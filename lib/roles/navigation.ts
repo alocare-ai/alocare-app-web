@@ -1,0 +1,74 @@
+import type { Locale } from "@alocare/design-system";
+import type { UserRole } from "@/lib/types/api";
+
+export type NavItem = {
+  label: string;
+  labelId: string;
+  href: string;
+};
+
+const NAV: Record<string, { en: string; id: string; href: string }> = {
+  dashboard: { en: "Dashboard", id: "Dasbor", href: "/dashboard" },
+  reports: { en: "Reports", id: "Laporan", href: "/reports/upload" },
+  chat: { en: "AI Chat", id: "Chat AI", href: "/chat" },
+  patients: { en: "Patients", id: "Pasien", href: "/patients" },
+  enterprise: { en: "Enterprise", id: "Perusahaan", href: "/enterprise" },
+  telemedicine: { en: "Telemedicine", id: "Telemedisin", href: "/telemedicine/new" },
+  settings: { en: "Settings", id: "Pengaturan", href: "/settings" },
+  myReports: { en: "My Reports", id: "Laporan Saya", href: "/reports/upload" },
+  history: { en: "History", id: "Riwayat", href: "/dashboard" },
+};
+
+function item(key: keyof typeof NAV): NavItem {
+  const n = NAV[key];
+  return { label: n.en, labelId: n.id, href: n.href };
+}
+
+const DOCTOR_ROLES: UserRole[] = [
+  "DOCTOR",
+  "CLINICIAN",
+  "NURSE",
+  "TENANT_ADMIN",
+  "SUPER_ADMIN",
+];
+const HR_ROLES: UserRole[] = ["HR_ADMIN"];
+const ADMIN_ROLES: UserRole[] = ["SUPER_ADMIN", "TENANT_ADMIN", "AUDITOR"];
+
+export function getNavItemsForRole(role: UserRole): NavItem[] {
+  if (role === "PATIENT") {
+    return [item("myReports"), item("chat"), item("history")];
+  }
+
+  if (HR_ROLES.includes(role)) {
+    return [item("dashboard"), item("enterprise"), item("reports")];
+  }
+
+  if (ADMIN_ROLES.includes(role) && !DOCTOR_ROLES.includes(role)) {
+    return [
+      item("dashboard"),
+      item("reports"),
+      item("patients"),
+      item("enterprise"),
+      item("settings"),
+    ];
+  }
+
+  return [
+    item("dashboard"),
+    item("reports"),
+    item("patients"),
+    item("chat"),
+    item("telemedicine"),
+  ];
+}
+
+export function labelNav(item: NavItem, locale: Locale): string {
+  return locale === "id" ? item.labelId : item.label;
+}
+
+export function isNavActive(href: string, pathname: string): boolean {
+  if (href === "/dashboard") return pathname === "/dashboard";
+  if (href === "/reports/upload") return pathname.startsWith("/reports");
+  if (href === "/telemedicine/new") return pathname.startsWith("/telemedicine");
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
