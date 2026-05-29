@@ -12,7 +12,10 @@
     "start": "next start",
     "lint": "eslint",
     "setup:env": "npm run generate-env",
-    "setup": "npm run generate-env && npm run setup-git"
+    "setup": "npm run generate-env && npm run setup-git",
+    "vercel:link": "vercel link",
+    "vercel:connect": "vercel git connect https://github.com/alocare-ai/alocare-app-web",
+    "vercel:deploy": "vercel --prod"
   },
   "dependencies": {
     "@alocare/design-system": "github:alocare-ai/alocare-design-system#main",
