@@ -31,6 +31,7 @@ export async function getAISession(sessionId: string): Promise<AISession> {
 export async function analyzeReport(data: {
   sessionId: string;
   reportId: string;
+  content: string;
   preferredLanguage?: string;
 }): Promise<{
   summary: string;
@@ -42,6 +43,7 @@ export async function analyzeReport(data: {
     body: JSON.stringify({
       sessionId: data.sessionId,
       reportId: data.reportId,
+      content: data.content,
       inputType: "pdf",
       preferredLanguage: data.preferredLanguage ?? "en",
     }),

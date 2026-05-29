@@ -17,20 +17,29 @@ export async function POST(request: NextRequest) {
     };
 
     const client = createApiClient();
-    const { data } = await client.post("/auth/login", { email, password });
+    const { data: tokens } = await client.post("/auth/login", {
+      email,
+      password,
+    });
 
-    const response = NextResponse.json({ ok: true });
-    response.cookies.set(AUTH_COOKIES.access, data.access_token, {
+    const authed = createApiClient(tokens.access_token);
+    const { data: user } = await authed.get("/users/me");
+
+    const response = NextResponse.json({ ok: true, user });
+    response.cookies.set(AUTH_COOKIES.access, tokens.access_token, {
       ...COOKIE_OPTS,
       maxAge: 60 * 60,
     });
-    response.cookies.set(AUTH_COOKIES.refresh, data.refresh_token, {
+    response.cookies.set(AUTH_COOKIES.refresh, tokens.refresh_token, {
       ...COOKIE_OPTS,
       maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;
   } catch {
-    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+    return NextResponse.json(
+      { error: "Invalid email or password" },
+      { status: 401 },
+    );
   }
 }

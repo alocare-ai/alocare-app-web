@@ -10,14 +10,19 @@ import {
   RiskIndicator,
   Spinner,
   UploadPreview,
-  bilingual,
   type ReviewFormData,
 } from "@alocare/design-system";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
+import { useMemo } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useLocale } from "@/hooks/use-locale";
 import { getReport, getReportResult, validateReport } from "@/lib/api/reports";
+import {
+  mapKeyFindings,
+  parseReportResult,
+  pickLocaleText,
+} from "@/lib/report-analysis";
 
 export default function ReportDetailPage() {
   const { locale } = useLocale();
@@ -35,6 +40,11 @@ export default function ReportDetailPage() {
     queryFn: () => getReportResult(reportId),
     enabled: Boolean(reportId),
   });
+
+  const analysis = useMemo(
+    () => (result ? parseReportResult(result) : null),
+    [result],
+  );
 
   const validateMutation = useMutation({
     mutationFn: (data: ReviewFormData) =>
@@ -65,21 +75,33 @@ export default function ReportDetailPage() {
     );
   }
 
-  const summary = result?.summary
-    ? bilingual(result.summary, result.summary)
-    : bilingual(
-        "Analysis in progress…",
-        "Analisis sedang berlangsung…",
-      );
+  const summary = analysis?.summary ?? {
+    en: "Analysis in progress…",
+    id: "Analisis sedang berlangsung…",
+  };
+  const hasSummary =
+    report.status === "completed" || Boolean(result?.summary_bilingual);
+  const doctorText = analysis
+    ? pickLocaleText(analysis.doctorSummary, locale)
+    : "";
+  const nextActions =
+    analysis?.nextActions[locale] ?? analysis?.nextActions.en ?? [];
+  const findings = mapKeyFindings(analysis?.keyFindings ?? []);
+  const confidencePercent =
+    analysis?.confidenceScore != null
+      ? Math.round(
+          analysis.confidenceScore <= 1
+            ? analysis.confidenceScore * 100
+            : analysis.confidenceScore,
+        )
+      : 0;
+  const riskLevel = analysis?.riskIndicator ?? "medium";
 
-  const recommendations =
-    result?.next_actions.map((action, i) => ({
-      id: String(i),
-      title: action,
-      icon: "default" as const,
-    })) ?? [];
-
-  const findings = parseFindings(result?.summary);
+  const recommendations = nextActions.map((action, i) => ({
+    id: String(i),
+    title: action,
+    icon: "default" as const,
+  }));
 
   return (
     <AppShell>
@@ -133,28 +155,35 @@ export default function ReportDetailPage() {
             <ClinicalSummaryCard
               summary={summary}
               lang={locale}
-              loading={!result?.summary}
+              loading={!hasSummary}
             />
-            <KeyFindingCard findings={findings} lang={locale} />
-            <ConfidenceScore score={result?.summary ? 92 : 0} lang={locale} />
-            <RiskIndicator level="low" lang={locale} />
+            {findings.length > 0 ? (
+              <KeyFindingCard findings={findings} lang={locale} />
+            ) : null}
+            <ConfidenceScore
+              score={hasSummary ? confidencePercent : 0}
+              lang={locale}
+            />
+            {hasSummary && analysis?.riskIndicator ? (
+              <RiskIndicator level={riskLevel} lang={locale} />
+            ) : null}
           </section>
 
           <section className="space-y-4">
-            {result?.doctor_summary ? (
+            {doctorText ? (
               <div className="rounded-xl border border-slate-200 bg-white p-4">
                 <h3 className="text-sm font-semibold text-slate-900">
                   {locale === "id" ? "Ringkasan dokter" : "Doctor summary"}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-700">
-                  {result.doctor_summary}
+                  {doctorText}
                 </p>
               </div>
             ) : null}
             <RecommendationList items={recommendations} lang={locale} />
             <DoctorReviewPanel
               lang={locale}
-              confidenceScore={92}
+              confidenceScore={hasSummary ? confidencePercent : 0}
               onSubmit={(data) => validateMutation.mutate(data)}
             />
           </section>
@@ -162,30 +191,4 @@ export default function ReportDetailPage() {
       </div>
     </AppShell>
   );
-}
-
-function parseFindings(summary?: string | null) {
-  if (!summary) {
-    return [
-      { label: "Hemoglobin", value: "—", status: "normal" as const },
-      { label: "WBC", value: "—", status: "normal" as const },
-      { label: "Platelet", value: "—", status: "normal" as const },
-    ];
-  }
-
-  const lower = summary.toLowerCase();
-  const plateletStatus = lower.includes("platelet") &&
-    (lower.includes("low") || lower.includes("rendah"))
-    ? ("low" as const)
-    : ("normal" as const);
-
-  return [
-    { label: "Hemoglobin", value: "13.2 g/dL", status: "normal" as const },
-    { label: "WBC", value: "8,100 /µL", status: "normal" as const },
-    {
-      label: "Platelet",
-      value: plateletStatus === "low" ? "142,000 /µL" : "210,000 /µL",
-      status: plateletStatus,
-    },
-  ];
 }

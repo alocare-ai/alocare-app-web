@@ -53,12 +53,30 @@ export interface Report {
   created_at: string | null;
 }
 
+export interface BilingualStrings {
+  en: string;
+  id: string;
+}
+
+export interface ReportKeyFinding {
+  name: string;
+  value: string;
+  status: string;
+  reference_range?: string | null;
+}
+
 export interface ReportResult {
   id: string;
   status: ReportStatus;
   summary: string | null;
   doctor_summary: string | null;
   next_actions: string[];
+  summary_bilingual?: BilingualStrings | null;
+  doctor_summary_bilingual?: BilingualStrings | null;
+  next_actions_bilingual?: { en: string[]; id: string[] } | null;
+  key_findings?: ReportKeyFinding[];
+  confidence_score?: number | null;
+  risk_indicator?: string | null;
 }
 
 export interface WorklistItem {
