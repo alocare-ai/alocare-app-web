@@ -12,8 +12,7 @@ import { useCallback, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { useLocale } from "@/hooks/use-locale";
 import { analyzeReport, createAISession } from "@/lib/api/chat";
-import { createReport } from "@/lib/api/reports";
-import { readReportFileContent } from "@/lib/report-analysis";
+import { createReport, uploadReportFile } from "@/lib/api/reports";
 
 type PipelineStep = "idle" | "uploaded" | "ocr" | "analyzing" | "completed";
 
@@ -47,7 +46,7 @@ export default function UploadReportPage() {
         await new Promise((r) => setTimeout(r, 800));
         setStep("analyzing");
 
-        const content = await readReportFileContent(file);
+        await uploadReportFile(report.id, file);
 
         const session = await createAISession({
           preferred_language: locale,
@@ -56,7 +55,7 @@ export default function UploadReportPage() {
         await analyzeReport({
           sessionId: session.id,
           reportId: report.id,
-          content,
+          content: "",
           preferredLanguage: locale,
         });
 

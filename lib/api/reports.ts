@@ -12,6 +12,33 @@ export async function createReport(data: {
   });
 }
 
+export async function uploadReportFile(
+  reportId: string,
+  file: File,
+): Promise<{ ok: boolean; filename: string; size: number }> {
+  const form = new FormData();
+  form.append("file", file);
+
+  const res = await fetch(`/api/backend/reports/${reportId}/upload`, {
+    method: "POST",
+    credentials: "include",
+    body: form,
+  });
+
+  if (!res.ok) {
+    let detail = "Upload failed";
+    try {
+      const body = (await res.json()) as { detail?: string };
+      detail = body.detail ?? detail;
+    } catch {
+      /* ignore */
+    }
+    throw new Error(detail);
+  }
+
+  return res.json() as Promise<{ ok: boolean; filename: string; size: number }>;
+}
+
 export async function getReport(id: string): Promise<Report> {
   return apiFetch<Report>(`/reports/${id}`);
 }

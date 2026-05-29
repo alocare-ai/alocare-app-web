@@ -19,6 +19,7 @@ import { AppShell } from "@/components/app-shell";
 import { useLocale } from "@/hooks/use-locale";
 import { getReport, getReportResult, validateReport } from "@/lib/api/reports";
 import {
+  confidenceDescription,
   mapKeyFindings,
   parseReportResult,
   pickLocaleText,
@@ -96,6 +97,12 @@ export default function ReportDetailPage() {
         )
       : 0;
   const riskLevel = analysis?.riskIndicator ?? "medium";
+  const isImageReport = /\.(jpe?g|png|gif|webp|heic|bmp)$/i.test(
+    report.file_reference ?? report.title ?? "",
+  );
+  const limitedAnalysis =
+    analysis?.limitedAnalysis ??
+    (isImageReport && findings.length === 0 && hasSummary);
 
   const recommendations = nextActions.map((action, i) => ({
     id: String(i),
@@ -152,6 +159,16 @@ export default function ReportDetailPage() {
           </section>
 
           <section className="space-y-4">
+            {limitedAnalysis ? (
+              <div
+                className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                role="status"
+              >
+                {locale === "id"
+                  ? "Unggahan gambar tidak menghasilkan nilai lab terstruktur. Gunakan PDF/teks untuk analisis lengkap."
+                  : "Image uploads cannot produce structured lab values yet. Use a text-based PDF or .txt for full analysis."}
+              </div>
+            ) : null}
             <ClinicalSummaryCard
               summary={summary}
               lang={locale}
@@ -159,10 +176,17 @@ export default function ReportDetailPage() {
             />
             {findings.length > 0 ? (
               <KeyFindingCard findings={findings} lang={locale} />
+            ) : hasSummary && !limitedAnalysis ? (
+              <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                {locale === "id"
+                  ? "Tidak ada temuan terstruktur pada dokumen ini."
+                  : "No structured findings were detected in this document."}
+              </div>
             ) : null}
             <ConfidenceScore
               score={hasSummary ? confidencePercent : 0}
               lang={locale}
+              description={confidenceDescription(locale, limitedAnalysis)}
             />
             {hasSummary && analysis?.riskIndicator ? (
               <RiskIndicator level={riskLevel} lang={locale} />

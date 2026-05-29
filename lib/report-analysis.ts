@@ -16,6 +16,7 @@ export type ParsedReportAnalysis = {
   keyFindings: StoredKeyFinding[];
   confidenceScore: number | null;
   riskIndicator: "low" | "medium" | "high" | null;
+  limitedAnalysis: boolean;
 };
 
 function asBilingual(
@@ -43,8 +44,16 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
   );
 
   if (result.summary_bilingual) {
+    const summary = result.summary_bilingual;
+    const limitedAnalysis =
+      (result.key_findings?.length ?? 0) === 0 &&
+      (result.confidence_score ?? 1) <= 0.35 &&
+      /ocr|image|gambar/i.test(
+        `${summary.en} ${summary.id}`,
+      );
+
     return {
-      summary: result.summary_bilingual,
+      summary,
       doctorSummary:
         result.doctor_summary_bilingual ?? bilingual("", ""),
       nextActions: result.next_actions_bilingual ?? {
@@ -62,6 +71,7 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
           ? result.confidence_score
           : null,
       riskIndicator: normalizeRisk(result.risk_indicator),
+      limitedAnalysis,
     };
   }
 
@@ -85,7 +95,20 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
     })),
     confidenceScore: summaryText ? 0.75 : null,
     riskIndicator: summaryText ? "medium" : null,
+    limitedAnalysis: false,
   };
+}
+
+export function confidenceDescription(
+  locale: Locale,
+  limited: boolean,
+): string | undefined {
+  if (limited) {
+    return locale === "id"
+      ? "Analisis terbatas — unggah laporan berbasis teks untuk hasil lengkap"
+      : "Limited analysis — upload a text-based report for full results";
+  }
+  return undefined;
 }
 
 export function pickLocaleText(text: BilingualText, locale: Locale): string {
@@ -130,13 +153,18 @@ export async function readReportFileContent(file: File): Promise<string> {
     }
   }
 
+  const isImage = file.type.startsWith("image/");
+
   const base = [
     `File name: ${file.name}`,
     `MIME type: ${file.type || "unknown"}`,
     `Size: ${file.size} bytes`,
-  ].join("\n");
+    isImage ? "Content kind: image (OCR not applied)" : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
 
-  if (file.size > 0 && file.size <= 512_000) {
+  if (!isImage && file.size > 0 && file.size <= 512_000) {
     try {
       const buffer = await file.arrayBuffer();
       const bytes = new Uint8Array(buffer.slice(0, 4000));
