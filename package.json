@@ -5,7 +5,7 @@
   "scripts": {
     "generate-env": "node scripts/generate-env.cjs",
     "setup-git": "node scripts/setup-git.cjs",
-    "postinstall": "node scripts/setup-git.cjs && node scripts/generate-env.cjs",
+    "postinstall": "node scripts/setup-git.cjs && node scripts/generate-env.cjs && node scripts/ensure-design-system.cjs",
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
@@ -15,7 +15,7 @@
     "setup": "npm run generate-env && npm run setup-git"
   },
   "dependencies": {
-    "@alocare/design-system": "file:../alocare-design-system",
+    "@alocare/design-system": "github:alocare-ai/alocare-design-system#main",
     "@tanstack/react-query": "^5.100.14",
     "axios": "^1.16.1",
     "next": "15.5.18",

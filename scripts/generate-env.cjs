@@ -5,6 +5,11 @@
 const fs = require("fs");
 const path = require("path");
 
+if (process.env.VERCEL || process.env.CI) {
+  console.log("generate-env: skipped on Vercel/CI (use project environment variables)");
+  process.exit(0);
+}
+
 const root = path.join(__dirname, "..");
 const examplePath = path.join(root, ".env.example");
 const envPath = path.join(root, ".env");
