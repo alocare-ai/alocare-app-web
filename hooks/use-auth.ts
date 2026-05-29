@@ -7,6 +7,7 @@ export function useAuth() {
   return useQuery({
     queryKey: ["me"],
     queryFn: getMe,
-    retry: false,
+    retry: 1,
+    staleTime: 60_000,
   });
 }

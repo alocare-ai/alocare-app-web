@@ -1,20 +1,39 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { createApiClient } from "@/lib/api/client";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_API_URL ?? "https://api.alocare.net";
 
+const COOKIE_OPTS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
+
+async function refreshAccessToken(
+  refresh: string,
+): Promise<{ access_token: string; refresh_token: string } | null> {
+  try {
+    const client = createApiClient();
+    const { data } = await client.post("/auth/refresh", {
+      refresh_token: refresh,
+    });
+    return data;
+  } catch {
+    return null;
+  }
+}
+
 async function forward(
   request: NextRequest,
   path: string,
+  token?: string,
 ): Promise<NextResponse> {
-  const jar = await cookies();
-  const token = jar.get(AUTH_COOKIES.access)?.value;
-
   const url = `${API_BASE}${path}${request.nextUrl.search}`;
   const contentType = request.headers.get("content-type") ?? "";
-
   const isMultipart = contentType.includes("multipart/form-data");
 
   const headers: Record<string, string> = {};
@@ -48,12 +67,48 @@ async function forward(
   });
 }
 
+async function proxyRequest(
+  request: NextRequest,
+  path: string,
+): Promise<NextResponse> {
+  const jar = await cookies();
+  const access = jar.get(AUTH_COOKIES.access)?.value;
+  const refresh = jar.get(AUTH_COOKIES.refresh)?.value;
+
+  let response = await forward(request, path, access);
+
+  if (response.status === 401 && refresh) {
+    const tokens = await refreshAccessToken(refresh);
+    if (tokens) {
+      response = await forward(request, path, tokens.access_token);
+      const nextResponse = new NextResponse(await response.text(), {
+        status: response.status,
+        headers: {
+          "Content-Type":
+            response.headers.get("content-type") ?? "application/json",
+        },
+      });
+      nextResponse.cookies.set(AUTH_COOKIES.access, tokens.access_token, {
+        ...COOKIE_OPTS,
+        maxAge: 60 * 60,
+      });
+      nextResponse.cookies.set(AUTH_COOKIES.refresh, tokens.refresh_token, {
+        ...COOKIE_OPTS,
+        maxAge: 60 * 60 * 24 * 7,
+      });
+      return nextResponse;
+    }
+  }
+
+  return response;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-  return forward(request, `/${path.join("/")}`);
+  return proxyRequest(request, `/${path.join("/")}`);
 }
 
 export async function POST(
@@ -61,7 +116,7 @@ export async function POST(
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-  return forward(request, `/${path.join("/")}`);
+  return proxyRequest(request, `/${path.join("/")}`);
 }
 
 export async function PUT(
@@ -69,7 +124,7 @@ export async function PUT(
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-  return forward(request, `/${path.join("/")}`);
+  return proxyRequest(request, `/${path.join("/")}`);
 }
 
 export async function PATCH(
@@ -77,7 +132,7 @@ export async function PATCH(
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-  return forward(request, `/${path.join("/")}`);
+  return proxyRequest(request, `/${path.join("/")}`);
 }
 
 export async function DELETE(
@@ -85,5 +140,5 @@ export async function DELETE(
   { params }: { params: Promise<{ path: string[] }> },
 ) {
   const { path } = await params;
-  return forward(request, `/${path.join("/")}`);
+  return proxyRequest(request, `/${path.join("/")}`);
 }

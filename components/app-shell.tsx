@@ -8,10 +8,12 @@ import {
 } from "@alocare/design-system";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { BrandLogo } from "@/components/brand-logo";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocale } from "@/hooks/use-locale";
 import { logout } from "@/lib/api/auth";
 import {
+  getDefaultNavItems,
   getNavItemsForRole,
   isNavActive,
   labelNav,
@@ -30,13 +32,13 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
   const { data: userFromQuery, isLoading } = useAuth();
   const user = userProp ?? userFromQuery;
 
-  const navItems = user
-    ? getNavItemsForRole(user.role).map((item) => ({
-        label: labelNav(item, locale),
-        href: item.href,
-        active: isNavActive(item.href, pathname),
-      }))
-    : [];
+  const navItems = (user ? getNavItemsForRole(user.role) : getDefaultNavItems()).map(
+    (item) => ({
+      label: labelNav(item, locale),
+      href: item.href,
+      active: isNavActive(item.href, pathname),
+    }),
+  );
 
   const handleLogout = async () => {
     await logout();
@@ -55,6 +57,7 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
+        logo={<BrandLogo href="/dashboard" size={40} />}
         locale={locale}
         onLocaleChange={setLocale}
         subtitle={
@@ -62,35 +65,38 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
             ? "Portal Kesehatan AI"
             : "AI-Powered Health Portal"
         }
-        navItems={navItems.map((item) => ({
-          ...item,
-          href: item.href,
-        }))}
+        navItems={navItems}
         actions={
-          user ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/settings"
-                className="hidden items-center gap-2 sm:flex"
-              >
-                <Avatar
-                  fallback={user.full_name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")
-                    .slice(0, 2)
-                    .toUpperCase()}
-                  size="sm"
-                />
-                <span className="max-w-[8rem] truncate text-sm font-medium text-slate-700">
-                  {user.full_name}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/settings"
+              className="flex items-center gap-2 rounded-lg px-2 py-1 hover:bg-slate-100"
+            >
+              {user ? (
+                <>
+                  <Avatar
+                    fallback={user.full_name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)
+                      .toUpperCase()}
+                    size="sm"
+                  />
+                  <span className="hidden max-w-[8rem] truncate text-sm font-medium text-slate-700 sm:inline">
+                    {user.full_name}
+                  </span>
+                </>
+              ) : (
+                <span className="text-sm font-medium text-slate-700">
+                  {locale === "id" ? "Pengaturan" : "Settings"}
                 </span>
-              </Link>
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                {locale === "id" ? "Keluar" : "Logout"}
-              </Button>
-            </div>
-          ) : null
+              )}
+            </Link>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
+              {locale === "id" ? "Keluar" : "Logout"}
+            </Button>
+          </div>
         }
       />
 

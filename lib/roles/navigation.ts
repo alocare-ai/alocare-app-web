@@ -34,6 +34,16 @@ const DOCTOR_ROLES: UserRole[] = [
 const HR_ROLES: UserRole[] = ["HR_ADMIN"];
 const ADMIN_ROLES: UserRole[] = ["SUPER_ADMIN", "TENANT_ADMIN", "AUDITOR"];
 
+export function getDefaultNavItems(): NavItem[] {
+  return [
+    item("dashboard"),
+    item("reports"),
+    item("patients"),
+    item("chat"),
+    item("settings"),
+  ];
+}
+
 export function getNavItemsForRole(role: UserRole): NavItem[] {
   if (role === "PATIENT") {
     return [item("myReports"), item("chat"), item("history")];
