@@ -7,13 +7,13 @@ import {
   CardHeader,
   Spinner,
   Textarea,
-  useLocale,
 } from "@alocare/design-system";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import {
   getConsultation,
   submitConsultation,

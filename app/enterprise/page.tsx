@@ -6,10 +6,10 @@ import {
   CardHeader,
   EmployeeHealthCard,
   Spinner,
-  useLocale,
 } from "@alocare/design-system";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import { getEnterpriseDashboard } from "@/lib/api/enterprise";
 
 export default function EnterprisePage() {

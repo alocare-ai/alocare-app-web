@@ -5,10 +5,11 @@ import {
   Button,
   Header,
   Spinner,
-  useLocale,
 } from "@alocare/design-system";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
+import { useLocale } from "@/hooks/use-locale";
 import { logout } from "@/lib/api/auth";
 import {
   getNavItemsForRole,
@@ -16,7 +17,6 @@ import {
   labelNav,
 } from "@/lib/roles/navigation";
 import type { UserProfile } from "@/lib/types/api";
-import { useAuth } from "@/hooks/use-auth";
 
 type AppShellProps = {
   children: React.ReactNode;

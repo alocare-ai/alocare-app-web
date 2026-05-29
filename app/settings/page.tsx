@@ -5,10 +5,10 @@ import {
   CardContent,
   CardHeader,
   LanguageSwitcher,
-  useLocale,
 } from "@alocare/design-system";
 import { AppShell } from "@/components/app-shell";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocale } from "@/hooks/use-locale";
 
 export default function SettingsPage() {
   const { locale, setLocale } = useLocale();

@@ -1,4 +1,4 @@
-import type { Locale } from "@alocare/design-system";
+import type { Locale } from "@/lib/i18n";
 import type { UserRole } from "@/lib/types/api";
 
 export type NavItem = {

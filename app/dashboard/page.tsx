@@ -8,13 +8,13 @@ import {
   CardTitle,
   Spinner,
   SystemHealthBadge,
-  useLocale,
 } from "@alocare/design-system";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
-import { getWorklist } from "@/lib/api/patients";
 import { useAuth } from "@/hooks/use-auth";
+import { useLocale } from "@/hooks/use-locale";
+import { getWorklist } from "@/lib/api/patients";
 
 export default function DashboardPage() {
   const { locale } = useLocale();

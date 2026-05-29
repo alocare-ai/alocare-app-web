@@ -1,10 +1,11 @@
 "use client";
 
-import { Spinner, useLocale } from "@alocare/design-system";
+import { Spinner } from "@alocare/design-system";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import { getTelemedicineSession } from "@/lib/api/telemedicine";
 
 export default function TelemedicineSessionPage() {

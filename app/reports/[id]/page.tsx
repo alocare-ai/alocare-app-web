@@ -11,12 +11,12 @@ import {
   Spinner,
   UploadPreview,
   bilingual,
-  useLocale,
   type ReviewFormData,
 } from "@alocare/design-system";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import { getReport, getReportResult, validateReport } from "@/lib/api/reports";
 
 export default function ReportDetailPage() {

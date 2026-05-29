@@ -7,11 +7,11 @@ import {
   CardHeader,
   Input,
   LanguageSwitcher,
-  useLocale,
 } from "@alocare/design-system";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
+import { useLocale } from "@/hooks/use-locale";
 import { login } from "@/lib/api/auth";
 
 function LoginForm() {

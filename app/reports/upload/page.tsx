@@ -5,12 +5,12 @@ import {
   Spinner,
   UploadDropzone,
   UploadPreview,
-  useLocale,
   type UploadDropzoneState,
 } from "@alocare/design-system";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import { analyzeReport, createAISession } from "@/lib/api/chat";
 import { createReport } from "@/lib/api/reports";
 

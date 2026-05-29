@@ -6,12 +6,12 @@ import {
   CardContent,
   Input,
   Spinner,
-  useLocale,
 } from "@alocare/design-system";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import { getPatients } from "@/lib/api/patients";
 
 export default function PatientsPage() {

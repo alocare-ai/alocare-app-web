@@ -1,8 +1,8 @@
 "use client";
 
-import { LocaleProvider } from "@alocare/design-system";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
+import { LocaleProvider } from "@/hooks/use-locale";
 
 export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(

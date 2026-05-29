@@ -5,11 +5,11 @@ import {
   ChatInput,
   ChatMessage,
   Spinner,
-  useLocale,
 } from "@alocare/design-system";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
+import { useLocale } from "@/hooks/use-locale";
 import {
   createAISession,
   getAISession,
