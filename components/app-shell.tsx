@@ -113,7 +113,13 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
                 {locale === "id" ? "Belum masuk" : "Not signed in"}
               </span>
             )}
-            <Button variant="ghost" size="sm" onClick={handleLogout}>
+            <Button
+              variant="ghost"
+              size="sm"
+              type="button"
+              className="cursor-pointer"
+              onClick={handleLogout}
+            >
               {locale === "id" ? "Keluar" : "Logout"}
             </Button>
           </div>
