@@ -41,11 +41,13 @@ In Vercel → Project → **Settings** → **Environment Variables**:
 | Variable | Production | Preview (optional) |
 |----------|------------|------------------|
 | `NEXT_PUBLIC_API_URL` | `https://api.alocare.net` | `https://api.alocare.net` or staging API |
-| `GITHUB_TOKEN` | GitHub PAT with **read** access to `alocare-design-system` | Same, if the design-system repo is private |
+| `GITHUB_TOKEN` | **Required.** GitHub PAT with `repo` read access to `alocare-ai/alocare-design-system` | Same |
+
+Optional: `DESIGN_SYSTEM_REF` — git commit SHA to install (default pinned in `scripts/install-design-system.cjs`).
 
 Do **not** rely on `.env` in the repo on Vercel — `generate-env` is skipped in CI. Set variables in the Vercel dashboard.
 
-`@alocare/design-system` installs over **HTTPS** (see `.npmrc`). Do not use `git+ssh` URLs in `package-lock.json` — Vercel has no SSH deploy keys and `npm ci` will exit with code 128.
+`@alocare/design-system` is **not** an npm git dependency (Vercel cannot use `git+ssh`). It is downloaded in `postinstall` via `scripts/install-design-system.cjs` using `GITHUB_TOKEN`.
 
 ## 1. Create the Vercel project
 
@@ -97,8 +99,8 @@ npx vercel --prod
 
 ## Troubleshooting
 
-- **`npm ci` exit 128 / Permission denied (publickey)** — `package-lock.json` must use `git+https://github.com/...` for `@alocare/design-system`, not `git+ssh://`. If the design-system repo is private, add `GITHUB_TOKEN` in Vercel (see table above).
-- **Build fails on `@alocare/design-system`** — ensure `package-lock.json` is committed; design system builds in `postinstall` via `scripts/ensure-design-system.cjs`.
+- **`npm ci` exit 128 / Permission denied (publickey)** — remove any `git+ssh` `@alocare/design-system` entry from `package.json` / `package-lock.json`. Use `install-design-system.cjs` and set `GITHUB_TOKEN` in Vercel.
+- **Build fails on `@alocare/design-system`** — confirm `GITHUB_TOKEN` is set; check build logs for `[install-design-system]`. Pin a commit with `DESIGN_SYSTEM_REF` if needed.
 - **Stale UI (e.g. 96% confidence inside Review & Validate)** — Vercel may cache an old `node_modules/@alocare/design-system/dist`. Redeploy after updating the lockfile, or trigger **Redeploy → Clear build cache**. `postinstall` rebuilds the design system on every Vercel/CI install.
 - **API calls fail in production** — set `NEXT_PUBLIC_API_URL` in Vercel; ensure `api.alocare.net` allows CORS from `app.alocare.net`.
 - **Login works locally but not on Vercel** — cookies require HTTPS in production; confirm domain matches and API is the same environment you logged in against.

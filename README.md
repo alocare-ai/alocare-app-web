@@ -15,12 +15,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ### Monorepo checkout (sibling `alocare-design-system`)
 
-If you clone all repos side by side, link the local design system instead of GitHub:
+If you clone all repos side by side, `postinstall` uses the sibling folder automatically:
 
 ```bash
-npm install ../alocare-design-system
+npm install
 npm run dev
 ```
+
+On **Vercel**, set `GITHUB_TOKEN` (read access to `alocare-design-system`). See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 Set `NEXT_PUBLIC_API_URL` in `.env.local` (see `.env.example`).
 
