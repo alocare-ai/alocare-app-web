@@ -95,6 +95,7 @@ npx vercel --prod
 ## Troubleshooting
 
 - **Build fails on `@alocare/design-system`** — ensure `package-lock.json` is committed; design system installs from `github:alocare-ai/alocare-design-system#main` and builds in `postinstall` via `scripts/ensure-design-system.cjs`.
+- **Stale UI (e.g. 96% confidence inside Review & Validate)** — Vercel may cache an old `node_modules/@alocare/design-system/dist`. Redeploy after updating the lockfile, or trigger **Redeploy → Clear build cache**. `postinstall` rebuilds the design system on every Vercel/CI install.
 - **API calls fail in production** — set `NEXT_PUBLIC_API_URL` in Vercel; ensure `api.alocare.net` allows CORS from `app.alocare.net`.
 - **Login works locally but not on Vercel** — cookies require HTTPS in production; confirm domain matches and API is the same environment you logged in against.
 - **Domain not verifying** — remove conflicting `app` records; CNAME must point to Vercel only.

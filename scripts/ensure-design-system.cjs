@@ -31,14 +31,30 @@ function ensureDistTypes() {
   }
 }
 
+function shouldForceRebuild() {
+  // Vercel/npm may reuse node_modules with an old prebuilt dist/; always rebuild in CI.
+  return (
+    process.env.VERCEL === "1" ||
+    process.env.CI === "true" ||
+    process.argv.includes("--force")
+  );
+}
+
 function main() {
   if (!fs.existsSync(designSystemDir)) {
     console.log("[ensure-design-system] @alocare/design-system not installed — skipped");
     return;
   }
 
-  if (!fs.existsSync(distEntry)) {
-    console.log("[ensure-design-system] Building @alocare/design-system…");
+  const force = shouldForceRebuild();
+  const needsBuild = !fs.existsSync(distEntry) || force;
+
+  if (needsBuild) {
+    if (force && fs.existsSync(distEntry)) {
+      console.log("[ensure-design-system] CI/Vercel: rebuilding design-system from source…");
+    } else {
+      console.log("[ensure-design-system] Building @alocare/design-system…");
+    }
     run("npm install", designSystemDir);
     run("npm run build", designSystemDir);
 
@@ -48,7 +64,7 @@ function main() {
     }
     console.log("[ensure-design-system] Build complete");
   } else {
-    console.log("[ensure-design-system] dist/index.js present");
+    console.log("[ensure-design-system] dist/index.js present — skipped (local)");
   }
 
   ensureDistTypes();
