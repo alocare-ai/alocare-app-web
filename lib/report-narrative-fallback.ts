@@ -1,47 +1,65 @@
 import type { Locale } from "@/lib/i18n";
 import { isPlaceholderClinicalSummary } from "@/lib/clinical-summary";
 
-const METRIC_PATTERNS: { label: string; re: RegExp }[] = [
-  { label: "Stress resilience score", re: /Stress\s+Resilience\s+Assessment\s*(\d{1,3})/i },
-  { label: "Stress assessment score", re: /Stress\s+Assessment\s*(\d{1,3})/i },
-  { label: "Physical stress score", re: /Physical\s+Stress\s*(\d{1,3})/i },
-  { label: "Psychological stress score", re: /Psychological\s+Stress\s*(\d{1,3})/i },
-  { label: "Autonomic balance score", re: /Autonomic\s+Nervous\s+Balance\s*(\d{1,3})/i },
-  { label: "Autonomic activity score", re: /Autonomic\s+Nervous\s+Activity\s*(\d{1,3})/i },
+const LAB_PATTERNS: { label: string; re: RegExp; unit: string }[] = [
+  { label: "Triglycerides", re: /Triglycerides?\s*([\d.]+)/i, unit: "mg/dL" },
+  { label: "Total cholesterol", re: /Total\s+Cholesterol\s*([\d.]+)/i, unit: "mg/dL" },
+  { label: "HDL cholesterol", re: /HDL\s+Cholesterol\s*([\d.]+)/i, unit: "mg/dL" },
+  { label: "LDL cholesterol", re: /LDL\s+Cholesterol\s*([\d.]+)/i, unit: "mg/dL" },
 ];
 
-function extractAdvice(document: string): string {
-  const match = document.match(
-    /Comprehensive\s+Advice\s*([\s\S]{40,1200}?)(?:Suggested\s+Next\s+Check|Disclaimer|Health\s+Life\s+Plan|$)/i,
-  );
-  return match ? match[1].replace(/\s+/g, " ").trim() : "";
-}
+const STRESS_PATTERNS: { label: string; re: RegExp }[] = [
+  { label: "Stress resilience score", re: /Stress\s+Resilience\s+Assessment\s*(\d{1,3})/i },
+  { label: "Stress assessment score", re: /Stress\s+Assessment\s*(\d{1,3})/i },
+];
 
 function extractPatient(document: string): string {
   const name = document.match(/Name[：:]\s*([A-Za-z][A-Za-z\s]{0,40})/)?.[1]?.trim();
-  const age = document.match(/Age[：:]\s*(\d{1,3})/)?.[1];
-  const parts: string[] = [];
-  if (name) parts.push(name);
-  if (age) parts.push(`age ${age}`);
-  return parts.join(", ") || "the patient";
+  return name ?? "";
 }
 
-/** Rule-based two-paragraph summary when the analyze stream returns a placeholder. */
-export function buildClinicalNarrativeFromDocument(
-  document: string,
-  locale: Locale,
-): string {
-  const metrics: string[] = [];
-  const seen = new Set<string>();
-  for (const { label, re } of METRIC_PATTERNS) {
-    const m = document.match(re);
-    if (!m || seen.has(label)) continue;
-    seen.add(label);
-    metrics.push(`${label} ${m[1]}`);
+function isLabReport(document: string): boolean {
+  if (/chemistry\s+panel|cholesterol|triglycerides|ldl|hdl/i.test(document)) {
+    return true;
   }
+  return LAB_PATTERNS.filter((p) => p.re.test(document)).length >= 2;
+}
 
-  const patient = extractPatient(document);
-  const advice = extractAdvice(document);
+function buildLabNarrative(document: string, locale: Locale): string {
+  const metrics: string[] = [];
+  for (const { label, re, unit } of LAB_PATTERNS) {
+    const m = document.match(re);
+    if (m) metrics.push(`${label} ${m[1]} ${unit}`);
+  }
+  const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
+  const metricText =
+    metrics.length > 0
+      ? metrics.join("; ")
+      : locale === "id"
+        ? "beberapa parameter kimia dari dokumen"
+        : "several chemistry values from the document";
+
+  if (locale === "id") {
+    return (
+      `Panel kimia darah untuk ${patient} mencatat: ${metricText}. ` +
+      `Nilai perlu ditafsirkan dengan riwayat medis dan faktor risiko.\n\n` +
+      `Disarankan diskusi hasil dengan pasien dan rencana tindak lanjut sesuai pedoman klinis.`
+    );
+  }
+  return (
+    `Chemistry panel for ${patient} records: ${metricText}. ` +
+    `Values should be interpreted with medical history and risk factors.\n\n` +
+    `Discuss results with the patient and plan appropriate follow-up.`
+  );
+}
+
+function buildStressNarrative(document: string, locale: Locale): string {
+  const metrics: string[] = [];
+  for (const { label, re } of STRESS_PATTERNS) {
+    const m = document.match(re);
+    if (m) metrics.push(`${label} ${m[1]}`);
+  }
+  const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
   const metricText =
     metrics.length > 0
       ? metrics.join("; ")
@@ -50,18 +68,36 @@ export function buildClinicalNarrativeFromDocument(
         : "multiple stress indicators from the document";
 
   if (locale === "id") {
-    const p1 = `Laporan ketahanan stres untuk ${patient} menunjukkan: ${metricText}. Skor perlu ditafsirkan dengan konteks klinis.`;
-    const p2 = advice
-      ? `Rekomendasi utama: ${advice.slice(0, 500)}`
-      : "Disarankan evaluasi lanjutan dengan tenaga kesehatan bila gejala berkelanjutan.";
-    return `${p1}\n\n${p2}`;
+    return (
+      `Laporan ketahanan stres untuk ${patient} menunjukkan: ${metricText}. ` +
+      `Skor perlu ditafsirkan dengan konteks klinis.\n\n` +
+      `Disarankan evaluasi lanjutan dengan tenaga kesehatan bila gejala berkelanjutan.`
+    );
   }
+  return (
+    `Stress resilience report for ${patient} shows: ${metricText}. ` +
+    `Scores should be interpreted with clinical context.\n\n` +
+    `Follow-up with a clinician is recommended if stress symptoms persist.`
+  );
+}
 
-  const p1 = `This stress resilience report for ${patient} shows: ${metricText}. Scores should be interpreted with clinical context.`;
-  const p2 = advice
-    ? `Primary recommendations: ${advice.slice(0, 500)}`
-    : "Follow-up with a clinician is recommended if stress symptoms persist.";
-  return `${p1}\n\n${p2}`;
+/** Rule-based summary when the analyze stream returns a placeholder. */
+export function buildClinicalNarrativeFromDocument(
+  document: string,
+  locale: Locale,
+): string {
+  if (isLabReport(document)) {
+    return buildLabNarrative(document, locale);
+  }
+  if (STRESS_PATTERNS.some((p) => p.re.test(document))) {
+    return buildStressNarrative(document, locale);
+  }
+  const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
+  const excerpt = document.replace(/\s+/g, " ").slice(0, 400);
+  if (locale === "id") {
+    return `Ringkasan dokumen untuk ${patient}. Cuplikan: ${excerpt}…`;
+  }
+  return `Document summary for ${patient}. Excerpt: ${excerpt}…`;
 }
 
 export function resolveSummaryAfterStream(

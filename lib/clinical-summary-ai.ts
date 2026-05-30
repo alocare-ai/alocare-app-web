@@ -119,16 +119,13 @@ export async function generateClinicalSummaryFromAI(params: {
     document,
     "id",
   );
-  const narrativePrimary = resolveSummaryAfterStream(
-    streamSummary,
-    document,
-    params.locale,
-  );
-
-  let summary: BilingualText = bilingual(
-    params.locale === "en" ? narrativePrimary : narrativeEn || narrativePrimary,
-    params.locale === "id" ? narrativePrimary : narrativeId || narrativePrimary,
-  );
+  let summary: BilingualText = bilingual(narrativeEn, narrativeId);
+  if (streamSummary && !isPlaceholderClinicalSummary(streamSummary)) {
+    summary =
+      params.locale === "en"
+        ? bilingual(streamSummary, narrativeId)
+        : bilingual(narrativeEn, streamSummary);
+  }
 
   try {
     const fresh = await getReportResult(params.reportId);

@@ -1,4 +1,5 @@
 import { bilingual, type BilingualText } from "@/lib/i18n";
+import { enrichRecommendation } from "@/lib/recommendation-details";
 import type { ReportResult } from "@/lib/types/api";
 
 const PLACEHOLDER_PATTERNS = [
@@ -140,7 +141,7 @@ export function mergeAnalyzeResponseIntoResult(
     next.next_actions = analyze.nextActions;
     next.next_actions_bilingual = {
       en: analyze.nextActions,
-      id: analyze.nextActions,
+      id: analyze.nextActions.map((a) => enrichRecommendation(a, "id").title),
     };
   }
 

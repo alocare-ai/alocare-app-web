@@ -3,6 +3,7 @@ import {
   hasMeaningfulClinicalSummary,
   resolveClinicalSummary,
 } from "@/lib/clinical-summary";
+import { enrichRecommendation } from "@/lib/recommendation-details";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
 
@@ -60,7 +61,7 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
         result.doctor_summary_bilingual ?? bilingual("", ""),
       nextActions: result.next_actions_bilingual ?? {
         en: result.next_actions,
-        id: result.next_actions,
+        id: result.next_actions.map((a) => enrichRecommendation(a, "id").title),
       },
       keyFindings: (result.key_findings ?? []).map((f) => ({
         name: f.name,
@@ -90,7 +91,7 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
       : bilingual("", ""),
     nextActions: {
       en: result.next_actions,
-      id: result.next_actions,
+      id: result.next_actions.map((a) => enrichRecommendation(a, "id").title),
     },
     keyFindings: (result.key_findings ?? []).map((f) => ({
       name: f.name,

@@ -24,6 +24,7 @@ import {
   hasDisplayableClinicalSummary,
   hasMeaningfulClinicalSummary,
 } from "@/lib/report-result-utils";
+import { enrichRecommendation } from "@/lib/recommendation-details";
 import { buildReportAssessments } from "@/lib/report-assessments";
 import {
   confidenceDescription,
@@ -176,11 +177,15 @@ export function ReportDetailClient({
     analysis?.limitedAnalysis ??
     (isImageReport && findings.length === 0 && hasSummary);
 
-  const recommendations = nextActions.map((action, i) => ({
-    id: String(i),
-    title: action,
-    icon: "default" as const,
-  }));
+  const recommendations = nextActions.map((action, i) => {
+    const enriched = enrichRecommendation(action, locale);
+    return {
+      id: String(i),
+      title: enriched.title,
+      description: enriched.description,
+      icon: "default" as const,
+    };
+  });
 
   return (
     <AppShell>
