@@ -22,7 +22,7 @@ npm install
 npm run dev
 ```
 
-On **Vercel**, set `GITHUB_TOKEN` (read access to `alocare-design-system`). See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+After design-system changes: `npm run sync-design-system` and commit `vendor/alocare-design-system`.
 
 Set `NEXT_PUBLIC_API_URL` in `.env.local` (see `.env.example`).
 

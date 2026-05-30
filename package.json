@@ -5,7 +5,8 @@
   "scripts": {
     "generate-env": "node scripts/generate-env.cjs",
     "setup-git": "node scripts/setup-git.cjs",
-    "postinstall": "node scripts/install-design-system.cjs && node scripts/setup-git.cjs && node scripts/generate-env.cjs",
+    "postinstall": "node scripts/setup-git.cjs && node scripts/generate-env.cjs",
+    "sync-design-system": "node scripts/sync-design-system-vendor.cjs",
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
@@ -18,6 +19,7 @@
     "vercel:deploy": "vercel --prod"
   },
   "dependencies": {
+    "@alocare/design-system": "file:vendor/alocare-design-system",
     "@tanstack/react-query": "^5.100.14",
     "axios": "^1.16.1",
     "lucide-react": "^0.511.0",

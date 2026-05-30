@@ -1,0 +1,1 @@
+{"version":3,"file":"LoginDivider.d.ts","sourceRoot":"","sources":["../../../../../src/components/auth/shared/LoginDivider.tsx"],"names":[],"mappings":"AAEA,OAAO,EAAK,KAAK,MAAM,EAAE,MAAM,cAAc,CAAC;AAE9C,MAAM,MAAM,iBAAiB,GAAG;IAC9B,IAAI,CAAC,EAAE,MAAM,CAAC;IACd,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB,CAAC;AAEF,wBAAgB,YAAY,CAAC,EAAE,IAAW,EAAE,SAAS,EAAE,EAAE,iBAAiB,2CAWzE"}

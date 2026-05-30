@@ -1,0 +1,1 @@
+{"version":3,"file":"SystemHealthBadge.d.ts","sourceRoot":"","sources":["../../../../../src/components/telemetry/SystemHealthBadge/SystemHealthBadge.tsx"],"names":[],"mappings":"AAGA,MAAM,MAAM,sBAAsB,GAAG;IACnC,OAAO,CAAC,EAAE,SAAS,GAAG,YAAY,CAAC;IACnC,SAAS,CAAC,EAAE,MAAM,CAAC;CACpB,CAAC;AAaF,wBAAgB,iBAAiB,CAAC,EAChC,OAAmB,EACnB,SAAS,GACV,EAAE,sBAAsB,2CAcxB"}
