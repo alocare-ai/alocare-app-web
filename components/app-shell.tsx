@@ -67,14 +67,21 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
-        logo={<BrandLogo href="/dashboard" size={40} />}
+        className="[&>div>div>span.leading-tight]:hidden"
+        logo={
+          <BrandLogo
+            href="/dashboard"
+            size={40}
+            showWordmark
+            subtitle={
+              locale === "id"
+                ? "Portal Kesehatan AI"
+                : "AI-Powered Health Portal"
+            }
+          />
+        }
         locale={locale}
         onLocaleChange={setLocale}
-        subtitle={
-          locale === "id"
-            ? "Portal Kesehatan AI"
-            : "AI-Powered Health Portal"
-        }
         navItems={navItems}
         actions={
           <div className="flex items-center gap-2 sm:gap-3">

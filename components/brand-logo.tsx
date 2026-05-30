@@ -28,7 +28,7 @@ export function BrandLogo({
 
   if (!showWordmark) {
     return href ? (
-      <Link href={href} className="inline-flex">
+      <Link href={href} className="inline-flex transition-opacity hover:opacity-80">
         {image}
       </Link>
     ) : (
@@ -53,5 +53,11 @@ export function BrandLogo({
     </div>
   );
 
-  return href ? <Link href={href}>{content}</Link> : content;
+  return href ? (
+    <Link href={href} className="inline-flex transition-opacity hover:opacity-80">
+      {content}
+    </Link>
+  ) : (
+    content
+  );
 }

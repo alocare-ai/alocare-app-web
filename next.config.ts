@@ -2,10 +2,6 @@ import type { NextConfig } from "next";
 import fs from "fs";
 import path from "path";
 
-const designSystemSrc = path.join(
-  __dirname,
-  "../alocare-design-system/src/index.ts",
-);
 const designSystemCss = path.join(
   __dirname,
   "../alocare-design-system/dist/design-system.css",
@@ -28,9 +24,6 @@ const nextConfig: NextConfig = {
       "@alocare/design-system/styles.css": fs.existsSync(designSystemCss)
         ? designSystemCss
         : designSystemFromNodeModules,
-      "@alocare/design-system": fs.existsSync(designSystemSrc)
-        ? designSystemSrc
-        : "@alocare/design-system",
     },
   },
 };

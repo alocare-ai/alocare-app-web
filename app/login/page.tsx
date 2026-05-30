@@ -64,28 +64,32 @@ function LoginForm() {
 
   const title =
     locale === "id" ? "Masuk ke Portal" : "Sign in to Portal";
-  const subtitle =
+  const brandSubtitle =
     locale === "id"
-      ? "Akses aman untuk tenaga medis dan pasien"
-      : "Secure access for clinicians and patients";
+      ? "Analisis Laporan Medis Berbasis AI"
+      : "Medical AI Report Analysis";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10">
-      <Card className="relative w-full max-w-md shadow-lg">
+    <div className="flex min-h-dvh items-center justify-center overflow-y-auto bg-slate-50 px-4 py-[max(1.5rem,env(safe-area-inset-top,0px))] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] sm:py-10">
+      <Card className="relative my-auto w-full max-w-md shadow-lg">
         <div className="absolute top-4 right-4 z-10">
           <LanguageSwitcher locale={locale} onChange={setLocale} />
         </div>
 
-        <CardHeader className="flex flex-col items-center border-b-0 px-6 pb-0 pt-10 text-center">
-          <BrandLogo href={undefined} size={56} />
-          <h1 className="mt-5 w-full font-heading text-2xl font-semibold tracking-tight text-balance text-slate-900 sm:text-[1.625rem]">
+        <CardHeader className="flex flex-col items-center border-b-0 px-6 pb-0 pt-12 text-center sm:pt-10">
+          <div className="flex justify-center">
+            <BrandLogo
+              href={undefined}
+              size={56}
+              showWordmark
+              subtitle={brandSubtitle}
+            />
+          </div>
+          <h1 className="mt-3 w-full font-heading text-2xl font-semibold leading-tight tracking-tight text-balance text-slate-900 sm:text-[1.625rem]">
             {title}
           </h1>
-          <p className="mt-2 max-w-[17.5rem] text-base leading-relaxed text-balance text-slate-600 sm:max-w-xs">
-            {subtitle}
-          </p>
         </CardHeader>
-        <CardContent className="pt-5">
+        <CardContent className="pt-4">
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               type="email"
@@ -153,7 +157,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen items-center justify-center text-slate-500">
+        <div className="flex min-h-dvh items-center justify-center text-slate-500">
           Loading…
         </div>
       }

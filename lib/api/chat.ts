@@ -1,5 +1,8 @@
 import type { AISession } from "@/lib/types/api";
+import { reportInputType } from "@/lib/report-analysis";
 import { apiFetch } from "./client";
+
+export { reportInputType };
 
 export async function createAISession(data?: {
   patient_reference?: string;
@@ -28,24 +31,29 @@ export async function getAISession(sessionId: string): Promise<AISession> {
   return apiFetch<AISession>(`/ai/sessions/${sessionId}`);
 }
 
+/** @deprecated Use `runAnalyzeStream` from `@/lib/api/analyze-stream` instead. */
 export async function analyzeReport(data: {
   sessionId: string;
   reportId: string;
   content: string;
+  inputType?: "pdf" | "image" | "text";
   preferredLanguage?: string;
 }): Promise<{
   summary: string;
   doctorSummary: string;
   nextActions: string[];
 }> {
-  return apiFetch("/ai/analyze", {
-    method: "POST",
-    body: JSON.stringify({
-      sessionId: data.sessionId,
-      reportId: data.reportId,
-      content: data.content,
-      inputType: "pdf",
-      preferredLanguage: data.preferredLanguage ?? "en",
-    }),
+  const { runAnalyzeStream } = await import("./analyze-stream");
+  const complete = await runAnalyzeStream({
+    sessionId: data.sessionId,
+    reportId: data.reportId,
+    content: data.content,
+    inputType: data.inputType,
+    preferredLanguage: data.preferredLanguage,
   });
+  return {
+    summary: complete.summary ?? "",
+    doctorSummary: complete.doctorSummary ?? "",
+    nextActions: complete.nextActions ?? [],
+  };
 }

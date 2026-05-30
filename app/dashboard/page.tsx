@@ -88,7 +88,7 @@ export default function DashboardPage() {
           <CardContent className="flex flex-wrap gap-3">
             {quickActions.map((action) => (
               <Link key={action.href} href={action.href}>
-                <Button variant="secondary">
+                <Button variant="secondary" className="cursor-pointer">
                   {locale === "id" ? action.id : action.en}
                 </Button>
               </Link>

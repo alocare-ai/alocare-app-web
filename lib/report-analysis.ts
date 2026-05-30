@@ -1,4 +1,8 @@
 import { bilingual, type BilingualText } from "@alocare/design-system";
+import {
+  hasMeaningfulClinicalSummary,
+  resolveClinicalSummary,
+} from "@/lib/clinical-summary";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
 
@@ -43,14 +47,12 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
     "Analisis sedang berlangsung…",
   );
 
-  if (result.summary_bilingual) {
-    const summary = result.summary_bilingual;
+  if (result.summary_bilingual || result.summary?.trim()) {
+    const summary = resolveClinicalSummary(result);
     const limitedAnalysis =
-      (result.key_findings?.length ?? 0) === 0 &&
-      (result.confidence_score ?? 1) <= 0.35 &&
-      /ocr|image|gambar/i.test(
-        `${summary.en} ${summary.id}`,
-      );
+      !hasMeaningfulClinicalSummary(result) &&
+      (result.key_findings?.length ?? 0) > 0 &&
+      (result.confidence_score ?? 1) <= 0.5;
 
     return {
       summary,
@@ -75,11 +77,14 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
     };
   }
 
-  const summaryText = result.summary?.trim();
   const doctorText = result.doctor_summary?.trim();
+  const resolved = resolveClinicalSummary(result);
+  const hasResolvedText = Boolean(
+    resolved.en?.trim() || resolved.id?.trim(),
+  );
 
   return {
-    summary: summaryText ? asBilingual(summaryText, summaryText) : progress,
+    summary: hasResolvedText ? resolved : progress,
     doctorSummary: doctorText
       ? asBilingual(doctorText, doctorText)
       : bilingual("", ""),
@@ -93,8 +98,8 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
       status: f.status,
       referenceRange: f.reference_range,
     })),
-    confidenceScore: summaryText ? 0.75 : null,
-    riskIndicator: summaryText ? "medium" : null,
+    confidenceScore: hasResolvedText ? 0.75 : null,
+    riskIndicator: hasResolvedText ? "medium" : null,
     limitedAnalysis: false,
   };
 }
@@ -138,6 +143,18 @@ export function mapKeyFindings(
             ? "high"
             : "normal",
   }));
+}
+
+export function reportInputType(
+  filename: string,
+): "pdf" | "image" | "text" {
+  if (/\.(jpe?g|png|gif|webp|heic|bmp)$/i.test(filename)) {
+    return "image";
+  }
+  if (/\.(txt|csv|md|json)$/i.test(filename)) {
+    return "text";
+  }
+  return "pdf";
 }
 
 export async function readReportFileContent(file: File): Promise<string> {
