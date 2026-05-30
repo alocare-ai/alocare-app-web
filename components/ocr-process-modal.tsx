@@ -229,7 +229,7 @@ export function OcrProcessModal({
                           {error ??
                             activeDetail(locale, key, ocrEvent, aiProgress)}
                         </p>
-                        {key === "analyzing" && aiSubsteps && !hasError ? (
+                        {key === "analyzing" && aiProgress && aiSubsteps && !hasError ? (
                           <ul
                             className="space-y-1 border-l-2 border-teal-200 pl-2.5"
                             aria-label={

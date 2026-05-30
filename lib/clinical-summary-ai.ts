@@ -10,7 +10,6 @@ import {
   isUnusableStreamSummary,
   mergeAnalyzeResponseIntoResult,
   resolveClinicalSummary,
-  type ReportResult,
 } from "@/lib/clinical-summary";
 import { bilingual, type BilingualText, type Locale } from "@/lib/i18n";
 import {
@@ -18,7 +17,7 @@ import {
   reportAnalysisInputType,
 } from "@/lib/report-result-utils";
 import { resolveSummaryAfterStream } from "@/lib/report-narrative-fallback";
-import type { Report } from "@/lib/types/api";
+import type { Report, ReportResult } from "@/lib/types/api";
 
 const MAX_DOCUMENT_CHARS = 24_000;
 
