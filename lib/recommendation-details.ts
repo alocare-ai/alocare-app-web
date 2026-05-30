@@ -39,12 +39,25 @@ const DETAILS: Record<string, { en: ActionDetail; id: ActionDetail }> = {
         "Telaah nyeri dada, sesak, riwayat keluarga, dan faktor risiko kardiovaskular.",
     },
   },
+  investigation: {
+    en: {
+      title: "Consider further investigation",
+      description:
+        "Order targeted tests based on abnormal values and clinical presentation.",
+    },
+    id: {
+      title: "Pertimbangkan investigasi lanjutan",
+      description:
+        "Lakukan pemeriksaan tambahan sesuai nilai abnormal dan kondisi klinis pasien.",
+    },
+  },
 };
 
 function matchKey(action: string): keyof typeof DETAILS | null {
   const lower = action.toLowerCase();
   if (lower.includes("lifestyle") || lower.includes("lower ldl")) return "lifestyle";
   if (lower.includes("discuss")) return "discuss";
+  if (lower.includes("investigation")) return "investigation";
   if (lower.includes("evaluation") || lower.includes("symptom")) return "evaluation";
   return null;
 }

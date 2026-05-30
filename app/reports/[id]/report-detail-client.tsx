@@ -32,6 +32,7 @@ import {
   confidenceDescription,
   mapKeyFindings,
   parseReportResult,
+  pickDoctorSummaryText,
   pickLocaleText,
 } from "@/lib/report-analysis";
 import type { Report, ReportResult } from "@/lib/types/api";
@@ -92,7 +93,7 @@ export function ReportDetailClient({
     () =>
       buildReportAssessments(
         analysis?.keyFindings ?? [],
-        analysis ? pickLocaleText(analysis.doctorSummary, locale) : "",
+        analysis ? pickDoctorSummaryText(analysis.doctorSummary, locale) : "",
       ),
     [analysis, locale],
   );
@@ -163,7 +164,7 @@ export function ReportDetailClient({
   }
 
   const doctorText = analysis
-    ? pickLocaleText(analysis.doctorSummary, locale)
+    ? pickDoctorSummaryText(analysis.doctorSummary, locale)
     : "";
   const nextActions =
     analysis?.nextActions[locale] ?? analysis?.nextActions.en ?? [];

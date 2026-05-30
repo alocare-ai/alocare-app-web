@@ -1,5 +1,9 @@
 import { bilingual, type BilingualText } from "@/lib/i18n";
-import { looksEnglish, looksIndonesian } from "@/lib/locale-detect";
+import {
+  looksEnglish,
+  looksIndonesian,
+  needsLocalizationToId,
+} from "@/lib/locale-detect";
 import {
   isDoctorBriefWithOcrExcerpt,
   isGenericLabClinicalTemplate,
@@ -31,6 +35,8 @@ function shouldUseEnClinicalForId(en: string, id: string): boolean {
 function shouldUseEnDoctorForId(en: string, id: string): boolean {
   if (!en.trim()) return false;
   if (!id.trim()) return true;
+  if (en === id) return true;
+  if (needsLocalizationToId(id)) return true;
   if (looksEnglish(id)) return true;
   if (isRawOcrDump(id)) return true;
   if (isDoctorBriefWithOcrExcerpt(id)) return true;
@@ -102,7 +108,19 @@ export function repairDoctorSummary(
   let en = doctor.en?.trim() ?? "";
   let id = doctor.id?.trim() ?? "";
 
+  if (
+    en &&
+    looksEnglish(en) &&
+    !isRawOcrDump(en) &&
+    (!id || shouldUseEnDoctorForId(en, id))
+  ) {
+    return bilingual(en, localizeDoctorEnToId(en));
+  }
+
   if (!document.trim()) {
+    if (id && needsLocalizationToId(id)) {
+      return bilingual(en || id, localizeDoctorEnToId(en || id));
+    }
     return doctor;
   }
 
@@ -147,8 +165,8 @@ export function repairDoctorSummary(
       return buildDoctorSummaryFromDocument(document, "id");
     }
 
-    if (looksEnglish(value)) {
-      return localizeDoctorEnToId(value);
+    if (looksEnglish(value) || needsLocalizationToId(value)) {
+      return localizeDoctorEnToId(enDoctor || value);
     }
     return value;
   };

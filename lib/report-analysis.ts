@@ -5,6 +5,11 @@ import {
 } from "@/lib/clinical-summary";
 import { repairAnalysisFromResult } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
+import {
+  looksEnglish,
+  needsLocalizationToId,
+} from "@/lib/locale-detect";
+import { localizeDoctorEnToId } from "@/lib/localize-summary";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
 
@@ -124,6 +129,27 @@ export function pickLocaleText(text: BilingualText, locale: Locale): string {
   const value = text[locale]?.trim();
   if (value) return value;
   return text.en?.trim() || text.id?.trim() || "";
+}
+
+/** Doctor summary for display — always localize from EN when ID is missing or mixed. */
+export function pickDoctorSummaryText(
+  text: BilingualText,
+  locale: Locale,
+): string {
+  const en = text.en?.trim() ?? "";
+  const id = text.id?.trim() ?? "";
+
+  if (locale === "id") {
+    if (en && looksEnglish(en)) {
+      return localizeDoctorEnToId(en);
+    }
+    if (id && needsLocalizationToId(id)) {
+      return localizeDoctorEnToId(en || id);
+    }
+    return id || en;
+  }
+
+  return en || id;
 }
 
 export function mapKeyFindings(
