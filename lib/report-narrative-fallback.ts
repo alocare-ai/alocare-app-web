@@ -131,16 +131,15 @@ export function buildDoctorSummaryFromDocument(
     return buildStressNarrative(document, locale).split("\n\n")[0] ?? "";
   }
 
-  const excerpt = document.replace(/\s+/g, " ").slice(0, 320);
   if (locale === "id") {
     return (
-      `Ringkasan singkat untuk ${patient}: ${excerpt}… ` +
-      "Tinjau dokumen lengkap untuk interpretasi klinis."
+      `${patient} memiliki hasil laboratorium pada dokumen ini. ` +
+      "Tinjau nilai lengkap di sistem dan diskusikan interpretasi klinis dengan pasien."
     );
   }
   return (
-    `Brief summary for ${patient}: ${excerpt}… ` +
-    "Review the full document for clinical interpretation."
+    `${patient} has laboratory results on file. ` +
+    "Review full values in the chart and discuss clinical interpretation with the patient."
   );
 }
 
