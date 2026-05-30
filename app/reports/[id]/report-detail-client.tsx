@@ -24,7 +24,9 @@ import {
   hasDisplayableClinicalSummary,
   hasMeaningfulClinicalSummary,
 } from "@/lib/report-result-utils";
+import { repairClinicalSummary } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
+import { extractDocumentText } from "@/lib/report-document";
 import { buildReportAssessments } from "@/lib/report-assessments";
 import {
   confidenceDescription,
@@ -127,6 +129,19 @@ export function ReportDetailClient({
         report?.status === "processing" ||
         initialAnalyzing));
 
+  const summary = useMemo(() => {
+    const base =
+      aiSummary ??
+      (hasMeaningfulSummary && analysis?.summary
+        ? analysis.summary
+        : {
+            en: "Analysis in progress…",
+            id: "Analisis sedang berlangsung…",
+          });
+    if (!result) return base;
+    return repairClinicalSummary(base, extractDocumentText(result));
+  }, [aiSummary, analysis?.summary, hasMeaningfulSummary, result]);
+
   if ((reportLoading || resultLoading) && !report) {
     return (
       <AppShell>
@@ -147,14 +162,6 @@ export function ReportDetailClient({
     );
   }
 
-  const summary =
-    aiSummary ??
-    (hasMeaningfulSummary && analysis?.summary
-      ? analysis.summary
-      : {
-          en: "Analysis in progress…",
-          id: "Analisis sedang berlangsung…",
-        });
   const doctorText = analysis
     ? pickLocaleText(analysis.doctorSummary, locale)
     : "";

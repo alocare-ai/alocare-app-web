@@ -1,5 +1,8 @@
 import { bilingual, type BilingualText } from "@/lib/i18n";
 import { enrichRecommendation } from "@/lib/recommendation-details";
+import { buildDoctorSummaryFromDocument } from "@/lib/report-narrative-fallback";
+import { extractDocumentText } from "@/lib/report-document";
+import { looksIndonesian } from "@/lib/locale-detect";
 import type { ReportResult } from "@/lib/types/api";
 
 const PLACEHOLDER_PATTERNS = [
@@ -90,9 +93,6 @@ export function resolveClinicalSummary(result: ReportResult): BilingualText {
   if (isPlaceholderClinicalSummary(en)) en = "";
   if (isPlaceholderClinicalSummary(id)) id = "";
 
-  if (!id && en) id = en;
-  if (!en && id) en = id;
-
   return bilingual(en, id);
 }
 
@@ -130,11 +130,22 @@ export function mergeAnalyzeResponseIntoResult(
 
   const doctorText = analyze.doctorSummary?.trim();
   if (doctorText) {
-    next.doctor_summary = doctorText;
-    next.doctor_summary_bilingual = {
-      en: doctorText,
-      id: next.doctor_summary_bilingual?.id?.trim() || doctorText,
-    };
+    const document = extractDocumentText(next);
+    let en = doctorText;
+    let id = next.doctor_summary_bilingual?.id?.trim() || "";
+    if (document) {
+      if (looksIndonesian(doctorText)) {
+        id = doctorText;
+        en = buildDoctorSummaryFromDocument(document, "en");
+      } else {
+        en = doctorText;
+        id = buildDoctorSummaryFromDocument(document, "id");
+      }
+    } else if (!id) {
+      id = en;
+    }
+    next.doctor_summary = en || id;
+    next.doctor_summary_bilingual = { en, id };
   }
 
   if (analyze.nextActions?.length) {

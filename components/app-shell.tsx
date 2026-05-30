@@ -67,40 +67,29 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
   return (
     <div className="min-h-screen bg-slate-50">
       <Header
-        className="[&>div>div>span.leading-tight]:hidden"
-        logo={
-          <BrandLogo
-            href="/dashboard"
-            size={40}
-            showWordmark
-            subtitle={
-              locale === "id"
-                ? "Portal Kesehatan AI"
-                : "AI-Powered Health Portal"
-            }
-          />
+        className="[&>div]:flex-wrap [&>div]:items-center [&>div]:gap-x-2 [&>div]:gap-y-2 [&>div]:px-3 [&>div]:py-2.5 sm:[&>div]:flex-nowrap sm:[&>div]:gap-4 sm:[&>div]:px-6 sm:[&>div]:py-4 [&>div>div:first-child]:min-w-0 [&>div>div:first-child]:max-w-[58%] sm:[&>div>div:first-child]:max-w-none [&>div>div:last-child]:ml-auto [&>div>div:last-child]:shrink-0"
+        logo={<BrandLogo href="/dashboard" size={32} showWordmark={false} />}
+        subtitle={
+          locale === "id"
+            ? "Portal Kesehatan AI"
+            : "AI-Powered Health Portal"
         }
         locale={locale}
         onLocaleChange={setLocale}
         navItems={navItems}
         actions={
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex max-w-full items-center justify-end gap-1.5 sm:gap-2">
             {user ? (
               <Link
                 href="/settings"
-                className="flex max-w-[12rem] items-center gap-2 rounded-lg border border-slate-200/80 bg-white px-2 py-1.5 shadow-sm transition-colors hover:bg-slate-50 sm:max-w-none sm:px-3"
+                className="flex min-w-0 max-w-[9.5rem] items-center gap-1.5 rounded-lg border border-slate-200/80 bg-white px-1.5 py-1 shadow-sm transition-colors hover:bg-slate-50 sm:max-w-none sm:gap-2 sm:px-3 sm:py-1.5"
                 title={user.email}
               >
                 <Avatar fallback={userInitials(user.full_name)} size="sm" />
-                <span className="min-w-0 text-left leading-tight">
-                  <span className="block truncate text-sm font-semibold text-slate-900">
-                    {user.full_name}
-                  </span>
-                  <span className="hidden truncate text-xs text-slate-500 sm:block">
-                    {user.email}
-                  </span>
+                <span className="min-w-0 truncate text-sm font-semibold text-slate-900 max-[380px]:hidden min-[381px]:block sm:max-w-[10rem]">
+                  {user.full_name}
                 </span>
-                <Badge variant="info" className="hidden shrink-0 sm:inline-flex">
+                <Badge variant="info" className="hidden shrink-0 lg:inline-flex">
                   {user.role.replace("_", " ")}
                 </Badge>
               </Link>
@@ -109,7 +98,7 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
                 {locale === "id" ? "Sesi berakhir…" : "Session expired…"}
               </span>
             ) : (
-              <span className="text-xs text-slate-500">
+              <span className="hidden text-xs text-slate-500 sm:inline">
                 {locale === "id" ? "Belum masuk" : "Not signed in"}
               </span>
             )}
@@ -117,7 +106,7 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
               variant="ghost"
               size="sm"
               type="button"
-              className="cursor-pointer"
+              className="hidden shrink-0 cursor-pointer sm:inline-flex"
               onClick={handleLogout}
             >
               {locale === "id" ? "Keluar" : "Logout"}
@@ -126,7 +115,7 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
         }
       />
 
-      <main className="mx-auto max-w-7xl px-6 py-6">{children}</main>
+      <main className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-6">{children}</main>
     </div>
   );
 }

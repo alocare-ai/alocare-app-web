@@ -12,10 +12,8 @@ import {
   resolveClinicalSummary,
 } from "@/lib/clinical-summary";
 import { bilingual, type BilingualText, type Locale } from "@/lib/i18n";
-import {
-  getDoctorSummaryForAnalysis,
-  reportAnalysisInputType,
-} from "@/lib/report-result-utils";
+import { extractDocumentText } from "@/lib/report-document";
+import { reportAnalysisInputType } from "@/lib/report-result-utils";
 import { resolveSummaryAfterStream } from "@/lib/report-narrative-fallback";
 import type { Report, ReportResult } from "@/lib/types/api";
 
@@ -29,7 +27,7 @@ export function buildFullDocumentForSummary(
 ): string {
   const primary =
     documentText?.trim() ||
-    getDoctorSummaryForAnalysis(result, locale) ||
+    extractDocumentText(result) ||
     result.doctor_summary?.trim() ||
     "";
 

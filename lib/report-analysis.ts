@@ -3,6 +3,7 @@ import {
   hasMeaningfulClinicalSummary,
   resolveClinicalSummary,
 } from "@/lib/clinical-summary";
+import { repairAnalysisFromResult } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
@@ -50,15 +51,17 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
 
   if (result.summary_bilingual || result.summary?.trim()) {
     const summary = resolveClinicalSummary(result);
+    const doctorSummary =
+      result.doctor_summary_bilingual ?? bilingual("", "");
+    const repaired = repairAnalysisFromResult(summary, doctorSummary, result);
     const limitedAnalysis =
       !hasMeaningfulClinicalSummary(result) &&
       (result.key_findings?.length ?? 0) > 0 &&
       (result.confidence_score ?? 1) <= 0.5;
 
     return {
-      summary,
-      doctorSummary:
-        result.doctor_summary_bilingual ?? bilingual("", ""),
+      summary: repaired.summary,
+      doctorSummary: repaired.doctor,
       nextActions: result.next_actions_bilingual ?? {
         en: result.next_actions,
         id: result.next_actions.map((a) => enrichRecommendation(a, "id").title),

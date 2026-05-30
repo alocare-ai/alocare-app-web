@@ -53,21 +53,18 @@ export function useReportAiAnalysis({
     try {
       let workingResult = result;
 
+      let ocrDocument = "";
       if (
         !(workingResult.doctor_summary?.trim() ||
           workingResult.doctor_summary_bilingual?.en?.trim()) &&
         (workingResult.key_findings?.length ?? 0) === 0
       ) {
-        const ocrText = await runOcrStream(reportId, () => {});
-        if (ocrText.trim()) {
-          workingResult = {
-            ...workingResult,
-            doctor_summary: ocrText,
-          };
-        }
+        ocrDocument = (await runOcrStream(reportId, () => {})).trim();
       }
 
-      const documentText = buildFullDocumentForSummary(workingResult, locale);
+      const documentText =
+        ocrDocument ||
+        buildFullDocumentForSummary(workingResult, locale);
 
       const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
         report,

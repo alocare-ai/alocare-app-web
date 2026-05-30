@@ -100,6 +100,50 @@ export function buildClinicalNarrativeFromDocument(
   return `Document summary for ${patient}. Excerpt: ${excerpt}…`;
 }
 
+/** Short clinician-oriented summary — distinct from clinical narrative. */
+export function buildDoctorSummaryFromDocument(
+  document: string,
+  locale: Locale,
+): string {
+  const metrics: string[] = [];
+  for (const { label, re, unit } of LAB_PATTERNS) {
+    const m = document.match(re);
+    if (m) metrics.push(`${label} ${m[1]} ${unit}`);
+  }
+  const patient =
+    extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
+
+  if (isLabReport(document) && metrics.length > 0) {
+    const list = metrics.slice(0, 6).join(", ");
+    if (locale === "id") {
+      return (
+        `${patient} menjalani panel kimia. Temuan utama: ${list}. ` +
+        "Risiko kardiovaskular perlu ditinjau bersama riwayat, gejala, dan target terapi."
+      );
+    }
+    return (
+      `${patient} underwent a chemistry panel. Key values: ${list}. ` +
+      "Cardiovascular risk should be reviewed with history, symptoms, and treatment goals."
+    );
+  }
+
+  if (STRESS_PATTERNS.some((p) => p.re.test(document))) {
+    return buildStressNarrative(document, locale).split("\n\n")[0] ?? "";
+  }
+
+  const excerpt = document.replace(/\s+/g, " ").slice(0, 320);
+  if (locale === "id") {
+    return (
+      `Ringkasan singkat untuk ${patient}: ${excerpt}… ` +
+      "Tinjau dokumen lengkap untuk interpretasi klinis."
+    );
+  }
+  return (
+    `Brief summary for ${patient}: ${excerpt}… ` +
+    "Review the full document for clinical interpretation."
+  );
+}
+
 export function resolveSummaryAfterStream(
   streamSummary: string,
   document: string,
