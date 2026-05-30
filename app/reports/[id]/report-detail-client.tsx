@@ -278,7 +278,6 @@ export function ReportDetailClient({
             <RecommendationList items={recommendations} lang={locale} />
             <DoctorReviewPanel
               lang={locale}
-              showConfidenceScore={false}
               onSubmit={(data) => validateMutation.mutate(data)}
             />
           </section>
