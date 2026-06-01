@@ -12,6 +12,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
+import { PatientAccountCard } from "@/components/patient-account-card";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocale } from "@/hooks/use-locale";
 import { getWorklist } from "@/lib/api/patients";
@@ -19,9 +20,11 @@ import { getWorklist } from "@/lib/api/patients";
 export default function DashboardPage() {
   const { locale } = useLocale();
   const { data: user } = useAuth();
+  const isPatient = user?.role === "PATIENT";
   const { data: worklist, isLoading } = useQuery({
     queryKey: ["worklist"],
     queryFn: getWorklist,
+    enabled: !isPatient,
   });
 
   const pending =
@@ -29,20 +32,33 @@ export default function DashboardPage() {
   const inProgress =
     worklist?.items.filter((i) => i.status === "in_progress").length ?? 0;
 
-  const quickActions = [
-    {
-      href: "/reports/upload",
-      en: "Upload report",
-      id: "Unggah laporan",
-    },
-    { href: "/chat", en: "Ask AI", id: "Tanya AI" },
-    {
-      href: "/telemedicine/new",
-      en: "Start consultation",
-      id: "Mulai konsultasi",
-    },
-    { href: "/patients", en: "View patients", id: "Lihat pasien" },
-  ];
+  const quickActions = isPatient
+    ? [
+        { href: "/my-health", en: "My health portal", id: "Portal kesehatan" },
+        {
+          href: user?.patient_id
+            ? `/patients/${user.patient_id}/health`
+            : "/my-health",
+          en: "Health intelligence",
+          id: "Intelijen kesehatan",
+        },
+        { href: "/reports/upload", en: "Upload checkup", id: "Unggah MCU" },
+        { href: "/chat", en: "Ask AI", id: "Tanya AI" },
+      ]
+    : [
+        {
+          href: "/reports/upload",
+          en: "Upload report",
+          id: "Unggah laporan",
+        },
+        { href: "/chat", en: "Ask AI", id: "Tanya AI" },
+        {
+          href: "/telemedicine/new",
+          en: "Start consultation",
+          id: "Mulai konsultasi",
+        },
+        { href: "/patients", en: "View patients", id: "Lihat pasien" },
+      ];
 
   return (
     <AppShell>
@@ -60,6 +76,11 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {isPatient && user ? (
+          <PatientAccountCard user={user} locale={locale} compact />
+        ) : null}
+
+        {!isPatient ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <MetricCard
             title={locale === "id" ? "Menunggu review" : "Pending review"}
@@ -78,6 +99,7 @@ export default function DashboardPage() {
             value={user?.role ?? "—"}
           />
         </div>
+        ) : null}
 
         <Card>
           <CardHeader>
@@ -96,6 +118,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
+        {!isPatient ? (
         <Card>
           <CardHeader>
             <CardTitle>
@@ -130,6 +153,7 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+        ) : null}
 
         <div className="grid gap-3 sm:grid-cols-2">
           <SystemHealthBadge variant="privacy" />

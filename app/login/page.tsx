@@ -17,6 +17,7 @@ import { useLocale } from "@/hooks/use-locale";
 import { login, logout } from "@/lib/api/auth";
 import { isAuthSessionError, sessionErrorMessage } from "@/lib/auth/session";
 import { ApiError } from "@/lib/api/client";
+import { getPostLoginPath } from "@/lib/auth/post-login";
 
 function LoginForm() {
   const { locale, setLocale } = useLocale();
@@ -46,7 +47,9 @@ function LoginForm() {
       await logout();
       const user = await login(email, password);
       queryClient.setQueryData(["me"], user);
-      router.push(from);
+      const destination =
+        user.role === "PATIENT" ? getPostLoginPath(user, from) : from;
+      router.push(destination);
       router.refresh();
     } catch (err) {
       if (err instanceof ApiError && isAuthSessionError(err)) {
@@ -138,9 +141,20 @@ function LoginForm() {
             <p className="font-semibold">
               {locale === "id" ? "Akun demo" : "Demo account"}
             </p>
-            <p className="mt-1 text-blue-800">
-              doctor@alocare.net / doctor123
-            </p>
+            <ul className="mt-1 space-y-1 text-blue-800">
+              <li>
+                <span className="font-medium">
+                  {locale === "id" ? "Dokter: " : "Clinician: "}
+                </span>
+                doctor@alocare.net / doctor123
+              </li>
+              <li>
+                <span className="font-medium">
+                  {locale === "id" ? "Pasien: " : "Patient: "}
+                </span>
+                patient@alocare.net / patient123
+              </li>
+            </ul>
             {process.env.NODE_ENV === "development" ? (
               <p className="mt-2 text-xs text-blue-700">
                 API: {apiUrl}

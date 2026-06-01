@@ -89,8 +89,17 @@ export function AppShell({ children, user: userProp }: AppShellProps) {
                 <span className="min-w-0 truncate text-sm font-semibold text-slate-900 max-[380px]:hidden min-[381px]:block sm:max-w-[10rem]">
                   {user.full_name}
                 </span>
+                {user.role === "PATIENT" && user.patient?.mrn ? (
+                  <span className="hidden text-xs text-slate-500 md:inline">
+                    MRN {user.patient.mrn}
+                  </span>
+                ) : null}
                 <Badge variant="info" className="hidden shrink-0 lg:inline-flex">
-                  {user.role.replace("_", " ")}
+                  {user.role === "PATIENT"
+                    ? locale === "id"
+                      ? "Pasien"
+                      : "Patient"
+                    : user.role.replace("_", " ")}
                 </Badge>
               </Link>
             ) : isError ? (

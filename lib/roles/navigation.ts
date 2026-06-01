@@ -13,9 +13,9 @@ const NAV: Record<string, { en: string; id: string; href: string }> = {
   chat: { en: "AI Chat", id: "Chat AI", href: "/chat" },
   patients: { en: "Patients", id: "Pasien", href: "/patients" },
   healthIntel: {
-    en: "Health Intelligence",
-    id: "Intelijen Kesehatan",
-    href: "/patients",
+    en: "My Health",
+    id: "Kesehatan Saya",
+    href: "/my-health",
   },
   enterprise: { en: "Enterprise", id: "Perusahaan", href: "/enterprise" },
   telemedicine: { en: "Telemedicine", id: "Telemedisin", href: "/telemedicine/new" },
@@ -51,7 +51,12 @@ export function getDefaultNavItems(): NavItem[] {
 
 export function getNavItemsForRole(role: UserRole): NavItem[] {
   if (role === "PATIENT") {
-    return [item("myReports"), item("healthIntel"), item("chat"), item("history")];
+    return [
+      item("healthIntel"),
+      item("myReports"),
+      item("chat"),
+      item("settings"),
+    ];
   }
 
   if (HR_ROLES.includes(role)) {
@@ -86,5 +91,8 @@ export function isNavActive(href: string, pathname: string): boolean {
   if (href === "/dashboard") return pathname === "/dashboard";
   if (href === "/reports/upload") return pathname.startsWith("/reports");
   if (href === "/telemedicine/new") return pathname.startsWith("/telemedicine");
+  if (href === "/my-health") {
+    return pathname === "/my-health" || pathname.endsWith("/health");
+  }
   return pathname === href || pathname.startsWith(`${href}/`);
 }

@@ -35,12 +35,27 @@ export interface TokenResponse {
   token_type: string;
 }
 
+/** Patient record linked to a PATIENT-role portal login. */
+export interface PatientAccountSummary {
+  id: string;
+  full_name: string;
+  mrn: string | null;
+  date_of_birth: string | null;
+  gender: string | null;
+  phone: string | null;
+  insurance_provider: string | null;
+  allergies: string | null;
+  medical_alerts: string | null;
+}
+
 export interface UserProfile {
   id: string;
   email: string;
   full_name: string;
   role: UserRole;
   tenant_id: string | null;
+  patient_id?: string | null;
+  patient?: PatientAccountSummary | null;
 }
 
 export interface Report {

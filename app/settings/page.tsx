@@ -7,6 +7,7 @@ import {
   LanguageSwitcher,
 } from "@alocare/design-system";
 import { AppShell } from "@/components/app-shell";
+import { PatientAccountCard } from "@/components/patient-account-card";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocale } from "@/hooks/use-locale";
 
@@ -59,6 +60,10 @@ export default function SettingsPage() {
             {locale === "id" ? "Pengaturan" : "Settings"}
           </h1>
         </div>
+
+        {user?.role === "PATIENT" ? (
+          <PatientAccountCard user={user} locale={locale} />
+        ) : null}
 
         {sections.map((section) => (
           <Card key={section.title}>
