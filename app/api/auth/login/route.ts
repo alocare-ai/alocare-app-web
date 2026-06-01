@@ -10,18 +10,24 @@ const COOKIE_OPTS = {
 };
 
 export async function POST(request: NextRequest) {
+  const { email, password } = (await request.json()) as {
+    email: string;
+    password: string;
+  };
+
+  const client = createApiClient();
+  let tokens: { access_token: string; refresh_token: string };
   try {
-    const { email, password } = (await request.json()) as {
-      email: string;
-      password: string;
-    };
+    const loginRes = await client.post("/auth/login", { email, password });
+    tokens = loginRes.data;
+  } catch {
+    return NextResponse.json(
+      { error: "Invalid email or password" },
+      { status: 401 },
+    );
+  }
 
-    const client = createApiClient();
-    const { data: tokens } = await client.post("/auth/login", {
-      email,
-      password,
-    });
-
+  try {
     const authed = createApiClient(tokens.access_token);
     const { data: user } = await authed.get("/users/me");
 
@@ -38,8 +44,11 @@ export async function POST(request: NextRequest) {
     return response;
   } catch {
     return NextResponse.json(
-      { error: "Invalid email or password" },
-      { status: 401 },
+      {
+        error:
+          "Sign-in succeeded but your profile could not be loaded. Please try again or contact support.",
+      },
+      { status: 503 },
     );
   }
 }

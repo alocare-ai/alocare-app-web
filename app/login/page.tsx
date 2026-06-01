@@ -15,7 +15,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { BrandLogo } from "@/components/brand-logo";
 import { useLocale } from "@/hooks/use-locale";
 import { login, logout } from "@/lib/api/auth";
-import { isAuthSessionError, sessionErrorMessage } from "@/lib/auth/session";
+import {
+  isAuthSessionError,
+  profileLoadErrorMessage,
+  sessionErrorMessage,
+} from "@/lib/auth/session";
 import { ApiError } from "@/lib/api/client";
 import { getPostLoginPath } from "@/lib/auth/post-login";
 
@@ -52,7 +56,9 @@ function LoginForm() {
       router.push(destination);
       router.refresh();
     } catch (err) {
-      if (err instanceof ApiError && isAuthSessionError(err)) {
+      if (err instanceof ApiError && err.status === 503) {
+        setError(profileLoadErrorMessage(locale));
+      } else if (err instanceof ApiError && isAuthSessionError(err)) {
         setError(sessionErrorMessage(locale, "session"));
       } else {
         setError(sessionErrorMessage(locale));
