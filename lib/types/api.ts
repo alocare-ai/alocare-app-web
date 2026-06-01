@@ -146,3 +146,90 @@ export interface AuditLog {
   timestamp?: string;
   details?: string;
 }
+
+export interface HealthProfile {
+  id: string;
+  patient_id: string;
+  height_cm: number | null;
+  weight_kg: number | null;
+  bmi: number | null;
+  activity_level: string | null;
+  sleep_hours_avg: number | null;
+  family_history: string | null;
+  chronic_conditions: string | null;
+  current_medications: string | null;
+  dietary_preferences: string | null;
+  health_goals: string | null;
+  biological_age: number | null;
+  intelligence_summary: string | null;
+  intelligence_generated_at: string | null;
+}
+
+export interface BiomarkerTrendPoint {
+  observed_at: string;
+  value: number;
+  value_text: string;
+  status: string;
+  report_id: string | null;
+}
+
+export interface BiomarkerTrend {
+  code: string;
+  name: string;
+  unit: string | null;
+  reference_low: number | null;
+  reference_high: number | null;
+  points: BiomarkerTrendPoint[];
+  change_percent: number | null;
+  direction: string | null;
+  insight_en: string | null;
+  insight_id: string | null;
+  projected_breach_months: number | null;
+}
+
+export interface RiskAssessment {
+  id: string;
+  condition: string;
+  condition_label: string;
+  score: number;
+  tier: string;
+  factors: string[];
+  narrative: string | null;
+  computed_at: string;
+}
+
+export interface ActionPlanItem {
+  id: string;
+  week_number: number;
+  category: string;
+  title: string;
+  description: string | null;
+  status: string;
+  due_date: string | null;
+}
+
+export interface ActionPlan {
+  id: string;
+  patient_id: string;
+  title: string;
+  program_type: string;
+  status: string;
+  focus_areas: string[];
+  start_date: string | null;
+  end_date: string | null;
+  items: ActionPlanItem[];
+  progress_percent: number;
+}
+
+export interface HealthIntelligenceDashboard {
+  patient_id: string;
+  profile: HealthProfile | null;
+  report_count: number;
+  biomarker_trends: BiomarkerTrend[];
+  risk_assessments: RiskAssessment[];
+  action_plans: ActionPlan[];
+  longitudinal_summary: string | null;
+  key_insights: string[];
+  concierge_level: number;
+  generated_at: string | null;
+}

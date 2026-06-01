@@ -12,6 +12,11 @@ const NAV: Record<string, { en: string; id: string; href: string }> = {
   reports: { en: "Reports", id: "Laporan", href: "/reports/upload" },
   chat: { en: "AI Chat", id: "Chat AI", href: "/chat" },
   patients: { en: "Patients", id: "Pasien", href: "/patients" },
+  healthIntel: {
+    en: "Health Intelligence",
+    id: "Intelijen Kesehatan",
+    href: "/patients",
+  },
   enterprise: { en: "Enterprise", id: "Perusahaan", href: "/enterprise" },
   telemedicine: { en: "Telemedicine", id: "Telemedisin", href: "/telemedicine/new" },
   settings: { en: "Settings", id: "Pengaturan", href: "/settings" },
@@ -46,7 +51,7 @@ export function getDefaultNavItems(): NavItem[] {
 
 export function getNavItemsForRole(role: UserRole): NavItem[] {
   if (role === "PATIENT") {
-    return [item("myReports"), item("chat"), item("history")];
+    return [item("myReports"), item("healthIntel"), item("chat"), item("history")];
   }
 
   if (HR_ROLES.includes(role)) {
@@ -67,6 +72,7 @@ export function getNavItemsForRole(role: UserRole): NavItem[] {
     item("dashboard"),
     item("reports"),
     item("patients"),
+    item("healthIntel"),
     item("chat"),
     item("telemedicine"),
   ];
