@@ -17,9 +17,12 @@ export async function login(
     const body = (await res.json().catch(() => ({}))) as {
       error?: string;
       detail?: string;
+      hint?: string;
+      code?: string;
     };
     const message = body.error ?? body.detail ?? "Login failed";
-    throw new ApiError(message, res.status, message);
+    const detail = body.hint ? `${message}\n\n${body.hint}` : message;
+    throw new ApiError(message, res.status, detail);
   }
 
   const body = (await res.json()) as LoginResult;

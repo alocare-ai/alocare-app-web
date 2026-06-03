@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
-import { createApiClient } from "@/lib/api/client";
+import {
+  upstreamFailureResponse,
+  upstreamGetJson,
+  upstreamPostJson,
+} from "@/lib/api/upstream";
+import type { TokenResponse, UserProfile } from "@/lib/types/api";
 
 const COOKIE_OPTS = {
   httpOnly: true,
@@ -15,40 +20,45 @@ export async function POST(request: NextRequest) {
     password: string;
   };
 
-  const client = createApiClient();
-  let tokens: { access_token: string; refresh_token: string };
-  try {
-    const loginRes = await client.post("/auth/login", { email, password });
-    tokens = loginRes.data;
-  } catch {
-    return NextResponse.json(
-      { error: "Invalid email or password" },
-      { status: 401 },
-    );
+  const loginResult = await upstreamPostJson<TokenResponse>("/auth/login", {
+    email,
+    password,
+  });
+
+  if (!loginResult.ok) {
+    return upstreamFailureResponse(loginResult.failure);
   }
 
-  try {
-    const authed = createApiClient(tokens.access_token);
-    const { data: user } = await authed.get("/users/me");
+  const tokens = loginResult.data;
+  const profileResult = await upstreamGetJson<UserProfile>(
+    "/users/me",
+    tokens.access_token,
+  );
 
-    const response = NextResponse.json({ ok: true, user });
-    response.cookies.set(AUTH_COOKIES.access, tokens.access_token, {
-      ...COOKIE_OPTS,
-      maxAge: 60 * 60,
-    });
-    response.cookies.set(AUTH_COOKIES.refresh, tokens.refresh_token, {
-      ...COOKIE_OPTS,
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    return response;
-  } catch {
+  if (!profileResult.ok) {
+    const failure = profileResult.failure;
     return NextResponse.json(
       {
         error:
-          "Sign-in succeeded but your profile could not be loaded. Please try again or contact support.",
+          failure.kind === "invalid_credentials"
+            ? "Sign-in succeeded but your session was rejected. Please try again."
+            : "Sign-in succeeded but your profile could not be loaded. Please try again or contact support.",
+        code: failure.kind,
+        ...(failure.hint ? { hint: failure.hint } : {}),
       },
       { status: 503 },
     );
   }
+
+  const response = NextResponse.json({ ok: true, user: profileResult.data });
+  response.cookies.set(AUTH_COOKIES.access, tokens.access_token, {
+    ...COOKIE_OPTS,
+    maxAge: 60 * 60,
+  });
+  response.cookies.set(AUTH_COOKIES.refresh, tokens.refresh_token, {
+    ...COOKIE_OPTS,
+    maxAge: 60 * 60 * 24 * 7,
+  });
+
+  return response;
 }

@@ -56,10 +56,14 @@ function LoginForm() {
       router.push(destination);
       router.refresh();
     } catch (err) {
-      if (err instanceof ApiError && err.status === 503) {
+      if (err instanceof ApiError && err.detail && err.status !== 401) {
+        setError(err.detail);
+      } else if (err instanceof ApiError && err.status === 503) {
         setError(profileLoadErrorMessage(locale));
       } else if (err instanceof ApiError && isAuthSessionError(err)) {
         setError(sessionErrorMessage(locale, "session"));
+      } else if (err instanceof ApiError && err.message) {
+        setError(err.message);
       } else {
         setError(sessionErrorMessage(locale));
       }
@@ -120,7 +124,7 @@ function LoginForm() {
             />
 
             {error ? (
-              <p className="text-sm text-red-600" role="alert">
+              <p className="whitespace-pre-line text-sm text-red-600" role="alert">
                 {error}
               </p>
             ) : null}

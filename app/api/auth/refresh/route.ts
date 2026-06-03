@@ -1,7 +1,11 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
-import { createApiClient } from "@/lib/api/client";
+import {
+  upstreamFailureResponse,
+  upstreamPostJson,
+} from "@/lib/api/upstream";
+import type { TokenResponse } from "@/lib/types/api";
 
 const COOKIE_OPTS = {
   httpOnly: true,
@@ -18,24 +22,24 @@ export async function POST() {
     return NextResponse.json({ error: "No refresh token" }, { status: 401 });
   }
 
-  try {
-    const client = createApiClient();
-    const { data } = await client.post("/auth/refresh", {
-      refresh_token: refresh,
-    });
+  const refreshResult = await upstreamPostJson<TokenResponse>("/auth/refresh", {
+    refresh_token: refresh,
+  });
 
-    const response = NextResponse.json(data);
-    response.cookies.set(AUTH_COOKIES.access, data.access_token, {
-      ...COOKIE_OPTS,
-      maxAge: 60 * 60,
-    });
-    response.cookies.set(AUTH_COOKIES.refresh, data.refresh_token, {
-      ...COOKIE_OPTS,
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
-    return response;
-  } catch {
-    return NextResponse.json({ error: "Refresh failed" }, { status: 401 });
+  if (!refreshResult.ok) {
+    return upstreamFailureResponse(refreshResult.failure);
   }
+
+  const data = refreshResult.data;
+  const response = NextResponse.json(data);
+  response.cookies.set(AUTH_COOKIES.access, data.access_token, {
+    ...COOKIE_OPTS,
+    maxAge: 60 * 60,
+  });
+  response.cookies.set(AUTH_COOKIES.refresh, data.refresh_token, {
+    ...COOKIE_OPTS,
+    maxAge: 60 * 60 * 24 * 7,
+  });
+
+  return response;
 }
