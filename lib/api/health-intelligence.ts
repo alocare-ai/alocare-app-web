@@ -65,3 +65,9 @@ export async function updateActionPlanItem(
     body: JSON.stringify({ status }),
   });
 }
+
+export async function getHealthTimeline(patientId: string, locale = "en") {
+  return apiFetch(
+    `/patients/${patientId}/timeline?locale=${encodeURIComponent(locale)}`,
+  );
+}

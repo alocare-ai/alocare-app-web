@@ -22,6 +22,8 @@ const NAV: Record<string, { en: string; id: string; href: string }> = {
   settings: { en: "Settings", id: "Pengaturan", href: "/settings" },
   myReports: { en: "My Reports", id: "Laporan Saya", href: "/reports/upload" },
   history: { en: "History", id: "Riwayat", href: "/dashboard" },
+  myHealth: { en: "My Health", id: "Kesehatan Saya", href: "/health" },
+  reviewQueue: { en: "Review queue", id: "Antrian review", href: "/review" },
 };
 
 function item(key: keyof typeof NAV): NavItem {
@@ -75,6 +77,7 @@ export function getNavItemsForRole(role: UserRole): NavItem[] {
 
   return [
     item("dashboard"),
+    item("reviewQueue"),
     item("reports"),
     item("patients"),
     item("healthIntel"),
@@ -94,5 +97,6 @@ export function isNavActive(href: string, pathname: string): boolean {
   if (href === "/my-health") {
     return pathname === "/my-health" || pathname.endsWith("/health");
   }
+  if (href === "/review") return pathname.startsWith("/review");
   return pathname === href || pathname.startsWith(`${href}/`);
 }

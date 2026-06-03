@@ -48,6 +48,19 @@ export interface PatientAccountSummary {
   medical_alerts: string | null;
 }
 
+export interface EarlyWarning {
+  code: string;
+  severity: string;
+  message: string;
+  change_percent?: number | null;
+}
+
+export interface DashboardActionItem {
+  title: string;
+  category: string;
+  priority: string;
+}
+
 export interface UserProfile {
   id: string;
   email: string;
@@ -240,9 +253,16 @@ export interface HealthIntelligenceDashboard {
   patient_id: string;
   profile: HealthProfile | null;
   report_count: number;
+  health_score?: number | null;
+  risk_indicators?: string[];
   biomarker_trends: BiomarkerTrend[];
   risk_assessments: RiskAssessment[];
   action_plans: ActionPlan[];
+  action_items?: DashboardActionItem[];
+  early_warnings?: EarlyWarning[];
+  recent_uploads?: string[];
+  ai_recommendations?: string[];
+  upcoming_tests?: string[];
   longitudinal_summary: string | null;
   key_insights: string[];
   concierge_level: number;
