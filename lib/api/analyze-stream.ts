@@ -1,4 +1,6 @@
 import { ApiError } from "@/lib/api/client";
+import { shouldUseUpstreamRewriteUpload } from "@/lib/api/public-api-base";
+import { fetchUploadCredentials } from "@/lib/api/upload-credentials";
 
 export {
   analyzeStreamEventToProgress,
@@ -55,28 +57,67 @@ function parseSseChunk(chunk: string): AnalyzeStreamEvent | null {
   return null;
 }
 
+function analyzeStreamBody(data: AnalyzeStreamRequest): string {
+  return JSON.stringify({
+    sessionId: data.sessionId,
+    reportId: data.reportId,
+    content: data.content,
+    inputType: data.inputType ?? "pdf",
+    preferredLanguage: data.preferredLanguage ?? "en",
+    patientReference: data.patientReference,
+  });
+}
+
+/** Production: stream directly to api.alocare.net (avoids Vercel serverless timeouts on long SSE). */
+async function openAnalyzeStream(
+  data: AnalyzeStreamRequest,
+  signal?: AbortSignal,
+): Promise<Response> {
+  const body = analyzeStreamBody(data);
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "text/event-stream",
+  };
+
+  if (shouldUseUpstreamRewriteUpload()) {
+    const { apiUrl, accessToken } = await fetchUploadCredentials();
+    return fetch(`${apiUrl.replace(/\/$/, "")}/ai/analyze/stream`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body,
+      signal,
+    });
+  }
+
+  return fetch("/api/ai/analyze/stream", {
+    method: "POST",
+    credentials: "include",
+    headers,
+    body,
+    signal,
+  });
+}
+
 export async function streamAnalyze(
   data: AnalyzeStreamRequest,
   handlers: AnalyzeStreamHandlers,
   signal?: AbortSignal,
 ): Promise<AnalyzeStreamEvent> {
-  const res = await fetch("/api/ai/analyze/stream", {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "text/event-stream",
-    },
-    body: JSON.stringify({
-      sessionId: data.sessionId,
-      reportId: data.reportId,
-      content: data.content,
-      inputType: data.inputType ?? "pdf",
-      preferredLanguage: data.preferredLanguage ?? "en",
-      patientReference: data.patientReference,
-    }),
-    signal,
-  });
+  let res: Response;
+  try {
+    res = await openAnalyzeStream(data, signal);
+  } catch (err) {
+    if (err instanceof TypeError) {
+      throw new ApiError(
+        "Could not reach the AI analysis service. Check your connection and try again.",
+        0,
+      );
+    }
+    throw err;
+  }
 
   if (!res.ok) {
     let detail: string | undefined;
@@ -137,7 +178,10 @@ export async function streamAnalyze(
 
   if (lastComplete) return lastComplete;
 
-  throw new Error("AI analyze stream ended without a complete event");
+  throw new ApiError(
+    "AI analysis ended before completion. The connection may have timed out — try again with fewer or smaller files.",
+    0,
+  );
 }
 
 export function runAnalyzeStream(

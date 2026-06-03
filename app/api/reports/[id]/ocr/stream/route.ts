@@ -3,6 +3,9 @@ import { cookies } from "next/headers";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { getApiUpstreamBase } from "@/lib/api/upstream";
 
+export const maxDuration = 300;
+export const runtime = "nodejs";
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },

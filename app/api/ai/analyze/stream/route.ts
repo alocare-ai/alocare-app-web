@@ -3,6 +3,10 @@ import { cookies } from "next/headers";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { getApiUpstreamBase } from "@/lib/api/upstream";
 
+/** Long-running SSE proxy (production analyze uses direct API from the browser). */
+export const maxDuration = 300;
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
   const jar = await cookies();
   const access = jar.get(AUTH_COOKIES.access)?.value;
