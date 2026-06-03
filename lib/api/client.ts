@@ -24,11 +24,11 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiFetch<T>(
+async function backendFetch(
   path: string,
   options: RequestInit = {},
-): Promise<T> {
-  const res = await fetch(`/api/backend${path}`, {
+): Promise<Response> {
+  return fetch(`/api/backend${path}`, {
     ...options,
     credentials: "include",
     headers: {
@@ -36,6 +36,23 @@ export async function apiFetch<T>(
       ...options.headers,
     },
   });
+}
+
+export async function apiFetch<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  let res = await backendFetch(path, options);
+
+  if (res.status === 401) {
+    const refreshed = await fetch("/api/auth/refresh", {
+      method: "POST",
+      credentials: "include",
+    });
+    if (refreshed.ok) {
+      res = await backendFetch(path, options);
+    }
+  }
 
   if (!res.ok) {
     let detail: string | undefined;

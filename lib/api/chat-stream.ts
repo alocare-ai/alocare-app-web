@@ -1,4 +1,5 @@
 import { ApiError } from "@/lib/api/client";
+import { refreshSessionCookies } from "@/lib/auth/refresh-session";
 import type { Locale } from "@/lib/i18n";
 
 export type ChatStreamStep = "started" | "token" | "complete" | "error";
@@ -44,6 +45,8 @@ export async function streamReportChat(
   handlers: ChatStreamHandlers,
   signal?: AbortSignal,
 ): Promise<ChatStreamEvent> {
+  await refreshSessionCookies();
+
   const res = await fetch("/api/ai/chat/stream", {
     method: "POST",
     credentials: "include",
