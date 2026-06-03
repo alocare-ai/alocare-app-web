@@ -351,7 +351,7 @@ export function ReportDetailClient({
             <ClinicalSummarySection
               summary={summary}
               locale={locale}
-              loading={!hasSummary || aiSummaryGenerating}
+              loading={!hasSummary && isAnalyzing}
               fileAnalyses={fileAnalyses}
               patientFields={clinicalSummaryPatientFields}
             />

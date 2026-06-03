@@ -245,16 +245,13 @@ const STAGE_PHASES: Record<AiPipelineStage, AiAnalysisPhase[]> = {
   saving: AI_SAVING_PHASES,
 };
 
-const PROGRESS_BAND: Record<
-  ReportPipelineStep,
+const STAGE_PROGRESS_BAND: Record<
+  AiPipelineStage,
   { start: number; end: number }
 > = {
-  uploaded: { start: 0, end: 10 },
-  ocr: { start: 10, end: 55 },
-  analyzing: { start: 55, end: 68 },
-  generating_summary: { start: 68, end: 86 },
-  saving_results: { start: 86, end: 98 },
-  completed: { start: 100, end: 100 },
+  prep: { start: 55, end: 68 },
+  generating: { start: 68, end: 86 },
+  saving: { start: 86, end: 98 },
 };
 
 export type AiAnalysisProgressState = {
@@ -266,16 +263,9 @@ export type AiAnalysisProgressState = {
 };
 
 export function pipelineStepFromAiProgress(
-  state: AiAnalysisProgressState,
+  _state: AiAnalysisProgressState,
 ): ReportPipelineStep {
-  switch (state.stage) {
-    case "prep":
-      return "analyzing";
-    case "generating":
-      return "generating_summary";
-    case "saving":
-      return "saving_results";
-  }
+  return "analyzing";
 }
 
 export function phaseLabel(phase: AiAnalysisPhase, locale: Locale): string {
@@ -373,14 +363,7 @@ function stageProgressPercent(
   phaseIndex: number,
   phaseCount: number,
 ): number {
-  const step = pipelineStepFromAiProgress({
-    stage,
-    phaseIndex,
-    phases: STAGE_PHASES[stage],
-    detail: "",
-    progress: 0,
-  });
-  const band = PROGRESS_BAND[step];
+  const band = STAGE_PROGRESS_BAND[stage];
   if (phaseCount <= 1) return band.end;
   const ratio = phaseIndex / (phaseCount - 1);
   return Math.round(band.start + ratio * (band.end - band.start));

@@ -7,6 +7,7 @@ import {
 } from "@alocare/design-system";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "@/components/app-shell";
 import { UploadedFileRow } from "@/components/uploaded-file-row";
 import {
@@ -16,6 +17,7 @@ import {
 import { useLocale } from "@/hooks/use-locale";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
+import { mergeAnalyzeResponseIntoResult } from "@/lib/clinical-summary";
 import { pipelineStepFromAiProgress } from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
 import { runOcrStream } from "@/lib/api/ocr-stream";
@@ -56,6 +58,7 @@ function formatFileSize(bytes: number): string {
 export default function UploadReportPage() {
   const { locale } = useLocale();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [dropState, setDropState] = useState<UploadDropzoneState>("empty");
   const [report, setReport] = useState<Report | null>(null);
   const [uploadedFiles, setUploadedFiles] = useState<ReportUploadedFile[]>([]);
@@ -187,21 +190,35 @@ export default function UploadReportPage() {
         setStep(pipelineStepFromAiProgress(state));
       };
 
+      const resultForAnalysis: ReportResult = {
+        id: report.id,
+        status: report.status,
+        summary: null,
+        doctor_summary: fileContent,
+        next_actions: [],
+      };
+
       try {
-        await generateClinicalSummaryFromAI({
+        const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
           report,
           reportId,
           locale,
           documentText: fileContent,
           fileCount,
           onProgress: handleAiProgress,
-          result: {
-            id: report.id,
-            status: report.status,
-            summary: null,
-            doctor_summary: fileContent,
-            next_actions: [],
-          } satisfies ReportResult,
+          result: resultForAnalysis,
+        });
+
+        const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {
+          summaryBilingual: summary,
+          doctorSummary: analyzeExtras?.doctorSummary,
+          nextActions: analyzeExtras?.nextActions,
+        });
+
+        queryClient.setQueryData(["report-result", reportId], merged);
+        queryClient.setQueryData(["report", reportId], {
+          ...report,
+          status: "completed",
         });
       } catch (analysisErr) {
         const message =
@@ -228,7 +245,7 @@ export default function UploadReportPage() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [isBusy, locale, report, reportId, router, uploadedFiles]);
+  }, [isBusy, locale, queryClient, report, reportId, router, uploadedFiles]);
 
   const pipelineStep = step === "idle" ? "uploaded" : step;
 

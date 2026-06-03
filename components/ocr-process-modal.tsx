@@ -46,15 +46,7 @@ function stepLabels(locale: Locale): Record<
     },
     analyzing: {
       title: locale === "id" ? "Analisis AI" : "AI analysis",
-      done: locale === "id" ? "Konteks siap" : "Context prepared",
-    },
-    generating_summary: {
-      title: locale === "id" ? "Ringkasan klinis" : "Clinical summary",
-      done: locale === "id" ? "Ringkasan dihasilkan" : "Summary generated",
-    },
-    saving_results: {
-      title: locale === "id" ? "Menyimpan hasil" : "Saving results",
-      done: locale === "id" ? "Hasil tersimpan" : "Results saved",
+      done: locale === "id" ? "Ringkasan klinis siap" : "Clinical summary ready",
     },
     completed: {
       title: locale === "id" ? "Selesai" : "Complete",
@@ -94,20 +86,6 @@ function activeDetail(
           ? "Memulai analisis AI…"
           : "Starting AI analysis…")
       );
-    case "generating_summary":
-      return (
-        aiProgress?.detail ??
-        (locale === "id"
-          ? "Menghasilkan ringkasan klinis…"
-          : "Generating clinical summary…")
-      );
-    case "saving_results":
-      return (
-        aiProgress?.detail ??
-        (locale === "id"
-          ? "Menyimpan hasil analisis…"
-          : "Saving analysis results…")
-      );
     case "completed":
       return locale === "id"
         ? "Membuka laporan…"
@@ -128,12 +106,6 @@ function overallProgress(
   }
   if (step === "analyzing") {
     return aiProgress?.progress ?? 60;
-  }
-  if (step === "generating_summary") {
-    return aiProgress?.progress ?? 75;
-  }
-  if (step === "saving_results") {
-    return aiProgress?.progress ?? 90;
   }
   if (step === "completed") return 100;
   if (step === "uploaded") return 10;
@@ -293,18 +265,10 @@ export function OcrProcessModal({
     Boolean(ocrFilesProgress?.files.some((f) => f.status === "error"));
   const progress = overallProgress(step, ocrFilesProgress, ocrEvent, aiProgress);
   const isFinished = step === "completed" && !hasError;
-  const aiSubstepSteps: ReportPipelineStep[] = [
-    "analyzing",
-    "generating_summary",
-    "saving_results",
-  ];
   const showAiSubsteps =
-    aiSubstepSteps.includes(step) &&
+    step === "analyzing" &&
     aiProgress &&
-    !hasError &&
-    ((step === "analyzing" && aiProgress.stage === "prep") ||
-      (step === "generating_summary" && aiProgress.stage === "generating") ||
-      (step === "saving_results" && aiProgress.stage === "saving"));
+    !hasError;
   const aiSubsteps = showAiSubsteps
     ? getAiPhaseStatuses(
         aiProgress.phases,
@@ -409,17 +373,9 @@ export function OcrProcessModal({
                         aiSubsteps ? (
                           <AiAnalysisSubsteps
                             ariaLabel={
-                              key === "generating_summary"
-                                ? locale === "id"
-                                  ? "Langkah ringkasan klinis"
-                                  : "Clinical summary steps"
-                                : key === "saving_results"
-                                  ? locale === "id"
-                                    ? "Langkah menyimpan hasil"
-                                    : "Saving results steps"
-                                  : locale === "id"
-                                    ? "Langkah analisis AI"
-                                    : "AI analysis steps"
+                              locale === "id"
+                                ? "Langkah analisis AI"
+                                : "AI analysis steps"
                             }
                             phases={aiProgress.phases}
                             activeIndex={aiProgress.phaseIndex}

@@ -67,6 +67,9 @@ export function reportNeedsAiClinicalSummary(
 ): boolean {
   if (!report || report.status === "failed") return false;
   if (hasMeaningfulClinicalSummary(result)) return false;
+  if (report.status === "completed" || report.status === "validated") {
+    return false;
+  }
   if (hasDoctorSummaryContent(result)) return true;
   if ((result?.key_findings?.length ?? 0) > 0) return true;
   return report.status === "uploaded" || report.status === "processing";

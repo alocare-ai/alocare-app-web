@@ -17,6 +17,8 @@ type ClinicalSummarySectionProps = {
   summary: BilingualText;
   locale: Locale;
   loading?: boolean;
+  /** Shown under the spinner while loading (defaults to analysis-in-progress copy). */
+  loadingMessage?: string;
   className?: string;
   fileAnalyses?: ReportFileAnalysis[];
   patientFields?: PatientDisplayField[];
@@ -26,10 +28,15 @@ export function ClinicalSummarySection({
   summary,
   locale,
   loading = false,
+  loadingMessage,
   className,
   fileAnalyses = [],
   patientFields = [],
 }: ClinicalSummarySectionProps) {
+  const defaultLoadingMessage =
+    locale === "id"
+      ? "Analisis sedang berlangsung…"
+      : "Analysis in progress…";
   const sectionTitle =
     locale === "id" ? "Ringkasan Klinis" : "Clinical Summary";
   const summaryText = pickLocaleText(summary, locale);
@@ -94,9 +101,7 @@ export function ClinicalSummarySection({
             <div className="flex items-center gap-2 py-4">
               <Spinner />
               <span className="text-sm text-slate-500">
-                {locale === "id"
-                  ? "Menghasilkan ringkasan…"
-                  : "Generating summary…"}
+                {loadingMessage ?? defaultLoadingMessage}
               </span>
             </div>
           ) : (
