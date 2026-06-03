@@ -1,7 +1,6 @@
 /**
- * Same-origin path rewritten to alocare-api (see next.config.ts).
- * Must NOT live under /api/* — Vercel still applies the 4.5 MB function
- * payload limit to /api routes even when using rewrites.
+ * Same-origin streaming proxy to alocare-api (app/upstream-api route).
+ * Must NOT live under /api/* — Vercel applies the 4.5 MB limit to /api routes.
  */
 export const UPSTREAM_UPLOAD_PREFIX = "/upstream-api";
 

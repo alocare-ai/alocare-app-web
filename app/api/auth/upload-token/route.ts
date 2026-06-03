@@ -4,8 +4,7 @@ import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { getPublicApiBase } from "@/lib/api/public-api-base";
 
 /**
- * Exposes the httpOnly access token for browser uploads via /upstream-api rewrite
- * (production) or /api/backend BFF (local dev).
+ * Exposes the httpOnly access token for browser uploads (direct API or /upstream-api).
  */
 export async function GET() {
   const jar = await cookies();

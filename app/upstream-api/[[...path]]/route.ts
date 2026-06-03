@@ -1,7 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getApiUpstreamBase } from "@/lib/api/upstream";
+import {
+  getApiUpstreamBase,
+  getUpstreamMisconfigurationHint,
+} from "@/lib/api/upstream";
 
 export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const maxDuration = 60;
 
 type RouteContext = { params: Promise<{ path?: string[] }> };
 
@@ -9,8 +14,14 @@ async function proxyToApi(
   request: NextRequest,
   pathSegments: string[],
 ): Promise<NextResponse> {
+  const upstreamBase = getApiUpstreamBase();
+  const misconfigured = getUpstreamMisconfigurationHint(upstreamBase);
+  if (misconfigured) {
+    return NextResponse.json({ detail: misconfigured }, { status: 503 });
+  }
+
   const path = pathSegments.join("/");
-  const url = `${getApiUpstreamBase()}/${path}${request.nextUrl.search}`;
+  const url = `${upstreamBase}/${path}${request.nextUrl.search}`;
 
   const headers = new Headers();
   const auth = request.headers.get("authorization");

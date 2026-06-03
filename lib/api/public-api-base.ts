@@ -1,14 +1,26 @@
 const DEFAULT_API = "https://api.alocare.net";
 
+function normalizePublicApiBase(raw: string): string {
+  const base = raw.replace(/\/$/, "");
+  try {
+    if (new URL(base).hostname.toLowerCase() === "app.alocare.net") {
+      return DEFAULT_API;
+    }
+  } catch {
+    return DEFAULT_API;
+  }
+  return base;
+}
+
 /** Browser-facing alocare-api base URL (from NEXT_PUBLIC_API_URL). */
 export function getPublicApiBase(): string {
   const trimmed = process.env.NEXT_PUBLIC_API_URL?.trim();
   const base = trimmed && trimmed.length > 0 ? trimmed : DEFAULT_API;
-  return base.replace(/\/$/, "");
+  return normalizePublicApiBase(base);
 }
 
 /**
- * Production: `/upstream-api/*` rewrite → API (one file per request, ≤ 4.5 MB each).
+ * Production: direct POST to api.alocare.net (CORS), fallback `/upstream-api` route.
  * Development: `/api/backend/*` BFF with httpOnly cookies.
  */
 export function shouldUseUpstreamRewriteUpload(): boolean {

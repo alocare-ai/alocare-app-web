@@ -11,9 +11,11 @@ import {
   VERCEL_MAX_UPLOAD_BYTES,
 } from "@/lib/api/upload-proxy-path";
 import {
+  directUploadNetworkError,
   fetchUploadCredentials,
   parseDirectUploadError,
   proxiedUploadNetworkError,
+  resolveDirectUploadApiBase,
 } from "./upload-credentials";
 
 export async function createReport(data: {
@@ -60,8 +62,41 @@ function assertFileWithinUploadLimit(file: File): void {
   }
 }
 
-/** Production: same-origin rewrite → API (one multipart request). */
-async function uploadReportFilesViaUpstreamRewrite(
+/** Production: browser → api.alocare.net (requires CORS on API). */
+async function uploadReportFilesDirectApi(
+  reportId: string,
+  files: File[],
+): Promise<ReportUploadResult> {
+  const credentials = await fetchUploadCredentials();
+  const apiBase = resolveDirectUploadApiBase(credentials);
+  const url = `${apiBase}/reports/${reportId}/upload`;
+
+  const form = new FormData();
+  for (const file of files) {
+    form.append("files", file);
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${credentials.accessToken}` },
+      body: form,
+    });
+  } catch (err) {
+    if (err instanceof TypeError) throw err;
+    throw new Error(directUploadNetworkError(err, apiBase));
+  }
+
+  if (!res.ok) {
+    throw new Error(await parseDirectUploadError(res));
+  }
+
+  return res.json() as Promise<ReportUploadResult>;
+}
+
+/** Production fallback: same-origin streaming proxy (no Vercel /api/* limit). */
+async function uploadReportFilesViaAppProxy(
   reportId: string,
   files: File[],
 ): Promise<ReportUploadResult> {
@@ -91,6 +126,20 @@ async function uploadReportFilesViaUpstreamRewrite(
   return res.json() as Promise<ReportUploadResult>;
 }
 
+async function uploadOneFileProduction(
+  reportId: string,
+  file: File,
+): Promise<ReportUploadResult> {
+  try {
+    return await uploadReportFilesDirectApi(reportId, [file]);
+  } catch (err) {
+    if (err instanceof TypeError) {
+      return uploadReportFilesViaAppProxy(reportId, [file]);
+    }
+    throw err;
+  }
+}
+
 export async function uploadReportFiles(
   reportId: string,
   files: File[],
@@ -106,7 +155,7 @@ export async function uploadReportFiles(
   if (shouldUseUpstreamRewriteUpload()) {
     let last: ReportUploadResult | undefined;
     for (const file of files) {
-      last = await uploadReportFilesViaUpstreamRewrite(reportId, [file]);
+      last = await uploadOneFileProduction(reportId, file);
     }
     return last!;
   }

@@ -17,10 +17,27 @@ const siblingDesignSystem = fs.existsSync(
 const monorepoRoot = path.join(__dirname, "..");
 
 const isDev = process.env.NODE_ENV === "development";
-const apiRewriteBase =
-  process.env.API_REWRITE_URL ??
-  (isDev ? "http://127.0.0.1:8080" : process.env.NEXT_PUBLIC_API_URL) ??
-  "http://127.0.0.1:8080";
+const PRODUCTION_API = "https://api.alocare.net";
+
+/** Build-time base for /v1/* rewrites only. Uploads use app/upstream-api route (runtime env). */
+function resolveApiRewriteBase(): string {
+  const explicit = process.env.API_REWRITE_URL?.trim();
+  if (explicit) return explicit.replace(/\/$/, "");
+  if (isDev) return "http://127.0.0.1:8080";
+  const pub = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (pub) {
+    try {
+      const host = new URL(pub).hostname.toLowerCase();
+      if (host === "app.alocare.net") return PRODUCTION_API;
+      return pub.replace(/\/$/, "");
+    } catch {
+      /* fall through */
+    }
+  }
+  return PRODUCTION_API;
+}
+
+const apiRewriteBase = resolveApiRewriteBase();
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@alocare/design-system"],
@@ -28,13 +45,6 @@ const nextConfig: NextConfig = {
   async rewrites() {
     const apiBase = apiRewriteBase.replace(/\/$/, "");
     return {
-      /** Must run before App Router filesystem — array rewrites only run afterFiles and 404. */
-      beforeFiles: [
-        {
-          source: "/upstream-api/:path*",
-          destination: `${apiBase}/:path*`,
-        },
-      ],
       afterFiles: [
         {
           source: "/v1/:path*",

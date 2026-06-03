@@ -8,7 +8,15 @@ const PRODUCTION_API_DEFAULT = "https://api.alocare.net";
 function normalizeBaseUrl(raw: string | undefined, fallback: string): string {
   const trimmed = raw?.trim();
   const base = trimmed && trimmed.length > 0 ? trimmed : fallback;
-  return base.replace(/\/$/, "");
+  const normalized = base.replace(/\/$/, "");
+  try {
+    if (new URL(normalized).hostname.toLowerCase() === "app.alocare.net") {
+      return PRODUCTION_API_DEFAULT;
+    }
+  } catch {
+    return fallback;
+  }
+  return normalized;
 }
 
 export function getApiUpstreamBase(): string {
