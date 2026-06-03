@@ -1,8 +1,8 @@
-import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import {
-  analyzeStreamEventToProgress,
-  runAnalyzeStream,
-} from "@/lib/api/analyze-stream";
+  createAiAnalysisProgressController,
+  type AiAnalysisProgressState,
+} from "@/lib/ai-analysis-progress";
+import { runAnalyzeStream } from "@/lib/api/analyze-stream";
 import { createAISession } from "@/lib/api/chat";
 import { getReportResult } from "@/lib/api/reports";
 import {
@@ -80,112 +80,117 @@ export async function generateClinicalSummaryFromAI(params: {
     preferred_language: params.locale,
   });
 
-  params.onProgress?.(
-    analyzeStreamEventToProgress(
-      {
-        step: "started",
-        progress: 5,
-        message:
-          params.locale === "id"
-            ? "Membuat sesi AI…"
-            : "Creating AI session…",
-      },
-      params.locale,
-      document.length,
-    ),
-  );
+  const progressCtrl = params.onProgress
+    ? createAiAnalysisProgressController(params.locale, params.onProgress, {
+        contentLength: document.length,
+        creepIntervalMs: 2600,
+      })
+    : null;
 
-  const complete = await runAnalyzeStream(
-    {
-      sessionId: session.id,
-      reportId: params.reportId,
-      content: document,
-      inputType: reportAnalysisInputType(params.report),
-      preferredLanguage: params.locale,
-    },
-    (event) => {
-      params.onProgress?.(
-        analyzeStreamEventToProgress(event, params.locale, document.length),
-      );
-    },
-  );
-
-  const streamSummary = (complete.summary ?? "").trim();
-  const streamDoctor = complete.doctorSummary?.trim();
-  const streamActions = complete.nextActions ?? [];
-
-  const sectionCount = splitDocumentSections(document).length;
-  const fileCount =
-    params.fileCount ?? (sectionCount > 1 ? sectionCount : 1);
-
-  const narrativeEn = resolveSummaryAfterStream(
-    params.locale === "en" ? streamSummary : "",
-    document,
-    "en",
-    fileCount,
-  );
-  const narrativeId = resolveSummaryAfterStream(
-    params.locale === "id" ? streamSummary : "",
-    document,
-    "id",
-    fileCount,
-  );
-  const rejectStreamVendorFraming =
-    fileCount > 1 && isFramedAsSingleVendorReport(streamSummary);
-
-  let summary: BilingualText = bilingual(narrativeEn, narrativeId);
-  if (
-    streamSummary &&
-    !isPlaceholderClinicalSummary(streamSummary) &&
-    !rejectStreamVendorFraming
-  ) {
-    summary =
-      params.locale === "en"
-        ? bilingual(streamSummary, narrativeId)
-        : bilingual(narrativeEn, streamSummary);
-  }
+  progressCtrl?.fromEvent({
+    step: "started",
+    progress: 5,
+    message:
+      params.locale === "id"
+        ? "Membuat sesi AI…"
+        : "Creating AI session…",
+  });
 
   try {
-    const fresh = await getReportResult(params.reportId);
-    const resolved = resolveClinicalSummary(fresh);
-    const rejectPersistedVendorFraming =
-      fileCount > 1 && isFramedAsSingleVendorReport(resolved.en);
+    const complete = await runAnalyzeStream(
+      {
+        sessionId: session.id,
+        reportId: params.reportId,
+        content: document,
+        inputType: reportAnalysisInputType(params.report),
+        preferredLanguage: params.locale,
+      },
+      (event) => {
+        progressCtrl?.fromEvent(event);
+      },
+    );
+
+    progressCtrl?.finish();
+
+    const streamSummary = (complete.summary ?? "").trim();
+    const streamDoctor = complete.doctorSummary?.trim();
+    const streamActions = complete.nextActions ?? [];
+
+    const sectionCount = splitDocumentSections(document).length;
+    const fileCount =
+      params.fileCount ?? (sectionCount > 1 ? sectionCount : 1);
+
+    const narrativeEn = resolveSummaryAfterStream(
+      params.locale === "en" ? streamSummary : "",
+      document,
+      "en",
+      fileCount,
+    );
+    const narrativeId = resolveSummaryAfterStream(
+      params.locale === "id" ? streamSummary : "",
+      document,
+      "id",
+      fileCount,
+    );
+    const rejectStreamVendorFraming =
+      fileCount > 1 && isFramedAsSingleVendorReport(streamSummary);
+
+    let summary: BilingualText = bilingual(narrativeEn, narrativeId);
     if (
-      !isPlaceholderClinicalSummary(resolved.en) &&
-      !rejectPersistedVendorFraming
+      streamSummary &&
+      !isPlaceholderClinicalSummary(streamSummary) &&
+      !rejectStreamVendorFraming
     ) {
-      summary = bilingual(resolved.en, summary.id || resolved.id || resolved.en);
+      summary =
+        params.locale === "en"
+          ? bilingual(streamSummary, narrativeId)
+          : bilingual(narrativeEn, streamSummary);
     }
-    if (
-      !isPlaceholderClinicalSummary(resolved.id) &&
-      !(fileCount > 1 && isFramedAsSingleVendorReport(resolved.id))
-    ) {
-      summary = bilingual(summary.en || resolved.en, resolved.id);
+
+    try {
+      const fresh = await getReportResult(params.reportId);
+      const resolved = resolveClinicalSummary(fresh);
+      const rejectPersistedVendorFraming =
+        fileCount > 1 && isFramedAsSingleVendorReport(resolved.en);
+      if (
+        !isPlaceholderClinicalSummary(resolved.en) &&
+        !rejectPersistedVendorFraming
+      ) {
+        summary = bilingual(resolved.en, summary.id || resolved.id || resolved.en);
+      }
+      if (
+        !isPlaceholderClinicalSummary(resolved.id) &&
+        !(fileCount > 1 && isFramedAsSingleVendorReport(resolved.id))
+      ) {
+        summary = bilingual(summary.en || resolved.en, resolved.id);
+      }
+    } catch {
+      /* use narrative from stream + document */
     }
-  } catch {
-    /* use narrative from stream + document */
-  }
 
-  if (isPlaceholderClinicalSummary(summary.en)) {
-    summary = bilingual(narrativeEn, summary.id);
-  }
-  if (isPlaceholderClinicalSummary(summary.id)) {
-    summary = bilingual(summary.en, narrativeId);
-  }
+    if (isPlaceholderClinicalSummary(summary.en)) {
+      summary = bilingual(narrativeEn, summary.id);
+    }
+    if (isPlaceholderClinicalSummary(summary.id)) {
+      summary = bilingual(summary.en, narrativeId);
+    }
 
-  const en = summary.en.trim();
-  const id = summary.id.trim();
-  if (isUnusableStreamSummary(en) && isUnusableStreamSummary(id)) {
-    throw new Error("Could not build a clinical summary from this report");
-  }
+    const en = summary.en.trim();
+    const id = summary.id.trim();
+    if (isUnusableStreamSummary(en) && isUnusableStreamSummary(id)) {
+      throw new Error("Could not build a clinical summary from this report");
+    }
 
-  return {
-    summary,
-    analyzeExtras: {
-      doctorSummary: streamDoctor || undefined,
-      nextActions: streamActions.length ? streamActions : undefined,
-    },
-  };
+    return {
+      summary,
+      analyzeExtras: {
+        doctorSummary: streamDoctor || undefined,
+        nextActions: streamActions.length ? streamActions : undefined,
+      },
+    };
+  } finally {
+    progressCtrl?.stop();
+  }
 }
 
 /** Apply stream output to an in-memory result (e.g. upload flow cache). */

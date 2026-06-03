@@ -1,13 +1,25 @@
+import type { AnalyzeStreamEvent, AnalyzeStreamStep } from "@/lib/api/analyze-stream";
 import type { Locale } from "@/lib/i18n";
 
 export type AiAnalysisPhaseId =
   | "session"
   | "context"
-  | "findings"
-  | "summary"
-  | "doctor"
-  | "bilingual"
-  | "scoring"
+  | "sections"
+  | "terminology"
+  | "labs"
+  | "vitals"
+  | "entities"
+  | "correlate"
+  | "narrative"
+  | "physician"
+  | "recommendations"
+  | "patient_note"
+  | "bilingual_en"
+  | "bilingual_id"
+  | "findings_list"
+  | "risk"
+  | "confidence"
+  | "validate"
   | "saving";
 
 export type AiAnalysisPhase = {
@@ -28,29 +40,84 @@ export const BASE_AI_PHASES: AiAnalysisPhase[] = [
     idLabel: "Meninjau teks laporan yang diekstrak",
   },
   {
-    id: "findings",
+    id: "sections",
+    en: "Parsing report sections and file boundaries",
+    idLabel: "Mengurai bagian laporan dan batas berkas",
+  },
+  {
+    id: "terminology",
+    en: "Normalizing medical terms and units",
+    idLabel: "Menormalkan istilah dan satuan medis",
+  },
+  {
+    id: "labs",
+    en: "Extracting laboratory values and reference ranges",
+    idLabel: "Mengekstrak nilai laboratorium dan rentang referensi",
+  },
+  {
+    id: "vitals",
+    en: "Reviewing vitals and screening scores",
+    idLabel: "Meninjau tanda vital dan skor skrining",
+  },
+  {
+    id: "entities",
     en: "Identifying key clinical findings",
     idLabel: "Mengidentifikasi temuan klinis utama",
   },
   {
-    id: "summary",
+    id: "correlate",
+    en: "Correlating abnormal results across files",
+    idLabel: "Mengkorelasikan hasil abnormal antar berkas",
+  },
+  {
+    id: "narrative",
     en: "Drafting clinical summary for clinicians",
     idLabel: "Menyusun ringkasan klinis untuk klinisi",
   },
   {
-    id: "doctor",
+    id: "physician",
+    en: "Preparing physician summary highlights",
+    idLabel: "Menyiapkan sorotan ringkasan untuk dokter",
+  },
+  {
+    id: "recommendations",
     en: "Preparing doctor summary and care recommendations",
     idLabel: "Menyiapkan ringkasan dokter dan rekomendasi perawatan",
   },
   {
-    id: "bilingual",
-    en: "Generating English and Indonesian summaries",
-    idLabel: "Menghasilkan ringkasan bahasa Inggris dan Indonesia",
+    id: "patient_note",
+    en: "Drafting patient-friendly explanation",
+    idLabel: "Menyusun penjelasan yang mudah dipahami pasien",
   },
   {
-    id: "scoring",
+    id: "bilingual_en",
+    en: "Generating English clinical narrative",
+    idLabel: "Menghasilkan narasi klinis bahasa Inggris",
+  },
+  {
+    id: "bilingual_id",
+    en: "Generating Indonesian clinical narrative",
+    idLabel: "Menghasilkan narasi klinis bahasa Indonesia",
+  },
+  {
+    id: "findings_list",
+    en: "Structuring key findings for clinician review",
+    idLabel: "Menyusun temuan utama untuk tinjauan klinisi",
+  },
+  {
+    id: "risk",
+    en: "Assessing clinical risk indicators",
+    idLabel: "Menilai indikator risiko klinis",
+  },
+  {
+    id: "confidence",
     en: "Calculating confidence score and risk indicator",
     idLabel: "Menghitung skor kepercayaan dan indikator risiko",
+  },
+  {
+    id: "validate",
+    en: "Validating and formatting AI output",
+    idLabel: "Memvalidasi dan memformat keluaran AI",
   },
   {
     id: "saving",
@@ -58,6 +125,9 @@ export const BASE_AI_PHASES: AiAnalysisPhase[] = [
     idLabel: "Menyimpan hasil analisis ke laporan Anda",
   },
 ];
+
+const GENERATING_PHASE_START = 8;
+const GENERATING_PHASE_END = 16;
 
 export type AiAnalysisProgressState = {
   phaseIndex: number;
@@ -105,7 +175,118 @@ export function analyzingProgressFromServer(
   return Math.round(Math.max(fromPhase, fromServer));
 }
 
+export function phaseIndexFromAnalyzeStep(
+  step: AnalyzeStreamStep,
+  serverProgress = 0,
+): number {
+  const last = BASE_AI_PHASES.length - 1;
+  switch (step) {
+    case "started":
+      return 0;
+    case "entities":
+      return 6;
+    case "generating": {
+      const p = Math.max(32, Math.min(88, serverProgress || 32));
+      const ratio = (p - 32) / (88 - 32);
+      return Math.round(
+        GENERATING_PHASE_START +
+          ratio * (GENERATING_PHASE_END - GENERATING_PHASE_START),
+      );
+    }
+    case "parsing":
+      return 17;
+    case "complete":
+      return last;
+    case "error":
+      return 0;
+    default:
+      return 0;
+  }
+}
+
+export function analyzeStreamEventToProgress(
+  event: AnalyzeStreamEvent,
+  locale: Locale,
+  contentLength = 0,
+): AiAnalysisProgressState {
+  const phaseIndex = phaseIndexFromAnalyzeStep(event.step, event.progress ?? 0);
+  const phase = BASE_AI_PHASES[phaseIndex] ?? BASE_AI_PHASES[0];
+  const detail =
+    event.message?.trim() ||
+    buildAiProgressDetail(phase, locale, contentLength);
+
+  const serverPct = event.progress ?? 0;
+  const progress =
+    event.step === "complete"
+      ? 92
+      : analyzingProgressFromServer(serverPct, phaseIndex);
+
+  return {
+    phaseIndex,
+    phases: BASE_AI_PHASES,
+    detail,
+    progress,
+  };
+}
+
 export type AiAnalysisProgressCallback = (state: AiAnalysisProgressState) => void;
+
+/** Gradually advance substeps while the analyze stream runs (never moves backward). */
+export function createAiAnalysisProgressController(
+  locale: Locale,
+  onProgress: AiAnalysisProgressCallback,
+  options?: { contentLength?: number; creepIntervalMs?: number },
+): {
+  fromEvent: (event: AnalyzeStreamEvent) => void;
+  finish: () => void;
+  stop: () => void;
+} {
+  const phases = BASE_AI_PHASES;
+  const charCount = options?.contentLength ?? 0;
+  let highWater = 0;
+
+  const emit = (index: number, detail?: string) => {
+    const clamped = Math.min(Math.max(index, 0), phases.length - 1);
+    if (clamped < highWater) return;
+    highWater = clamped;
+    const phase = phases[highWater];
+    onProgress({
+      phaseIndex: highWater,
+      phases,
+      detail: detail ?? buildAiProgressDetail(phase, locale, charCount),
+      progress: analyzingProgress(highWater, phases.length),
+    });
+  };
+
+  emit(0);
+
+  const creepIntervalMs = options?.creepIntervalMs ?? 2800;
+  const timer = setInterval(() => {
+    if (highWater < phases.length - 2) {
+      emit(highWater + 1);
+    }
+  }, creepIntervalMs);
+
+  return {
+    fromEvent: (event) => {
+      const idx = phaseIndexFromAnalyzeStep(event.step, event.progress ?? 0);
+      const detail =
+        event.message?.trim() ||
+        buildAiProgressDetail(
+          phases[idx] ?? phases[0],
+          locale,
+          charCount,
+        );
+      const merged = Math.max(highWater, idx);
+      emit(merged, detail);
+      if (event.step === "complete") {
+        emit(phases.length - 1, detail);
+      }
+    },
+    finish: () => emit(phases.length - 1),
+    stop: () => clearInterval(timer),
+  };
+}
 
 export async function runWithAiAnalysisProgress<T>(
   locale: Locale,
@@ -146,12 +327,10 @@ export async function runWithAiAnalysisProgress<T>(
     );
   };
 
-  schedule(800, 1);
-  schedule(2400, 2);
-  schedule(4200, 3);
-  schedule(6000, 4);
-  schedule(7800, 5);
-  schedule(9600, 6);
+  const stagger = 2200;
+  for (let i = 1; i < phases.length - 1; i++) {
+    schedule(stagger * i, i);
+  }
 
   try {
     const result = await work(advance);

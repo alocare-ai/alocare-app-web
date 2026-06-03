@@ -1,11 +1,9 @@
-import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
-import {
-  BASE_AI_PHASES,
-  analyzingProgressFromServer,
-  buildAiProgressDetail,
-} from "@/lib/ai-analysis-progress";
-import type { Locale } from "@/lib/i18n";
 import { ApiError } from "@/lib/api/client";
+
+export {
+  analyzeStreamEventToProgress,
+  phaseIndexFromAnalyzeStep,
+} from "@/lib/ai-analysis-progress";
 
 export type AnalyzeStreamStep =
   | "started"
@@ -42,40 +40,6 @@ export type AnalyzeStreamHandlers = {
   onComplete: (event: AnalyzeStreamEvent) => void;
   onError: (message: string) => void;
 };
-
-const STEP_PHASE_INDEX: Record<AnalyzeStreamStep, number> = {
-  started: 0,
-  entities: 2,
-  generating: 3,
-  parsing: 4,
-  complete: 7,
-  error: 0,
-};
-
-export function analyzeStreamEventToProgress(
-  event: AnalyzeStreamEvent,
-  locale: Locale,
-  contentLength = 0,
-): AiAnalysisProgressState {
-  const phaseIndex = STEP_PHASE_INDEX[event.step] ?? 0;
-  const phase = BASE_AI_PHASES[phaseIndex] ?? BASE_AI_PHASES[0];
-  const detail =
-    event.message?.trim() ||
-    buildAiProgressDetail(phase, locale, contentLength);
-
-  const serverPct = event.progress ?? 0;
-  const progress =
-    event.step === "complete"
-      ? 92
-      : analyzingProgressFromServer(serverPct, phaseIndex);
-
-  return {
-    phaseIndex,
-    phases: BASE_AI_PHASES,
-    detail,
-    progress,
-  };
-}
 
 function parseSseChunk(chunk: string): AnalyzeStreamEvent | null {
   for (const line of chunk.split("\n")) {

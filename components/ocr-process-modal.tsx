@@ -227,7 +227,7 @@ export function OcrProcessModal({
       aria-modal="true"
       aria-labelledby="report-process-modal-title"
     >
-      <Card className="w-full max-w-md shadow-xl">
+      <Card className="w-full max-w-lg shadow-xl">
         <CardContent className="space-y-5 pt-6">
           <div className="min-w-0">
             <h2
@@ -280,7 +280,7 @@ export function OcrProcessModal({
                     </p>
                     {state === "active" ? (
                       <div className="mt-1 space-y-2">
-                        {!showOcrSubsteps ? (
+                        {!showOcrSubsteps && !aiSubsteps ? (
                           <p
                             className={`text-xs ${
                               hasError ? "text-red-600" : "text-slate-600"
@@ -306,7 +306,7 @@ export function OcrProcessModal({
                         ) : null}
                         {key === "analyzing" && aiProgress && aiSubsteps && !hasError ? (
                           <ul
-                            className="space-y-1 border-l-2 border-teal-200 pl-2.5"
+                            className="max-h-52 space-y-1 overflow-y-auto border-l-2 border-teal-200 py-0.5 pl-2.5 pr-1"
                             aria-label={
                               locale === "id"
                                 ? "Langkah analisis AI"
@@ -325,7 +325,21 @@ export function OcrProcessModal({
                                 }`}
                               >
                                 <SubstepMarker status={sub.status} />
-                                <span>{sub.label}</span>
+                                <span className="min-w-0 flex-1">
+                                  <span className="block leading-snug">
+                                    {sub.label}
+                                  </span>
+                                  {sub.status === "active" &&
+                                  aiProgress.detail ? (
+                                    <span
+                                      className="mt-0.5 block font-normal text-slate-600"
+                                      role="status"
+                                      aria-live="polite"
+                                    >
+                                      {aiProgress.detail}
+                                    </span>
+                                  ) : null}
+                                </span>
                               </li>
                             ))}
                           </ul>
