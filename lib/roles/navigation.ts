@@ -46,7 +46,6 @@ export function getDefaultNavItems(): NavItem[] {
     item("dashboard"),
     item("reports"),
     item("patients"),
-    item("chat"),
     item("settings"),
   ];
 }
@@ -56,7 +55,6 @@ export function getNavItemsForRole(role: UserRole): NavItem[] {
     return [
       item("healthIntel"),
       item("myReports"),
-      item("chat"),
       item("settings"),
     ];
   }
@@ -81,7 +79,6 @@ export function getNavItemsForRole(role: UserRole): NavItem[] {
     item("reports"),
     item("patients"),
     item("healthIntel"),
-    item("chat"),
     item("telemedicine"),
   ];
 }

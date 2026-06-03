@@ -2,24 +2,22 @@
 
 import {
   AIStatusBadge,
-  ClinicalSummaryCard,
-  ConfidenceScore,
-  DoctorReviewPanel,
-  KeyFindingCard,
   RecommendationList,
-  RiskIndicator,
   Spinner,
-  type ReviewFormData,
 } from "@alocare/design-system";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { getPatient } from "@/lib/api/patients";
 import { useMemo, type ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { DoctorSummaryCard } from "@/components/doctor-summary-card";
-import { ReportAssessmentPanel } from "@/components/report-assessment-panel";
-import { ReportFileCard } from "@/components/report-file-card";
+import { ClinicalSummarySection } from "@/components/clinical-summary-section";
+import { ReportFilesSection } from "@/components/report-files-section";
+import { ReportHeaderInsights } from "@/components/report-header-insights";
+import { ReportAddFilesButton } from "@/components/report-add-files-button";
+import { ReportAiChatFab } from "@/components/report-ai-chat-fab";
 import { useLocale } from "@/hooks/use-locale";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
-import { getReport, getReportResult, validateReport } from "@/lib/api/reports";
+import { getReport, getReportResult } from "@/lib/api/reports";
 import {
   hasDisplayableClinicalSummary,
   hasMeaningfulClinicalSummary,
@@ -27,20 +25,35 @@ import {
 import { repairClinicalSummary } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
 import { extractDocumentText } from "@/lib/report-document";
-import { buildReportAssessments } from "@/lib/report-assessments";
 import {
-  confidenceDescription,
   mapKeyFindings,
   parseReportResult,
-  pickDoctorSummaryText,
+  resolveDoctorSummaryForLocale,
+  pickLocaleText,
 } from "@/lib/report-analysis";
-import type { Report, ReportResult } from "@/lib/types/api";
+import { parseClinicalSummaryParts } from "@/lib/clinical-summary-display";
+import {
+  ageFromDateOfBirth,
+  buildReportPageHeading,
+  extractReportSubject,
+  patientDisplayFields,
+} from "@/lib/report-patient-heading";
+import {
+  buildReportChatMeta,
+  type ReportChatMeta,
+} from "@/lib/report-chat-context";
+import type {
+  Report,
+  ReportResult,
+  ReportUploadedFile,
+} from "@/lib/types/api";
 
 type ReportDetailClientProps = {
   reportId: string;
   initialReport: Report | null;
   initialResult: ReportResult | null;
   initialAnalyzing: boolean;
+  chatMeta: ReportChatMeta;
   analyzingBanner?: ReactNode;
 };
 
@@ -49,10 +62,10 @@ export function ReportDetailClient({
   initialReport,
   initialResult,
   initialAnalyzing,
+  chatMeta,
   analyzingBanner = null,
 }: ReportDetailClientProps) {
   const { locale } = useLocale();
-  const queryClient = useQueryClient();
 
   const { data: report, isLoading: reportLoading } = useQuery({
     queryKey: ["report", reportId],
@@ -65,6 +78,12 @@ export function ReportDetailClient({
       }
       return false;
     },
+  });
+
+  const { data: linkedPatient } = useQuery({
+    queryKey: ["patient", report?.patient_id],
+    queryFn: () => getPatient(report!.patient_id!),
+    enabled: Boolean(report?.patient_id),
   });
 
   const { data: result, isLoading: resultLoading } = useQuery({
@@ -88,15 +107,6 @@ export function ReportDetailClient({
     [result],
   );
 
-  const assessments = useMemo(
-    () =>
-      buildReportAssessments(
-        analysis?.keyFindings ?? [],
-        analysis ? pickDoctorSummaryText(analysis.doctorSummary, locale) : "",
-      ),
-    [analysis, locale],
-  );
-
   const {
     isAnalyzing: aiAnalysisRunning,
     isRunning: aiSummaryGenerating,
@@ -108,15 +118,6 @@ export function ReportDetailClient({
     report,
     result,
     locale,
-  });
-
-  const validateMutation = useMutation({
-    mutationFn: (data: ReviewFormData) =>
-      validateReport(reportId, data.comments),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["report", reportId] });
-      queryClient.invalidateQueries({ queryKey: ["report-result", reportId] });
-    },
   });
 
   const hasMeaningfulSummary = hasMeaningfulClinicalSummary(result);
@@ -139,8 +140,95 @@ export function ReportDetailClient({
             id: "Analisis sedang berlangsung…",
           });
     if (!result) return base;
-    return repairClinicalSummary(base, extractDocumentText(result));
+    return repairClinicalSummary(base, extractDocumentText(result), result);
   }, [aiSummary, analysis?.summary, hasMeaningfulSummary, result]);
+
+  const uploadedFiles = useMemo((): ReportUploadedFile[] => {
+    if (!report) return [];
+    if (result?.uploaded_files?.length) {
+      return result.uploaded_files;
+    }
+    const ref = report.file_reference?.trim();
+    if (!ref) {
+      return [{ filename: report.title, size_bytes: 0 }];
+    }
+    if (ref.includes(",")) {
+      return ref.split(",").map((name) => ({
+        filename: name.trim(),
+        size_bytes: 0,
+      }));
+    }
+    return [{ filename: ref, size_bytes: 0 }];
+  }, [report, result?.uploaded_files]);
+
+  const fileAnalyses = useMemo(
+    () => result?.file_analyses ?? [],
+    [result?.file_analyses],
+  );
+
+  const doctorText = useMemo(() => {
+    if (!analysis) return "";
+    return resolveDoctorSummaryForLocale(analysis.doctorSummary, locale, {
+      documentText: result ? extractDocumentText(result) : "",
+      fileCount: uploadedFiles.length,
+    });
+  }, [analysis, locale, result, uploadedFiles.length]);
+
+  const chatMetaResolved = useMemo(
+    () =>
+      report
+        ? buildReportChatMeta(report, result ?? null, locale)
+        : chatMeta,
+    [report, result, locale, chatMeta],
+  );
+
+  const reportSubject = useMemo(() => {
+    const clinicalText = summary ? pickLocaleText(summary, locale) : "";
+    const clinicalOverview = clinicalText
+      ? parseClinicalSummaryParts(clinicalText).overview
+      : "";
+    return extractReportSubject({
+      clinicalSummary: clinicalOverview || clinicalText,
+      doctorSummary: doctorText,
+      documentText: result ? extractDocumentText(result) : "",
+      fileAnalyses,
+      uploadedFilenames: uploadedFiles.map((f) => f.filename),
+      fileCount: uploadedFiles.length,
+      linkedPatient: linkedPatient
+        ? {
+            fullName: linkedPatient.full_name,
+            age: ageFromDateOfBirth(linkedPatient.date_of_birth),
+            gender: linkedPatient.gender,
+          }
+        : null,
+    });
+  }, [
+    summary,
+    locale,
+    doctorText,
+    result,
+    uploadedFiles,
+    fileAnalyses,
+    linkedPatient,
+  ]);
+
+  const pageHeading = useMemo(
+    () =>
+      buildReportPageHeading(reportSubject, locale, report?.title ?? "", {
+        fileCount: uploadedFiles.length,
+      }),
+    [reportSubject, locale, report?.title, uploadedFiles.length],
+  );
+
+  const clinicalSummaryPatientFields = useMemo(
+    () =>
+      patientDisplayFields(reportSubject, locale, {
+        fileCount: uploadedFiles.length,
+        mrn: linkedPatient?.mrn ?? null,
+        dateOfBirth: linkedPatient?.date_of_birth ?? null,
+      }),
+    [reportSubject, locale, uploadedFiles.length, linkedPatient],
+  );
 
   if ((reportLoading || resultLoading) && !report) {
     return (
@@ -162,21 +250,9 @@ export function ReportDetailClient({
     );
   }
 
-  const doctorText = analysis
-    ? pickDoctorSummaryText(analysis.doctorSummary, locale)
-    : "";
   const nextActions =
     analysis?.nextActions[locale] ?? analysis?.nextActions.en ?? [];
   const findings = mapKeyFindings(analysis?.keyFindings ?? []);
-  const confidencePercent =
-    analysis?.confidenceScore != null
-      ? Math.round(
-          analysis.confidenceScore <= 1
-            ? analysis.confidenceScore * 100
-            : analysis.confidenceScore,
-        )
-      : 0;
-  const riskLevel = analysis?.riskIndicator ?? "medium";
   const isImageReport = /\.(jpe?g|png|gif|webp|heic|bmp)$/i.test(
     report.file_reference ?? report.title ?? "",
   );
@@ -197,25 +273,34 @@ export function ReportDetailClient({
   return (
     <AppShell>
       <div className="space-y-6">
+        <ReportHeaderInsights locale={locale} keyFindings={findings} />
+
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h1 className="font-heading text-2xl font-bold text-slate-900">
-              {report.title}
+              {pageHeading.title}
             </h1>
-            <p className="mt-1 text-sm text-slate-600">
-              {locale === "id" ? "Hasil analisis AI" : "AI analysis result"}
-            </p>
+            <p className="mt-1 text-sm text-slate-600">{pageHeading.subtitle}</p>
           </div>
-          <AIStatusBadge
-            status={
-              report.status === "validated"
-                ? "review"
-                : report.status === "completed"
-                  ? "complete"
-                  : "processing"
-            }
-            lang={locale}
-          />
+          <div className="flex shrink-0 flex-col items-end gap-2">
+            <AIStatusBadge
+              status={
+                report.status === "validated"
+                  ? "review"
+                  : report.status === "completed"
+                    ? "complete"
+                    : "processing"
+              }
+              lang={locale}
+            />
+            <ReportAddFilesButton
+              reportId={reportId}
+              report={report}
+              result={result ?? null}
+              locale={locale}
+              disabled={isAnalyzing || aiSummaryGenerating}
+            />
+          </div>
         </div>
 
         {isAnalyzing ? analyzingBanner : null}
@@ -243,8 +328,13 @@ export function ReportDetailClient({
 
         <div className="grid gap-6 lg:grid-cols-3">
           <section className="space-y-4">
-            <ReportFileCard report={report} locale={locale} />
-            <ReportAssessmentPanel items={assessments} locale={locale} />
+            <ReportFilesSection
+              report={report}
+              reportId={reportId}
+              locale={locale}
+              uploadedFiles={uploadedFiles}
+              fileAnalyses={fileAnalyses}
+            />
           </section>
 
           <section className="space-y-4">
@@ -258,28 +348,19 @@ export function ReportDetailClient({
                   : "Image uploads cannot produce structured lab values yet. Use a text-based PDF or .txt for full analysis."}
               </div>
             ) : null}
-            <ClinicalSummaryCard
+            <ClinicalSummarySection
               summary={summary}
-              lang={locale}
+              locale={locale}
               loading={!hasSummary || aiSummaryGenerating}
-              className="[&_p]:whitespace-pre-wrap"
+              fileAnalyses={fileAnalyses}
+              patientFields={clinicalSummaryPatientFields}
             />
-            {findings.length > 0 && assessments.length === 0 ? (
-              <KeyFindingCard findings={findings} lang={locale} />
-            ) : hasSummary && !limitedAnalysis && findings.length === 0 ? (
+            {hasSummary && !limitedAnalysis && findings.length === 0 ? (
               <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
                 {locale === "id"
                   ? "Tidak ada temuan terstruktur pada dokumen ini."
                   : "No structured findings were detected in this document."}
               </div>
-            ) : null}
-            <ConfidenceScore
-              score={hasSummary ? confidencePercent : 0}
-              lang={locale}
-              description={confidenceDescription(locale, limitedAnalysis)}
-            />
-            {hasSummary && analysis?.riskIndicator ? (
-              <RiskIndicator level={riskLevel} lang={locale} />
             ) : null}
           </section>
 
@@ -287,14 +368,20 @@ export function ReportDetailClient({
             {doctorText ? (
               <DoctorSummaryCard text={doctorText} locale={locale} />
             ) : null}
-            <RecommendationList items={recommendations} lang={locale} />
-            <DoctorReviewPanel
-              lang={locale}
-              onSubmit={(data) => validateMutation.mutate(data)}
-            />
+            {recommendations.length > 0 ? (
+              <RecommendationList items={recommendations} lang={locale} />
+            ) : null}
           </section>
         </div>
       </div>
+
+      <ReportAiChatFab
+        reportId={reportId}
+        locale={locale}
+        sessionId={report.ai_session_id}
+        chatMeta={chatMetaResolved}
+        disabled={isAnalyzing || !hasSummary}
+      />
     </AppShell>
   );
 }

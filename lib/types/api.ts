@@ -93,6 +93,20 @@ export interface ReportKeyFinding {
   reference_range?: string | null;
 }
 
+export interface ReportUploadedFile {
+  filename: string;
+  size_bytes: number;
+}
+
+export interface ReportFileAnalysis {
+  filename: string;
+  size_bytes: number;
+  char_count: number;
+  extract_preview: string;
+  summary: BilingualStrings;
+  key_findings?: ReportKeyFinding[];
+}
+
 export interface ReportResult {
   id: string;
   status: ReportStatus;
@@ -105,6 +119,8 @@ export interface ReportResult {
   key_findings?: ReportKeyFinding[];
   confidence_score?: number | null;
   risk_indicator?: string | null;
+  uploaded_files?: ReportUploadedFile[];
+  file_analyses?: ReportFileAnalysis[];
 }
 
 export interface WorklistItem {

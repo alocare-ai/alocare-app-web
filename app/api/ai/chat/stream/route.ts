@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
   const body = await request.text();
 
-  const upstream = await fetch(`${getApiUpstreamBase()}/ai/analyze/stream`, {
+  const upstream = await fetch(`${getApiUpstreamBase()}/ai/chat/stream`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${access}`,
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   if (!upstream.ok || !upstream.body) {
     const detail = await upstream.text();
-    return new Response(detail || "AI analyze stream failed", {
+    return new Response(detail || "AI chat stream failed", {
       status: upstream.status,
     });
   }

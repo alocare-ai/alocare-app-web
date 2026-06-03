@@ -12,9 +12,14 @@ import {
   resolveClinicalSummary,
 } from "@/lib/clinical-summary";
 import { bilingual, type BilingualText, type Locale } from "@/lib/i18n";
+import {
+  buildBalancedDocumentExcerpt,
+  splitDocumentSections,
+} from "@/lib/document-sections";
 import { extractDocumentText } from "@/lib/report-document";
 import { reportAnalysisInputType } from "@/lib/report-result-utils";
 import { resolveSummaryAfterStream } from "@/lib/report-narrative-fallback";
+import { isFramedAsSingleVendorReport } from "@/lib/report-summary-framing";
 import type { Report, ReportResult } from "@/lib/types/api";
 
 const MAX_DOCUMENT_CHARS = 24_000;
@@ -34,7 +39,7 @@ export function buildFullDocumentForSummary(
   if (!primary) return "";
 
   if (primary.length > MAX_DOCUMENT_CHARS) {
-    return `${primary.slice(0, MAX_DOCUMENT_CHARS)}\n\n[Document truncated for analysis]`;
+    return buildBalancedDocumentExcerpt(primary, MAX_DOCUMENT_CHARS);
   }
 
   return primary;
@@ -51,6 +56,8 @@ export async function generateClinicalSummaryFromAI(params: {
   locale: Locale;
   /** Raw full-document text (e.g. from OCR) when available */
   documentText?: string;
+  /** When >1, fallbacks avoid labeling the whole upload as a single Airdoc report */
+  fileCount?: number;
   onProgress?: ClinicalSummaryAiProgress;
 }): Promise<{
   summary: BilingualText;
@@ -107,18 +114,31 @@ export async function generateClinicalSummaryFromAI(params: {
   const streamDoctor = complete.doctorSummary?.trim();
   const streamActions = complete.nextActions ?? [];
 
+  const sectionCount = splitDocumentSections(document).length;
+  const fileCount =
+    params.fileCount ?? (sectionCount > 1 ? sectionCount : 1);
+
   const narrativeEn = resolveSummaryAfterStream(
     params.locale === "en" ? streamSummary : "",
     document,
     "en",
+    fileCount,
   );
   const narrativeId = resolveSummaryAfterStream(
     params.locale === "id" ? streamSummary : "",
     document,
     "id",
+    fileCount,
   );
+  const rejectStreamVendorFraming =
+    fileCount > 1 && isFramedAsSingleVendorReport(streamSummary);
+
   let summary: BilingualText = bilingual(narrativeEn, narrativeId);
-  if (streamSummary && !isPlaceholderClinicalSummary(streamSummary)) {
+  if (
+    streamSummary &&
+    !isPlaceholderClinicalSummary(streamSummary) &&
+    !rejectStreamVendorFraming
+  ) {
     summary =
       params.locale === "en"
         ? bilingual(streamSummary, narrativeId)
@@ -128,10 +148,18 @@ export async function generateClinicalSummaryFromAI(params: {
   try {
     const fresh = await getReportResult(params.reportId);
     const resolved = resolveClinicalSummary(fresh);
-    if (!isPlaceholderClinicalSummary(resolved.en)) {
+    const rejectPersistedVendorFraming =
+      fileCount > 1 && isFramedAsSingleVendorReport(resolved.en);
+    if (
+      !isPlaceholderClinicalSummary(resolved.en) &&
+      !rejectPersistedVendorFraming
+    ) {
       summary = bilingual(resolved.en, summary.id || resolved.id || resolved.en);
     }
-    if (!isPlaceholderClinicalSummary(resolved.id)) {
+    if (
+      !isPlaceholderClinicalSummary(resolved.id) &&
+      !(fileCount > 1 && isFramedAsSingleVendorReport(resolved.id))
+    ) {
       summary = bilingual(summary.en || resolved.en, resolved.id);
     }
   } catch {

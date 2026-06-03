@@ -66,12 +66,21 @@ export function useReportAiAnalysis({
         ocrDocument ||
         buildFullDocumentForSummary(workingResult, locale);
 
+      const fileCount = Math.max(
+        workingResult.uploaded_files?.length ?? 0,
+        report.file_reference?.includes(",")
+          ? report.file_reference.split(",").length
+          : 0,
+        1,
+      );
+
       const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
         report,
         result: workingResult,
         reportId,
         locale,
         documentText: documentText || undefined,
+        fileCount,
       });
 
       if (runId !== runIdRef.current) return;

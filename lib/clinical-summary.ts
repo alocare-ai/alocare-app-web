@@ -1,12 +1,10 @@
 import { bilingual, type BilingualText } from "@/lib/i18n";
 import { enrichRecommendation } from "@/lib/recommendation-details";
 import { looksEnglish, looksIndonesian } from "@/lib/locale-detect";
-import {
-  localizeClinicalEnToId,
-  localizeDoctorEnToId,
-} from "@/lib/localize-summary";
-import { buildDoctorSummaryFromDocument } from "@/lib/report-narrative-fallback";
+import { localizeClinicalEnToId } from "@/lib/localize-summary";
+import { resolveDoctorSummaryForLocale } from "@/lib/doctor-summary-locale";
 import { extractDocumentText } from "@/lib/report-document";
+import { effectiveReportFileCount } from "@/lib/report-summary-framing";
 import type { ReportResult } from "@/lib/types/api";
 
 const PLACEHOLDER_PATTERNS = [
@@ -141,22 +139,21 @@ export function mergeAnalyzeResponseIntoResult(
   const doctorText = analyze.doctorSummary?.trim();
   if (doctorText) {
     const document = extractDocumentText(next);
-    let en = doctorText;
-    let id = next.doctor_summary_bilingual?.id?.trim() || "";
-    if (document) {
-      if (looksIndonesian(doctorText)) {
-        id = doctorText;
-        en = buildDoctorSummaryFromDocument(document, "en");
-      } else if (looksEnglish(doctorText)) {
-        en = doctorText;
-        id = localizeDoctorEnToId(doctorText);
-      } else {
-        en = doctorText;
-        id = buildDoctorSummaryFromDocument(document, "id");
-      }
-    } else if (!id) {
-      id = looksEnglish(en) ? localizeDoctorEnToId(en) : en;
-    }
+    const fileCount = effectiveReportFileCount(
+      document,
+      next.uploaded_files?.length ?? 0,
+    );
+    const en = looksIndonesian(doctorText)
+      ? resolveDoctorSummaryForLocale(
+          bilingual("", doctorText),
+          "en",
+          { documentText: document, fileCount },
+        )
+      : doctorText;
+    const id = resolveDoctorSummaryForLocale(bilingual(en, doctorText), "id", {
+      documentText: document,
+      fileCount,
+    });
     next.doctor_summary = en || id;
     next.doctor_summary_bilingual = { en, id };
   }

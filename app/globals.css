@@ -15,3 +15,87 @@ body {
 .font-heading {
   font-family: var(--font-heading);
 }
+
+@keyframes ai-chat-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes ai-chat-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes ai-chat-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes ai-chat-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ai-chat-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ai-chat-float,
+  .animate-ai-chat-glow,
+  .animate-ai-chat-pulse-ring,
+  .animate-ai-chat-panel-in,
+  .animate-ai-chat-shimmer {
+    animation: none !important;
+  }
+}
+
+.animate-ai-chat-float {
+  animation: ai-chat-float 2.8s ease-in-out infinite;
+}
+
+.animate-ai-chat-glow {
+  animation: ai-chat-glow 2.2s ease-in-out infinite;
+}
+
+.animate-ai-chat-pulse-ring {
+  animation: ai-chat-pulse-ring 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.animate-ai-chat-panel-in {
+  animation: ai-chat-panel-in 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-ai-chat-shimmer {
+  background-size: 200% auto;
+  animation: ai-chat-shimmer 4s linear infinite;
+}

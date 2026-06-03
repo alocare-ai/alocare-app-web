@@ -9,7 +9,6 @@ import {
   looksEnglish,
   needsLocalizationToId,
 } from "@/lib/locale-detect";
-import { localizeDoctorEnToId } from "@/lib/localize-summary";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
 
@@ -131,26 +130,7 @@ export function pickLocaleText(text: BilingualText, locale: Locale): string {
   return text.en?.trim() || text.id?.trim() || "";
 }
 
-/** Doctor summary for display — always localize from EN when ID is missing or mixed. */
-export function pickDoctorSummaryText(
-  text: BilingualText,
-  locale: Locale,
-): string {
-  const en = text.en?.trim() ?? "";
-  const id = text.id?.trim() ?? "";
-
-  if (locale === "id") {
-    if (en && looksEnglish(en)) {
-      return localizeDoctorEnToId(en);
-    }
-    if (id && needsLocalizationToId(id)) {
-      return localizeDoctorEnToId(en || id);
-    }
-    return id || en;
-  }
-
-  return en || id;
-}
+export { pickDoctorSummaryText, resolveDoctorSummaryForLocale } from "@/lib/doctor-summary-locale";
 
 export function mapKeyFindings(
   findings: StoredKeyFinding[],
@@ -185,6 +165,16 @@ export function reportInputType(
     return "text";
   }
   return "pdf";
+}
+
+export async function readReportFilesContent(files: File[]): Promise<string> {
+  const parts = await Promise.all(
+    files.map(async (file) => {
+      const text = await readReportFileContent(file);
+      return text.trim() ? `--- ${file.name} ---\n${text.trim()}` : "";
+    }),
+  );
+  return parts.filter(Boolean).join("\n\n");
 }
 
 export async function readReportFileContent(file: File): Promise<string> {

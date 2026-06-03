@@ -16,57 +16,116 @@ import { useLocale } from "@/hooks/use-locale";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
 import { ApiError } from "@/lib/api/client";
-import type { OcrStreamEvent } from "@/lib/api/ocr-stream";
 import { runOcrStream } from "@/lib/api/ocr-stream";
-import { createReport, uploadReportFile } from "@/lib/api/reports";
+import {
+  applyOcrStreamEvent,
+  createOcrFilesProgress,
+  type OcrFilesProgressState,
+} from "@/lib/ocr-file-progress";
+import {
+  createReport,
+  saveReportFileAnalyses,
+  uploadReportFiles,
+} from "@/lib/api/reports";
+import { generatePerFileSummaries } from "@/lib/per-file-summary";
 import type { ReportResult } from "@/lib/types/api";
-import { readReportFileContent } from "@/lib/report-analysis";
+import {
+  readReportFileContent,
+  readReportFilesContent,
+} from "@/lib/report-analysis";
 
 type PipelineStep = "idle" | ReportPipelineStep;
+
+function buildReportTitle(files: File[]): string {
+  const base = files[0].name.replace(/\.[^.]+$/, "");
+  if (files.length === 1) return base;
+  return `${base} (+${files.length - 1} more)`;
+}
+
+function formatFileReference(files: File[]): string {
+  return files
+    .map((f) => f.name)
+    .join(", ")
+    .slice(0, 500);
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function formatFileLabel(files: File[], locale: "en" | "id"): string {
+  if (files.length === 1) return files[0].name;
+  const names = files.map((f) => f.name).join(", ");
+  if (names.length <= 72) return names;
+  return locale === "id"
+    ? `${files.length} berkas dipilih`
+    : `${files.length} files selected`;
+}
 
 export default function UploadReportPage() {
   const { locale } = useLocale();
   const router = useRouter();
   const [dropState, setDropState] = useState<UploadDropzoneState>("empty");
-  const [fileName, setFileName] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [step, setStep] = useState<PipelineStep>("idle");
   const [error, setError] = useState<string | null>(null);
   const [processModalOpen, setProcessModalOpen] = useState(false);
-  const [ocrEvent, setOcrEvent] = useState<OcrStreamEvent | null>(null);
+  const [ocrFilesProgress, setOcrFilesProgress] =
+    useState<OcrFilesProgressState | null>(null);
   const [aiProgress, setAiProgress] = useState<AiAnalysisProgressState | null>(
     null,
   );
 
+  const fileLabel =
+    selectedFiles.length > 0
+      ? formatFileLabel(selectedFiles, locale)
+      : null;
+
   const handleFiles = useCallback(
     async (files: FileList) => {
-      const file = files[0];
-      if (!file) return;
+      const fileList = Array.from(files);
+      if (!fileList.length) return;
 
       setError(null);
-      setOcrEvent(null);
+      setOcrFilesProgress(null);
       setAiProgress(null);
-      setFileName(file.name);
+      setSelectedFiles(fileList);
       setDropState("uploading");
       setStep("uploaded");
       setProcessModalOpen(true);
 
       try {
         const report = await createReport({
-          title: file.name.replace(/\.[^.]+$/, ""),
-          file_reference: file.name,
+          title: buildReportTitle(fileList),
+          file_reference: formatFileReference(fileList),
         });
 
         setDropState("success");
 
-        await uploadReportFile(report.id, file);
+        const uploadResult = await uploadReportFiles(report.id, fileList);
 
         setStep("ocr");
 
-        let ocrText = "";
-        ocrText = await runOcrStream(report.id, setOcrEvent);
+        const initialOcr = createOcrFilesProgress(
+          fileList.map((f) => f.name),
+        );
+        setOcrFilesProgress(initialOcr);
 
-        const fileContent =
-          ocrText.trim() || (await readReportFileContent(file));
+        const ocrText = await runOcrStream(report.id, (event) => {
+          setOcrFilesProgress((prev) =>
+            applyOcrStreamEvent(prev ?? initialOcr, event, locale),
+          );
+        });
+
+        let fileContent = ocrText.trim();
+        if (!fileContent) {
+          fileContent =
+            fileList.length === 1
+              ? await readReportFileContent(fileList[0])
+              : await readReportFilesContent(fileList);
+        }
 
         setStep("analyzing");
 
@@ -76,6 +135,7 @@ export default function UploadReportPage() {
             reportId: report.id,
             locale,
             documentText: fileContent,
+            fileCount: fileList.length,
             onProgress: setAiProgress,
             result: {
               id: report.id,
@@ -85,6 +145,27 @@ export default function UploadReportPage() {
               next_actions: [],
             } satisfies ReportResult,
           });
+
+          if (fileList.length > 1) {
+            const sizeByFilename = new Map(
+              uploadResult.files.map((f) => [f.filename, f.size]),
+            );
+            for (const file of fileList) {
+              if (!sizeByFilename.has(file.name)) {
+                sizeByFilename.set(file.name, file.size);
+              }
+            }
+            const perFile = await generatePerFileSummaries({
+              report,
+              reportId: report.id,
+              locale,
+              documentText: fileContent,
+              sizeByFilename,
+            });
+            if (perFile.length) {
+              await saveReportFileAnalyses(report.id, perFile);
+            }
+          }
         } catch (analysisErr) {
           const message =
             analysisErr instanceof Error
@@ -121,9 +202,9 @@ export default function UploadReportPage() {
       <OcrProcessModal
         open={processModalOpen}
         locale={locale}
-        fileName={fileName}
+        fileName={fileLabel}
         step={pipelineStep}
-        ocrEvent={ocrEvent}
+        ocrFilesProgress={ocrFilesProgress}
         aiProgress={aiProgress}
         error={error}
       />
@@ -135,25 +216,32 @@ export default function UploadReportPage() {
           </h1>
           <p className="mt-1 text-sm text-slate-600">
             {locale === "id"
-              ? "Unggah PDF atau gambar laporan medis."
-              : "Upload PDFs or images of medical reports."}
+              ? "Unggah beberapa PDF atau gambar laporan medis — teks digabung untuk analisis yang lebih lengkap."
+              : "Upload multiple PDFs or images of medical reports — text is combined for richer analysis."}
           </p>
         </div>
 
         <UploadDropzone
           lang={locale}
           state={dropState}
+          multiple
           onFilesSelected={handleFiles}
           hideHeader
           className="[&>span]:hidden [&>h2]:hidden [&>p]:hidden"
         />
 
-        {fileName && !processModalOpen ? (
-          <UploadPreview
-            fileName={fileName}
-            lang={locale}
-            uploaded={step !== "idle"}
-          />
+        {fileLabel && !processModalOpen ? (
+          <div className="space-y-2">
+            {selectedFiles.map((file) => (
+              <UploadPreview
+                key={`${file.name}-${file.size}-${file.lastModified}`}
+                fileName={file.name}
+                fileSize={formatFileSize(file.size)}
+                lang={locale}
+                uploaded={step !== "idle"}
+              />
+            ))}
+          </div>
         ) : null}
 
         {error && !processModalOpen ? (

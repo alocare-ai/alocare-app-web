@@ -4,6 +4,7 @@ export type OcrStreamStep =
   | "extracting"
   | "page"
   | "ocr"
+  | "file_complete"
   | "complete"
   | "error";
 
@@ -15,6 +16,9 @@ export type OcrStreamEvent = {
   totalPages?: number;
   charCount?: number;
   text?: string;
+  file?: string;
+  fileIndex?: number;
+  fileTotal?: number;
 };
 
 export type OcrStreamHandlers = {

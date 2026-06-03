@@ -5,6 +5,7 @@ import {
   getServerLocale,
   isReportAnalyzing,
 } from "@/lib/api/server-reports";
+import { buildReportChatMeta } from "@/lib/report-chat-context";
 import { ReportDetailClient } from "./report-detail-client";
 
 type ReportPageProps = {
@@ -21,6 +22,17 @@ export default async function ReportDetailPage({ params }: ReportPageProps) {
   ]);
 
   const analyzing = isReportAnalyzing(report, result);
+  const chatMeta = report
+    ? buildReportChatMeta(report, result, locale)
+    : {
+        fileCount: 0,
+        hasAnalysis: false,
+        hasDocumentText: false,
+        contextHint:
+          locale === "id"
+            ? "Konteks laporan akan tersedia setelah analisis."
+            : "Report context will be available after analysis.",
+      };
 
   return (
     <ReportDetailClient
@@ -28,6 +40,7 @@ export default async function ReportDetailPage({ params }: ReportPageProps) {
       initialReport={report}
       initialResult={result}
       initialAnalyzing={analyzing}
+      chatMeta={chatMeta}
       analyzingBanner={
         analyzing ? <ReportAnalyzingBanner locale={locale} /> : null
       }

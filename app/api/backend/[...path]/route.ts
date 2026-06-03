@@ -1,10 +1,7 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { createApiClient } from "@/lib/api/client";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
-
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://api.alocare.net";
+import { getApiUpstreamBase } from "@/lib/api/upstream";
 
 const COOKIE_OPTS = {
   httpOnly: true,
@@ -17,11 +14,16 @@ async function refreshAccessToken(
   refresh: string,
 ): Promise<{ access_token: string; refresh_token: string } | null> {
   try {
-    const client = createApiClient();
-    const { data } = await client.post("/auth/refresh", {
-      refresh_token: refresh,
+    const res = await fetch(`${getApiUpstreamBase()}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: refresh }),
     });
-    return data;
+    if (!res.ok) return null;
+    return (await res.json()) as {
+      access_token: string;
+      refresh_token: string;
+    };
   } catch {
     return null;
   }
@@ -32,7 +34,7 @@ async function forward(
   path: string,
   token?: string,
 ): Promise<NextResponse> {
-  const url = `${API_BASE}${path}${request.nextUrl.search}`;
+  const url = `${getApiUpstreamBase()}${path}${request.nextUrl.search}`;
   const contentType = request.headers.get("content-type") ?? "";
   const isMultipart = contentType.includes("multipart/form-data");
 

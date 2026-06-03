@@ -1,9 +1,7 @@
 import { cookies } from "next/headers";
 
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
-
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://api.alocare.net";
+import { getApiUpstreamBase } from "@/lib/api/upstream";
 
 export async function GET(
   _request: Request,
@@ -17,7 +15,7 @@ export async function GET(
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const upstream = await fetch(`${API_BASE}/reports/${id}/ocr/stream`, {
+  const upstream = await fetch(`${getApiUpstreamBase()}/reports/${id}/ocr/stream`, {
     headers: {
       Authorization: `Bearer ${access}`,
       Accept: "text/event-stream",

@@ -20,10 +20,19 @@ export async function createAISession(data?: {
 export async function sendChatMessage(
   sessionId: string,
   message: string,
-): Promise<{ reply: string }> {
-  return apiFetch<{ reply: string }>("/ai/chat", {
+  options?: {
+    reportId?: string;
+    preferredLanguage?: string;
+  },
+): Promise<{ reply: string; language?: string }> {
+  return apiFetch<{ reply: string; language?: string }>("/ai/chat", {
     method: "POST",
-    body: JSON.stringify({ sessionId, message }),
+    body: JSON.stringify({
+      sessionId,
+      message,
+      reportId: options?.reportId,
+      preferredLanguage: options?.preferredLanguage,
+    }),
   });
 }
 

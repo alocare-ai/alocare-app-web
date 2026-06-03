@@ -5,6 +5,10 @@ import { Check, Circle, X } from "lucide-react";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { getAiPhaseStatuses } from "@/lib/ai-analysis-progress";
 import type { OcrStreamEvent } from "@/lib/api/ocr-stream";
+import {
+  getOcrFileStatuses,
+  type OcrFilesProgressState,
+} from "@/lib/ocr-file-progress";
 import type { Locale } from "@/hooks/use-locale";
 
 export type ReportPipelineStep =
@@ -25,7 +29,8 @@ type OcrProcessModalProps = {
   locale: Locale;
   fileName?: string | null;
   step: ReportPipelineStep;
-  ocrEvent: OcrStreamEvent | null;
+  ocrFilesProgress?: OcrFilesProgressState | null;
+  ocrEvent?: OcrStreamEvent | null;
   aiProgress?: AiAnalysisProgressState | null;
   error?: string | null;
 };
@@ -36,8 +41,8 @@ function stepLabels(locale: Locale): Record<
 > {
   return {
     uploaded: {
-      title: locale === "id" ? "Unggah berkas" : "Upload file",
-      done: locale === "id" ? "Berkas terunggah" : "File uploaded",
+      title: locale === "id" ? "Unggah berkas" : "Upload files",
+      done: locale === "id" ? "Berkas terunggah" : "Files uploaded",
     },
     ocr: {
       title: locale === "id" ? "Pemindaian OCR" : "OCR scanning",
@@ -54,44 +59,11 @@ function stepLabels(locale: Locale): Record<
   };
 }
 
-function ocrDetail(locale: Locale, event: OcrStreamEvent | null): string {
-  if (!event) {
-    return locale === "id" ? "Memulai OCR…" : "Starting OCR…";
-  }
-  if (event.message) return event.message;
-
-  switch (event.step) {
-    case "started":
-      return locale === "id" ? "Menyiapkan dokumen…" : "Preparing document…";
-    case "loading":
-      return locale === "id" ? "Memuat PDF…" : "Loading PDF…";
-    case "extracting":
-      return locale === "id" ? "Membaca berkas teks…" : "Reading text file…";
-    case "page":
-      return locale === "id"
-        ? `Halaman ${event.page ?? 1} dari ${event.totalPages ?? "?"}`
-        : `Page ${event.page ?? 1} of ${event.totalPages ?? "?"}`;
-    case "ocr":
-      return locale === "id"
-        ? `OCR halaman ${event.page ?? 1}…`
-        : `OCR on page ${event.page ?? 1}…`;
-    case "complete":
-      return event.charCount != null
-        ? locale === "id"
-          ? `${event.charCount.toLocaleString()} karakter`
-          : `${event.charCount.toLocaleString()} characters`
-        : locale === "id"
-          ? "OCR selesai"
-          : "OCR complete";
-    default:
-      return locale === "id" ? "Memindai dokumen…" : "Scanning document…";
-  }
-}
-
 function activeDetail(
   locale: Locale,
   step: ReportPipelineStep,
-  ocrEvent: OcrStreamEvent | null,
+  ocrFilesProgress: OcrFilesProgressState | null | undefined,
+  ocrEvent: OcrStreamEvent | null | undefined,
   aiProgress: AiAnalysisProgressState | null | undefined,
 ): string {
   switch (step) {
@@ -99,8 +71,18 @@ function activeDetail(
       return locale === "id"
         ? "Mengunggah ke server…"
         : "Uploading to server…";
-    case "ocr":
-      return ocrDetail(locale, ocrEvent);
+    case "ocr": {
+      if (ocrFilesProgress?.detail) return ocrFilesProgress.detail;
+      if (ocrEvent?.message) return ocrEvent.message;
+      const done = ocrFilesProgress?.files.filter((f) => f.status === "done").length ?? 0;
+      const total = ocrFilesProgress?.files.length ?? 0;
+      if (total > 1) {
+        return locale === "id"
+          ? `Memindai ${done} / ${total} berkas…`
+          : `Scanning ${done} / ${total} files…`;
+      }
+      return locale === "id" ? "Memulai OCR…" : "Starting OCR…";
+    }
     case "analyzing":
       return (
         aiProgress?.detail ??
@@ -117,10 +99,12 @@ function activeDetail(
 
 function overallProgress(
   step: ReportPipelineStep,
-  ocrEvent: OcrStreamEvent | null,
+  ocrFilesProgress: OcrFilesProgressState | null | undefined,
+  ocrEvent: OcrStreamEvent | null | undefined,
   aiProgress: AiAnalysisProgressState | null | undefined,
 ): number {
   if (step === "ocr") {
+    if (ocrFilesProgress) return ocrFilesProgress.overallProgress;
     const ocrPct = ocrEvent?.progress ?? 0;
     return Math.min(58, 12 + ocrPct * 0.46);
   }
@@ -145,20 +129,82 @@ function stepState(
   return "pending";
 }
 
+function OcrFileSubsteps({
+  locale,
+  ocrFilesProgress,
+}: {
+  locale: Locale;
+  ocrFilesProgress: OcrFilesProgressState;
+}) {
+  const items = getOcrFileStatuses(ocrFilesProgress.files, locale);
+  if (items.length <= 1) return null;
+
+  return (
+    <ul
+      className="space-y-1 border-l-2 border-teal-200 pl-2.5"
+      aria-label={locale === "id" ? "Pemindaian per berkas" : "Per-file scanning"}
+    >
+      {items.map((sub) => (
+        <li
+          key={sub.label}
+          className={`flex items-start gap-1.5 text-xs ${
+            sub.status === "done"
+              ? "text-emerald-700"
+              : sub.status === "active"
+                ? "font-medium text-teal-800"
+                : sub.status === "error"
+                  ? "text-red-600"
+                  : "text-slate-400"
+          }`}
+        >
+          <SubstepMarker
+            status={
+              sub.status === "error"
+                ? "error"
+                : sub.status === "done"
+                  ? "done"
+                  : sub.status === "active"
+                    ? "active"
+                    : "pending"
+            }
+          />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate" title={sub.label}>
+              {sub.label}
+            </span>
+            {sub.status === "active" && sub.detail ? (
+              <span className="block font-normal text-slate-600">{sub.detail}</span>
+            ) : null}
+            {sub.status === "done" && sub.detail ? (
+              <span className="block font-normal text-emerald-600/90">
+                {sub.detail}
+              </span>
+            ) : null}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export function OcrProcessModal({
   open,
   locale,
   fileName,
   step,
-  ocrEvent,
+  ocrFilesProgress,
+  ocrEvent = null,
   aiProgress,
   error,
 }: OcrProcessModalProps) {
   if (!open) return null;
 
   const labels = stepLabels(locale);
-  const hasError = Boolean(error) || ocrEvent?.step === "error";
-  const progress = overallProgress(step, ocrEvent, aiProgress);
+  const hasError =
+    Boolean(error) ||
+    ocrEvent?.step === "error" ||
+    Boolean(ocrFilesProgress?.files.some((f) => f.status === "error"));
+  const progress = overallProgress(step, ocrFilesProgress, ocrEvent, aiProgress);
   const isFinished = step === "completed" && !hasError;
   const aiSubsteps =
     step === "analyzing" && aiProgress
@@ -168,6 +214,11 @@ export function OcrProcessModal({
           locale,
         )
       : null;
+  const showOcrSubsteps =
+    step === "ocr" &&
+    ocrFilesProgress &&
+    ocrFilesProgress.files.length > 1 &&
+    !hasError;
 
   return (
     <div
@@ -196,6 +247,16 @@ export function OcrProcessModal({
             {PIPELINE_ORDER.map((key) => {
               const state = stepState(key, step, hasError);
               const label = labels[key];
+              const ocrCollapsed =
+                key === "ocr" &&
+                state === "done" &&
+                ocrFilesProgress &&
+                ocrFilesProgress.files.length > 0;
+              const ocrDoneSummary =
+                ocrCollapsed &&
+                (locale === "id"
+                  ? `${ocrFilesProgress.files.length} berkas — teks digabung`
+                  : `${ocrFilesProgress.files.length} files — text combined`);
 
               return (
                 <li
@@ -219,16 +280,30 @@ export function OcrProcessModal({
                     </p>
                     {state === "active" ? (
                       <div className="mt-1 space-y-2">
-                        <p
-                          className={`text-xs ${
-                            hasError ? "text-red-600" : "text-slate-600"
-                          }`}
-                          role="status"
-                          aria-live="polite"
-                        >
-                          {error ??
-                            activeDetail(locale, key, ocrEvent, aiProgress)}
-                        </p>
+                        {!showOcrSubsteps ? (
+                          <p
+                            className={`text-xs ${
+                              hasError ? "text-red-600" : "text-slate-600"
+                            }`}
+                            role="status"
+                            aria-live="polite"
+                          >
+                            {error ??
+                              activeDetail(
+                                locale,
+                                key,
+                                ocrFilesProgress,
+                                ocrEvent,
+                                aiProgress,
+                              )}
+                          </p>
+                        ) : null}
+                        {showOcrSubsteps ? (
+                          <OcrFileSubsteps
+                            locale={locale}
+                            ocrFilesProgress={ocrFilesProgress}
+                          />
+                        ) : null}
                         {key === "analyzing" && aiProgress && aiSubsteps && !hasError ? (
                           <ul
                             className="space-y-1 border-l-2 border-teal-200 pl-2.5"
@@ -258,7 +333,7 @@ export function OcrProcessModal({
                       </div>
                     ) : state === "done" ? (
                       <p className="mt-0.5 text-xs text-emerald-700">
-                        {label.done}
+                        {ocrDoneSummary || label.done}
                       </p>
                     ) : null}
                   </div>
@@ -283,7 +358,7 @@ export function OcrProcessModal({
 function SubstepMarker({
   status,
 }: {
-  status: "done" | "active" | "pending";
+  status: "done" | "active" | "pending" | "error";
 }) {
   if (status === "done") {
     return (
@@ -296,8 +371,16 @@ function SubstepMarker({
   }
   if (status === "active") {
     return (
-      <span
-        className="mt-1 h-2 w-2 shrink-0 animate-pulse rounded-full bg-teal-600"
+      <span className="mt-1 flex h-3 w-3 shrink-0 items-center justify-center">
+        <Spinner size="sm" className="h-2.5 w-2.5" />
+      </span>
+    );
+  }
+  if (status === "error") {
+    return (
+      <X
+        className="mt-0.5 h-3 w-3 shrink-0 text-red-600"
+        strokeWidth={3}
         aria-hidden
       />
     );

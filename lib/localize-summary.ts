@@ -41,6 +41,16 @@ const CLINICAL_REPLACEMENTS: [RegExp, string][] = [
   [/\brenal function\b/gi, "fungsi ginjal"],
 ];
 
+const DOCTOR_FIELD_LABELS: [RegExp, string][] = [
+  [/\bName:\s*/gi, "Nama: "],
+  [/\bGender:\s*/gi, "Jenis kelamin: "],
+  [/\bAge:\s*/gi, "Usia: "],
+  [/\bID Number:\s*/gi, "Nomor ID: "],
+  [/\bTime:\s*/gi, "Waktu: "],
+  [/\bPrimary report recommendations:\s*/gi, "Rekomendasi utama dari laporan: "],
+  [/\bPrimary recommendations from this file:\s*/gi, "Rekomendasi utama dari berkas ini: "],
+];
+
 const DOCTOR_REPLACEMENTS: [RegExp, string][] = [
   [/\bThe patient presented with\b/gi, "Pasien datang dengan"],
   [/\bThe patient is\b/gi, "Pasien"],
@@ -83,6 +93,16 @@ const DOCTOR_REPLACEMENTS: [RegExp, string][] = [
   [/\bphysician\b/gi, "dokter"],
   [/\bpatient\b/gi, "pasien"],
   [/\bPasien adalah\b/gi, "Pasien"],
+  [/\bKey values:\s*/gi, "Nilai utama: "],
+  [/\bKey metrics:\s*/gi, "Metrik utama: "],
+  [/\bStress resilience score\b/gi, "Skor ketahanan stres"],
+  [/\bStress assessment score\b/gi, "Skor penilaian stres"],
+  [/\bScores should be interpreted with\b/gi, "Skor perlu ditafsirkan bersama"],
+  [/\bYour psychological stress is relatively high\b/gi, "Tingkat stres psikologis relatif tinggi"],
+  [/\bphysical stress indicators are temporarily stable\b/gi, "indikator stres fisik sementara stabil"],
+  [/\bRecommendations:\s*/gi, "Rekomendasi: "],
+  [/\bFollow-up with a clinician is recommended\b/gi, "Kontrol dengan tenaga kesehatan disarankan"],
+  [/\bCardiovascular risk should be reviewed with\b/gi, "Risiko kardiovaskular perlu ditinjau bersama"],
   ...CLINICAL_REPLACEMENTS,
 ];
 
@@ -99,7 +119,9 @@ export function localizeClinicalEnToId(en: string): string {
 }
 
 export function localizeDoctorEnToId(en: string): string {
-  return applyReplacements(en.trim(), DOCTOR_REPLACEMENTS);
+  let out = applyReplacements(en.trim(), DOCTOR_FIELD_LABELS);
+  out = applyReplacements(out, DOCTOR_REPLACEMENTS);
+  return out;
 }
 
 export function isGenericLabClinicalTemplate(text: string): boolean {
