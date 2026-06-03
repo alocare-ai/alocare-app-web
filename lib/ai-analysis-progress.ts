@@ -30,7 +30,6 @@ export type AiAnalysisPhaseId =
   | "bilingual_merge"
   | "biomarkers_sync"
   | "persist_analysis"
-  | "file_analyses"
   | "finalize";
 
 export type AiAnalysisPhase = {
@@ -223,13 +222,6 @@ export const AI_SAVING_PHASES: AiAnalysisPhase[] = [
     idLabel: "Menyimpan hasil analisis ke laporan Anda",
     detailEn: "Writing summaries and actions to the database — may take a moment on large reports",
     detailId: "Menulis ringkasan dan tindakan ke basis data — dapat memakan waktu pada laporan besar",
-  },
-  {
-    id: "file_analyses",
-    en: "Saving per-file analysis sections",
-    idLabel: "Menyimpan bagian analisis per berkas",
-    detailEn: "Storing collapsible summaries for each uploaded file",
-    detailId: "Menyimpan ringkasan yang dapat dilipat untuk setiap berkas yang diunggah",
   },
   {
     id: "finalize",

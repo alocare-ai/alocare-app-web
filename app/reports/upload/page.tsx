@@ -16,10 +16,7 @@ import {
 import { useLocale } from "@/hooks/use-locale";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
-import {
-  pipelineStepFromAiProgress,
-  runWithSavingProgress,
-} from "@/lib/ai-analysis-progress";
+import { pipelineStepFromAiProgress } from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
 import { runOcrStream } from "@/lib/api/ocr-stream";
 import {
@@ -31,10 +28,8 @@ import {
   createReport,
   deleteReportFile,
   getReportFiles,
-  saveReportFileAnalyses,
   uploadReportFiles,
 } from "@/lib/api/reports";
-import { generatePerFileSummaries } from "@/lib/per-file-summary";
 import type { Report, ReportResult, ReportUploadedFile } from "@/lib/types/api";
 
 type PipelineStep = "idle" | ReportPipelineStep;
@@ -208,41 +203,6 @@ export default function UploadReportPage() {
             next_actions: [],
           } satisfies ReportResult,
         });
-
-        if (fileCount > 1) {
-          await runWithSavingProgress(
-            locale,
-            handleAiProgress,
-            async (advance) => {
-              advance(
-                "file_analyses",
-                locale === "id"
-                  ? "Membuat ringkasan untuk setiap berkas yang diunggah…"
-                  : "Building a summary section for each uploaded file…",
-              );
-              const sizeByFilename = new Map(
-                uploadedFiles.map((f) => [f.filename, f.size_bytes ?? 0]),
-              );
-              const perFile = await generatePerFileSummaries({
-                report,
-                reportId,
-                locale,
-                documentText: fileContent,
-                sizeByFilename,
-              });
-              if (perFile.length) {
-                advance(
-                  "persist_analysis",
-                  locale === "id"
-                    ? "Menyimpan analisis per berkas ke server…"
-                    : "Saving per-file analyses to the server…",
-                );
-                await saveReportFileAnalyses(reportId, perFile);
-              }
-            },
-            { startAt: "file_analyses" },
-          );
-        }
       } catch (analysisErr) {
         const message =
           analysisErr instanceof Error

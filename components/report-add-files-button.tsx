@@ -21,7 +21,6 @@ import {
   type OcrFilesProgressState,
 } from "@/lib/ocr-file-progress";
 import {
-  buildReportFileAnalyses,
   getReportFiles,
   getReportResult,
   uploadReportFiles,
@@ -177,10 +176,6 @@ export function ReportAddFilesButton({
       });
 
       queryClient.setQueryData(["report-result", reportId], merged);
-
-      if (fileCount > 1) {
-        await buildReportFileAnalyses(reportId);
-      }
 
       await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
       await queryClient.invalidateQueries({
