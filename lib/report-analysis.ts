@@ -67,8 +67,10 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
       summary: repaired.summary,
       doctorSummary: repaired.doctor,
       nextActions: result.next_actions_bilingual ?? {
-        en: result.next_actions,
-        id: result.next_actions.map((a) => enrichRecommendation(a, "id").title),
+        en: result.next_actions ?? [],
+        id: (result.next_actions ?? []).map((a) =>
+          enrichRecommendation(a, "id").title,
+        ),
       },
       keyFindings: (result.key_findings ?? []).map((f) => ({
         name: f.name,
@@ -97,8 +99,10 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
       ? asBilingual(doctorText, doctorText)
       : bilingual("", ""),
     nextActions: {
-      en: result.next_actions,
-      id: result.next_actions.map((a) => enrichRecommendation(a, "id").title),
+      en: result.next_actions ?? [],
+      id: (result.next_actions ?? []).map((a) =>
+        enrichRecommendation(a, "id").title,
+      ),
     },
     keyFindings: (result.key_findings ?? []).map((f) => ({
       name: f.name,

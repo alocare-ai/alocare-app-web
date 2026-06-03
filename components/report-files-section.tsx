@@ -48,8 +48,12 @@ function formatCreatedAt(value: string | null, locale: Locale): string | null {
 }
 
 function pickSummary(entry: ReportFileAnalysis, locale: Locale): string {
-  const text = locale === "id" ? entry.summary.id : entry.summary.en;
-  return text.trim() || entry.summary.en.trim() || entry.summary.id.trim();
+  const summary = entry.summary;
+  if (!summary) return "";
+  const text = locale === "id" ? summary.id : summary.en;
+  return (
+    text?.trim() || summary.en?.trim() || summary.id?.trim() || ""
+  );
 }
 
 function buildFileNamesSummary(

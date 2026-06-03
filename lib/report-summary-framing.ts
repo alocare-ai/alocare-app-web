@@ -51,10 +51,12 @@ export function buildClinicalNarrativeFromFileAnalyses(
 
   const parts = analyses
     .map((entry) => {
+      const summary = entry.summary;
+      if (!summary) return "";
       const text =
         locale === "id"
-          ? entry.summary.id?.trim() || entry.summary.en?.trim()
-          : entry.summary.en?.trim() || entry.summary.id?.trim();
+          ? summary.id?.trim() || summary.en?.trim()
+          : summary.en?.trim() || summary.id?.trim();
       if (!text) return "";
       return `**${entry.filename}**\n${text}`;
     })

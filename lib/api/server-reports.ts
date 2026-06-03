@@ -1,19 +1,26 @@
 import { cookies } from "next/headers";
 
+import { getPublicApiBase } from "@/lib/api/public-api-base";
+import { getApiUpstreamBase } from "@/lib/api/upstream";
 import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { isReportAnalyzing } from "@/lib/report-result-utils";
 import type { Report, ReportResult } from "@/lib/types/api";
 import type { Locale } from "@/lib/i18n";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://api.alocare.net";
+/** Server-side report prefetch (RSC). Prefer API_PROXY_URL; never call the portal host. */
+function getServerReportApiBase(): string {
+  if (process.env.API_PROXY_URL?.trim()) {
+    return getApiUpstreamBase();
+  }
+  return getPublicApiBase();
+}
 
 async function serverApiFetch<T>(path: string): Promise<T | null> {
   const jar = await cookies();
   const token = jar.get(AUTH_COOKIES.access)?.value;
   if (!token) return null;
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${getServerReportApiBase()}${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
@@ -22,7 +29,17 @@ async function serverApiFetch<T>(path: string): Promise<T | null> {
   });
 
   if (!res.ok) return null;
-  return res.json() as Promise<T>;
+
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!contentType.includes("application/json")) {
+    return null;
+  }
+
+  try {
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
 }
 
 export async function getReportServer(id: string): Promise<Report | null> {

@@ -251,7 +251,7 @@ export function ReportDetailClient({
   }
 
   const nextActions =
-    analysis?.nextActions[locale] ?? analysis?.nextActions.en ?? [];
+    analysis?.nextActions?.[locale] ?? analysis?.nextActions?.en ?? [];
   const findings = mapKeyFindings(analysis?.keyFindings ?? []);
   const isImageReport = /\.(jpe?g|png|gif|webp|heic|bmp)$/i.test(
     report.file_reference ?? report.title ?? "",

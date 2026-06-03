@@ -52,10 +52,12 @@ function pickFileAnalysisSummary(
   entry: ReportFileAnalysis,
   locale: Locale,
 ): string {
+  const summary = entry.summary;
+  if (!summary) return "";
   const text =
     locale === "id"
-      ? entry.summary.id?.trim() || entry.summary.en?.trim()
-      : entry.summary.en?.trim() || entry.summary.id?.trim();
+      ? summary.id?.trim() || summary.en?.trim()
+      : summary.en?.trim() || summary.id?.trim();
   return text ?? "";
 }
 
