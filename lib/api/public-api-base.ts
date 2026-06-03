@@ -8,9 +8,14 @@ export function getPublicApiBase(): string {
 }
 
 /**
- * Production uploads go browser → API (avoids Vercel 4.5 MB limit).
- * Local dev uses the BFF proxy (same-origin, no CORS) via /api/backend.
+ * Production: same-origin `/api/upstream/*` rewrite → API (no CORS, no function body cap).
+ * Development: `/api/backend/*` BFF with httpOnly cookies.
  */
-export function shouldUseDirectReportUpload(): boolean {
+export function shouldUseUpstreamRewriteUpload(): boolean {
   return process.env.NODE_ENV === "production";
+}
+
+/** @deprecated Use shouldUseUpstreamRewriteUpload */
+export function shouldUseDirectReportUpload(): boolean {
+  return shouldUseUpstreamRewriteUpload();
 }

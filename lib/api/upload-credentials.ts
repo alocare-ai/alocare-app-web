@@ -65,6 +65,15 @@ export async function parseDirectUploadError(res: Response): Promise<string> {
   }
 }
 
+export function proxiedUploadNetworkError(err: unknown): string {
+  if (err instanceof TypeError) {
+    return "Upload failed. Check your connection and that the latest app deployment is live.";
+  }
+  if (err instanceof Error) return err.message;
+  return "Upload failed.";
+}
+
+/** @deprecated Cross-origin direct upload; production uses /api/upstream rewrite */
 export function directUploadNetworkError(err: unknown, apiUrl: string): string {
   if (err instanceof TypeError) {
     const isLocal =

@@ -5,12 +5,11 @@ import type {
   ReportUploadedFile,
 } from "@/lib/types/api";
 import { apiFetch } from "./client";
-import { shouldUseDirectReportUpload } from "@/lib/api/public-api-base";
+import { shouldUseUpstreamRewriteUpload } from "@/lib/api/public-api-base";
 import {
-  directUploadNetworkError,
   fetchUploadCredentials,
   parseDirectUploadError,
-  resolveDirectUploadApiBase,
+  proxiedUploadNetworkError,
 } from "./upload-credentials";
 
 export async function createReport(data: {
@@ -49,22 +48,23 @@ async function uploadReportFilesViaBff(
   return res.json() as Promise<ReportUploadResult>;
 }
 
-async function uploadReportFilesDirect(
+/** Production: POST to same-origin path; Vercel rewrites to api.alocare.net. */
+async function uploadReportFilesViaUpstreamRewrite(
   reportId: string,
   form: FormData,
 ): Promise<ReportUploadResult> {
   const credentials = await fetchUploadCredentials();
-  const apiBase = resolveDirectUploadApiBase(credentials);
+  const url = `/api/upstream/reports/${reportId}/upload`;
 
   let res: Response;
   try {
-    res = await fetch(`${apiBase}/reports/${reportId}/upload`, {
+    res = await fetch(url, {
       method: "POST",
       headers: { Authorization: `Bearer ${credentials.accessToken}` },
       body: form,
     });
   } catch (err) {
-    throw new Error(directUploadNetworkError(err, apiBase));
+    throw new Error(proxiedUploadNetworkError(err));
   }
 
   if (!res.ok) {
@@ -87,8 +87,8 @@ export async function uploadReportFiles(
     form.append("files", file);
   }
 
-  if (shouldUseDirectReportUpload()) {
-    return uploadReportFilesDirect(reportId, form);
+  if (shouldUseUpstreamRewriteUpload()) {
+    return uploadReportFilesViaUpstreamRewrite(reportId, form);
   }
 
   return uploadReportFilesViaBff(reportId, form);

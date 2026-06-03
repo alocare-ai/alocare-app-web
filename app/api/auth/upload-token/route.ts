@@ -4,8 +4,8 @@ import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { getPublicApiBase } from "@/lib/api/public-api-base";
 
 /**
- * Exposes the httpOnly access token for direct browser → api.alocare.net uploads.
- * Avoids proxying large multipart bodies through Vercel (4.5 MB function limit).
+ * Exposes the httpOnly access token for browser uploads via /api/upstream rewrite
+ * (production) or /api/backend BFF (local dev).
  */
 export async function GET() {
   const jar = await cookies();

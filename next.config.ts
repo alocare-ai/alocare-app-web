@@ -26,10 +26,16 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@alocare/design-system"],
   ...(siblingDesignSystem ? { outputFileTracingRoot: monorepoRoot } : {}),
   async rewrites() {
+    const apiBase = apiRewriteBase.replace(/\/$/, "");
     return [
       {
         source: "/v1/:path*",
-        destination: `${apiRewriteBase.replace(/\/$/, "")}/v1/:path*`,
+        destination: `${apiBase}/v1/:path*`,
+      },
+      /** Same-origin multipart uploads (edge proxy → API; avoids CORS + serverless 4.5 MB). */
+      {
+        source: "/api/upstream/:path*",
+        destination: `${apiBase}/:path*`,
       },
     ];
   },
