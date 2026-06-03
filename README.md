@@ -36,7 +36,7 @@ The portal is deployed to **[app.alocare.net](https://app.alocare.net)** via Ver
 | Build command | `npm run build` |
 | Install command | `npm ci` |
 
-Pushes to `main` on `alocare-ai/alocare-app-web` auto-deploy via Vercel Git integration. Add the custom domain `app.alocare.net` in Vercel (CNAME → `cname.vercel-dns.com`). See [alocare-tech-stack/deployment/app-web.md](../alocare-tech-stack/deployment/app-web.md).
+Production deploys run via GitHub Actions (`.github/workflows/vercel-deploy.yml`), not Vercel Git auto-deploy. Add the custom domain `app.alocare.net` in Vercel (CNAME → `cname.vercel-dns.com`). See [alocare-tech-stack/deployment/app-web.md](../alocare-tech-stack/deployment/app-web.md).
 
 | Environment variable | Production value |
 |---------------------|------------------|
