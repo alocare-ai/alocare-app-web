@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance } from "axios";
+import { getPublicApiBase } from "@/lib/api/public-api-base";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://api.alocare.net";
+const API_BASE = getPublicApiBase();
 
 export function createApiClient(token?: string): AxiosInstance {
   return axios.create({

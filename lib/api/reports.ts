@@ -5,6 +5,12 @@ import type {
   ReportUploadedFile,
 } from "@/lib/types/api";
 import { apiFetch } from "./client";
+import {
+  directUploadNetworkError,
+  fetchUploadCredentials,
+  parseDirectUploadError,
+  resolveDirectUploadApiBase,
+} from "./upload-credentials";
 
 export async function createReport(data: {
   title: string;
@@ -33,26 +39,27 @@ export async function uploadReportFiles(
     throw new Error("No files selected");
   }
 
+  const credentials = await fetchUploadCredentials();
+  const apiBase = resolveDirectUploadApiBase(credentials);
+
   const form = new FormData();
   for (const file of files) {
     form.append("files", file);
   }
 
-  const res = await fetch(`/api/backend/reports/${reportId}/upload`, {
-    method: "POST",
-    credentials: "include",
-    body: form,
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${apiBase}/reports/${reportId}/upload`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${credentials.accessToken}` },
+      body: form,
+    });
+  } catch (err) {
+    throw new Error(directUploadNetworkError(err, apiBase));
+  }
 
   if (!res.ok) {
-    let detail = "Upload failed";
-    try {
-      const body = (await res.json()) as { detail?: string };
-      detail = body.detail ?? detail;
-    } catch {
-      /* ignore */
-    }
-    throw new Error(detail);
+    throw new Error(await parseDirectUploadError(res));
   }
 
   return res.json() as Promise<ReportUploadResult>;
