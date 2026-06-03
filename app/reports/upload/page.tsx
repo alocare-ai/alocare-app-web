@@ -16,6 +16,10 @@ import {
 import { useLocale } from "@/hooks/use-locale";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
+import {
+  pipelineStepFromAiProgress,
+  runWithSavingProgress,
+} from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
 import { runOcrStream } from "@/lib/api/ocr-stream";
 import {
@@ -183,6 +187,11 @@ export default function UploadReportPage() {
 
       setStep("analyzing");
 
+      const handleAiProgress = (state: AiAnalysisProgressState) => {
+        setAiProgress(state);
+        setStep(pipelineStepFromAiProgress(state));
+      };
+
       try {
         await generateClinicalSummaryFromAI({
           report,
@@ -190,7 +199,7 @@ export default function UploadReportPage() {
           locale,
           documentText: fileContent,
           fileCount,
-          onProgress: setAiProgress,
+          onProgress: handleAiProgress,
           result: {
             id: report.id,
             status: report.status,
@@ -201,19 +210,38 @@ export default function UploadReportPage() {
         });
 
         if (fileCount > 1) {
-          const sizeByFilename = new Map(
-            uploadedFiles.map((f) => [f.filename, f.size_bytes ?? 0]),
-          );
-          const perFile = await generatePerFileSummaries({
-            report,
-            reportId,
+          await runWithSavingProgress(
             locale,
-            documentText: fileContent,
-            sizeByFilename,
-          });
-          if (perFile.length) {
-            await saveReportFileAnalyses(reportId, perFile);
-          }
+            handleAiProgress,
+            async (advance) => {
+              advance(
+                "file_analyses",
+                locale === "id"
+                  ? "Membuat ringkasan untuk setiap berkas yang diunggah…"
+                  : "Building a summary section for each uploaded file…",
+              );
+              const sizeByFilename = new Map(
+                uploadedFiles.map((f) => [f.filename, f.size_bytes ?? 0]),
+              );
+              const perFile = await generatePerFileSummaries({
+                report,
+                reportId,
+                locale,
+                documentText: fileContent,
+                sizeByFilename,
+              });
+              if (perFile.length) {
+                advance(
+                  "persist_analysis",
+                  locale === "id"
+                    ? "Menyimpan analisis per berkas ke server…"
+                    : "Saving per-file analyses to the server…",
+                );
+                await saveReportFileAnalyses(reportId, perFile);
+              }
+            },
+            { startAt: "file_analyses" },
+          );
         }
       } catch (analysisErr) {
         const message =

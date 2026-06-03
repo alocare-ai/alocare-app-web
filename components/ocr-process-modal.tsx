@@ -1,9 +1,16 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Card, CardContent, Progress, Spinner } from "@alocare/design-system";
 import { Check, Circle, X } from "lucide-react";
 import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
 import { getAiPhaseStatuses } from "@/lib/ai-analysis-progress";
+import {
+  REPORT_PIPELINE_ORDER,
+  type ReportPipelineStep,
+} from "@/lib/report-pipeline";
+
+export type { ReportPipelineStep } from "@/lib/report-pipeline";
 import type { OcrStreamEvent } from "@/lib/api/ocr-stream";
 import {
   getOcrFileStatuses,
@@ -11,18 +18,7 @@ import {
 } from "@/lib/ocr-file-progress";
 import type { Locale } from "@/hooks/use-locale";
 
-export type ReportPipelineStep =
-  | "uploaded"
-  | "ocr"
-  | "analyzing"
-  | "completed";
-
-const PIPELINE_ORDER: ReportPipelineStep[] = [
-  "uploaded",
-  "ocr",
-  "analyzing",
-  "completed",
-];
+const PIPELINE_ORDER = REPORT_PIPELINE_ORDER;
 
 type OcrProcessModalProps = {
   open: boolean;
@@ -50,7 +46,15 @@ function stepLabels(locale: Locale): Record<
     },
     analyzing: {
       title: locale === "id" ? "Analisis AI" : "AI analysis",
-      done: locale === "id" ? "Ringkasan dibuat" : "Summary generated",
+      done: locale === "id" ? "Konteks siap" : "Context prepared",
+    },
+    generating_summary: {
+      title: locale === "id" ? "Ringkasan klinis" : "Clinical summary",
+      done: locale === "id" ? "Ringkasan dihasilkan" : "Summary generated",
+    },
+    saving_results: {
+      title: locale === "id" ? "Menyimpan hasil" : "Saving results",
+      done: locale === "id" ? "Hasil tersimpan" : "Results saved",
     },
     completed: {
       title: locale === "id" ? "Selesai" : "Complete",
@@ -90,6 +94,20 @@ function activeDetail(
           ? "Memulai analisis AI…"
           : "Starting AI analysis…")
       );
+    case "generating_summary":
+      return (
+        aiProgress?.detail ??
+        (locale === "id"
+          ? "Menghasilkan ringkasan klinis…"
+          : "Generating clinical summary…")
+      );
+    case "saving_results":
+      return (
+        aiProgress?.detail ??
+        (locale === "id"
+          ? "Menyimpan hasil analisis…"
+          : "Saving analysis results…")
+      );
     case "completed":
       return locale === "id"
         ? "Membuka laporan…"
@@ -109,7 +127,13 @@ function overallProgress(
     return Math.min(58, 12 + ocrPct * 0.46);
   }
   if (step === "analyzing") {
-    return aiProgress?.progress ?? 65;
+    return aiProgress?.progress ?? 60;
+  }
+  if (step === "generating_summary") {
+    return aiProgress?.progress ?? 75;
+  }
+  if (step === "saving_results") {
+    return aiProgress?.progress ?? 90;
   }
   if (step === "completed") return 100;
   if (step === "uploaded") return 10;
@@ -127,6 +151,69 @@ function stepState(
   if (keyIdx < currentIdx) return "done";
   if (keyIdx === currentIdx) return "active";
   return "pending";
+}
+
+type AiSubstepItem = {
+  label: string;
+  status: "done" | "active" | "pending";
+  detail?: string;
+};
+
+function AiAnalysisSubsteps({
+  ariaLabel,
+  phases,
+  activeIndex,
+  items,
+  statusDetail,
+}: {
+  ariaLabel: string;
+  phases: { id: string }[];
+  activeIndex: number;
+  items: AiSubstepItem[];
+  statusDetail?: string;
+}) {
+  const activeItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    const node = activeItemRef.current;
+    if (!node) return;
+    node.scrollIntoView({ block: "end", behavior: "smooth" });
+  }, [activeIndex, statusDetail, items.length]);
+
+  return (
+    <ul
+      className="max-h-44 space-y-1 overflow-y-auto scroll-smooth border-l-2 border-teal-200 py-0.5 pl-2.5 pr-1"
+      aria-label={ariaLabel}
+    >
+      {items.map((sub, i) => (
+        <li
+          key={phases[i]?.id ?? `${sub.label}-${i}`}
+          ref={sub.status === "active" ? activeItemRef : undefined}
+          className={`flex items-start gap-1.5 text-xs ${
+            sub.status === "done"
+              ? "text-emerald-700"
+              : sub.status === "active"
+                ? "font-medium text-teal-800"
+                : "text-slate-400"
+          }`}
+        >
+          <SubstepMarker status={sub.status} />
+          <span className="min-w-0 flex-1">
+            <span className="block leading-snug">{sub.label}</span>
+            {sub.status === "active" && sub.detail ? (
+              <span
+                className="mt-0.5 block font-normal text-slate-600"
+                role="status"
+                aria-live="polite"
+              >
+                {sub.detail}
+              </span>
+            ) : null}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 function OcrFileSubsteps({
@@ -206,14 +293,26 @@ export function OcrProcessModal({
     Boolean(ocrFilesProgress?.files.some((f) => f.status === "error"));
   const progress = overallProgress(step, ocrFilesProgress, ocrEvent, aiProgress);
   const isFinished = step === "completed" && !hasError;
-  const aiSubsteps =
-    step === "analyzing" && aiProgress
-      ? getAiPhaseStatuses(
-          aiProgress.phases,
-          aiProgress.phaseIndex,
-          locale,
-        )
-      : null;
+  const aiSubstepSteps: ReportPipelineStep[] = [
+    "analyzing",
+    "generating_summary",
+    "saving_results",
+  ];
+  const showAiSubsteps =
+    aiSubstepSteps.includes(step) &&
+    aiProgress &&
+    !hasError &&
+    ((step === "analyzing" && aiProgress.stage === "prep") ||
+      (step === "generating_summary" && aiProgress.stage === "generating") ||
+      (step === "saving_results" && aiProgress.stage === "saving"));
+  const aiSubsteps = showAiSubsteps
+    ? getAiPhaseStatuses(
+        aiProgress.phases,
+        aiProgress.phaseIndex,
+        locale,
+        { statusDetail: aiProgress.detail },
+      )
+    : null;
   const showOcrSubsteps =
     step === "ocr" &&
     ocrFilesProgress &&
@@ -304,45 +403,29 @@ export function OcrProcessModal({
                             ocrFilesProgress={ocrFilesProgress}
                           />
                         ) : null}
-                        {key === "analyzing" && aiProgress && aiSubsteps && !hasError ? (
-                          <ul
-                            className="max-h-52 space-y-1 overflow-y-auto border-l-2 border-teal-200 py-0.5 pl-2.5 pr-1"
-                            aria-label={
-                              locale === "id"
-                                ? "Langkah analisis AI"
-                                : "AI analysis steps"
+                        {showAiSubsteps &&
+                        key === step &&
+                        aiProgress &&
+                        aiSubsteps ? (
+                          <AiAnalysisSubsteps
+                            ariaLabel={
+                              key === "generating_summary"
+                                ? locale === "id"
+                                  ? "Langkah ringkasan klinis"
+                                  : "Clinical summary steps"
+                                : key === "saving_results"
+                                  ? locale === "id"
+                                    ? "Langkah menyimpan hasil"
+                                    : "Saving results steps"
+                                  : locale === "id"
+                                    ? "Langkah analisis AI"
+                                    : "AI analysis steps"
                             }
-                          >
-                            {aiSubsteps.map((sub, i) => (
-                              <li
-                                key={aiProgress.phases[i]?.id ?? sub.label}
-                                className={`flex items-start gap-1.5 text-xs ${
-                                  sub.status === "done"
-                                    ? "text-emerald-700"
-                                    : sub.status === "active"
-                                      ? "font-medium text-teal-800"
-                                      : "text-slate-400"
-                                }`}
-                              >
-                                <SubstepMarker status={sub.status} />
-                                <span className="min-w-0 flex-1">
-                                  <span className="block leading-snug">
-                                    {sub.label}
-                                  </span>
-                                  {sub.status === "active" &&
-                                  aiProgress.detail ? (
-                                    <span
-                                      className="mt-0.5 block font-normal text-slate-600"
-                                      role="status"
-                                      aria-live="polite"
-                                    >
-                                      {aiProgress.detail}
-                                    </span>
-                                  ) : null}
-                                </span>
-                              </li>
-                            ))}
-                          </ul>
+                            phases={aiProgress.phases}
+                            activeIndex={aiProgress.phaseIndex}
+                            items={aiSubsteps}
+                            statusDetail={aiProgress.detail}
+                          />
                         ) : null}
                       </div>
                     ) : state === "done" ? (

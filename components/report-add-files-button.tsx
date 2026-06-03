@@ -8,7 +8,10 @@ import {
   type ReportPipelineStep,
 } from "@/components/ocr-process-modal";
 import type { Locale } from "@/hooks/use-locale";
-import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
+import {
+  pipelineStepFromAiProgress,
+  type AiAnalysisProgressState,
+} from "@/lib/ai-analysis-progress";
 import { mergeAnalyzeResponseIntoResult } from "@/lib/clinical-summary";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
 import { runOcrStream } from "@/lib/api/ocr-stream";
@@ -152,6 +155,11 @@ export function ReportAddFilesButton({
 
       const fileCount = allFiles.length;
 
+      const handleAiProgress = (state: AiAnalysisProgressState) => {
+        setAiProgress(state);
+        setStep(pipelineStepFromAiProgress(state));
+      };
+
       const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
         report,
         result: resultForAnalysis,
@@ -159,7 +167,7 @@ export function ReportAddFilesButton({
         locale,
         documentText,
         fileCount,
-        onProgress: setAiProgress,
+        onProgress: handleAiProgress,
       });
 
       const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {

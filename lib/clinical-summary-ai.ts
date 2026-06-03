@@ -110,7 +110,12 @@ export async function generateClinicalSummaryFromAI(params: {
       },
     );
 
-    progressCtrl?.finish();
+    progressCtrl?.enterSaving(
+      params.locale === "id"
+        ? "Mengurai keluaran model dan menyiapkan penyimpanan…"
+        : "Parsing model output and preparing to save…",
+    );
+    progressCtrl?.advanceSaving("parse_response");
 
     const streamSummary = (complete.summary ?? "").trim();
     const streamDoctor = complete.doctorSummary?.trim();
@@ -135,6 +140,8 @@ export async function generateClinicalSummaryFromAI(params: {
     const rejectStreamVendorFraming =
       fileCount > 1 && isFramedAsSingleVendorReport(streamSummary);
 
+    progressCtrl?.advanceSaving("validate_output");
+
     let summary: BilingualText = bilingual(narrativeEn, narrativeId);
     if (
       streamSummary &&
@@ -147,7 +154,10 @@ export async function generateClinicalSummaryFromAI(params: {
           : bilingual(narrativeEn, streamSummary);
     }
 
+    progressCtrl?.advanceSaving("bilingual_merge");
+
     try {
+      progressCtrl?.advanceSaving("report_refresh");
       const fresh = await getReportResult(params.reportId);
       const resolved = resolveClinicalSummary(fresh);
       const rejectPersistedVendorFraming =
@@ -180,6 +190,9 @@ export async function generateClinicalSummaryFromAI(params: {
     if (isUnusableStreamSummary(en) && isUnusableStreamSummary(id)) {
       throw new Error("Could not build a clinical summary from this report");
     }
+
+    progressCtrl?.advanceSaving("persist_analysis");
+    progressCtrl?.finish();
 
     return {
       summary,
