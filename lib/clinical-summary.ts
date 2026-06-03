@@ -26,8 +26,8 @@ const HEURISTIC_PATTERNS = [
   /laporan berhasil diproses/i,
   /tinjauan\s+['"]/i,
   /berdasarkan dokumen yang diunggah/i,
-  /\bcuplikan\s*:/i,
-  /\bsnippet\s*:/i,
+  /^cuplikan\s*:\s*$/im,
+  /^snippet\s*:\s*$/im,
   /weak below average above average/i,
   /gender[：:]\s*\w+/i,
   /id number[：:]/i,
@@ -86,14 +86,25 @@ export function hasMeaningfulClinicalSummary(
   return hasEn || hasId;
 }
 
+/** Lenient gate after a finished analyze stream (avoids false rejects on rule-based multi-file copy). */
+export function hasAcceptableClinicalSummary(
+  result: ReportResult | null | undefined,
+): boolean {
+  if (!result) return false;
+  const en =
+    result.summary_bilingual?.en?.trim() ?? result.summary?.trim() ?? "";
+  const id = result.summary_bilingual?.id?.trim() ?? "";
+  return !isUnusableStreamSummary(en) || !isUnusableStreamSummary(id);
+}
+
 /** Only AI-backed summaries — no client-side synthesis. */
 export function resolveClinicalSummary(result: ReportResult): BilingualText {
   let en =
     result.summary_bilingual?.en?.trim() ?? result.summary?.trim() ?? "";
   let id = result.summary_bilingual?.id?.trim() ?? "";
 
-  if (isPlaceholderClinicalSummary(en)) en = "";
-  if (isPlaceholderClinicalSummary(id)) id = "";
+  if (isUnusableStreamSummary(en)) en = "";
+  if (isUnusableStreamSummary(id)) id = "";
 
   return bilingual(en, id);
 }
@@ -112,11 +123,11 @@ export function mergeAnalyzeResponseIntoResult(
   if (analyze.summaryBilingual) {
     const en = analyze.summaryBilingual.en?.trim() ?? "";
     const id = analyze.summaryBilingual.id?.trim() ?? "";
-    if (!isPlaceholderClinicalSummary(en) || !isPlaceholderClinicalSummary(id)) {
+    if (!isUnusableStreamSummary(en) || !isUnusableStreamSummary(id)) {
       next.summary = en || id;
       next.summary_bilingual = {
-        en: isPlaceholderClinicalSummary(en) ? id : en,
-        id: isPlaceholderClinicalSummary(id)
+        en: isUnusableStreamSummary(en) ? id : en,
+        id: isUnusableStreamSummary(id)
           ? looksEnglish(en)
             ? localizeClinicalEnToId(en)
             : en
@@ -127,7 +138,7 @@ export function mergeAnalyzeResponseIntoResult(
     }
   } else {
     const summaryText = analyze.summary?.trim();
-    if (summaryText && !isPlaceholderClinicalSummary(summaryText)) {
+    if (summaryText && !isUnusableStreamSummary(summaryText)) {
       next.summary = summaryText;
       next.summary_bilingual = {
         en: summaryText,

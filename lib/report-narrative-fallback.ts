@@ -135,9 +135,9 @@ function buildSectionNarrative(
   const excerpt = document.replace(/\s+/g, " ").slice(0, 400);
   const fileBit = filename ? ` (${filename})` : "";
   if (locale === "id") {
-    return `Ringkasan dokumen${fileBit} untuk ${patient}. Cuplikan: ${excerpt}…`;
+    return `Ringkasan dokumen${fileBit} untuk ${patient}. Awalan teks: ${excerpt}…`;
   }
-  return `Document summary${fileBit} for ${patient}. Excerpt: ${excerpt}…`;
+  return `Document summary${fileBit} for ${patient}. Opening text: ${excerpt}…`;
 }
 
 /** Rule-based summary when the analyze stream returns a placeholder. */

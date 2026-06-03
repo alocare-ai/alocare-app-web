@@ -18,10 +18,7 @@ import { ReportAiChatFab } from "@/components/report-ai-chat-fab";
 import { useLocale } from "@/hooks/use-locale";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
 import { getReport, getReportResult } from "@/lib/api/reports";
-import {
-  hasDisplayableClinicalSummary,
-  hasMeaningfulClinicalSummary,
-} from "@/lib/report-result-utils";
+import { hasDisplayableClinicalSummary } from "@/lib/report-result-utils";
 import { bilingual } from "@/lib/i18n";
 import { repairClinicalSummary } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
@@ -104,13 +101,13 @@ export function ReportDetailClient({
     queryKey: ["report-result", reportId],
     queryFn: () => getReportResult(reportId),
     initialData:
-      cachedResult && hasMeaningfulClinicalSummary(cachedResult)
+      cachedResult && hasDisplayableClinicalSummary(cachedResult)
         ? cachedResult
         : initialResult ?? undefined,
     refetchOnMount: (query) =>
-      !hasMeaningfulClinicalSummary(query.state.data),
+      !hasDisplayableClinicalSummary(query.state.data),
     refetchInterval: (query) => {
-      if (hasMeaningfulClinicalSummary(query.state.data)) {
+      if (hasDisplayableClinicalSummary(query.state.data)) {
         return false;
       }
       const status = report?.status;
@@ -139,12 +136,11 @@ export function ReportDetailClient({
     locale,
   });
 
-  const hasMeaningfulSummary = hasMeaningfulClinicalSummary(result);
   const hasSummary = hasDisplayableClinicalSummary(result);
 
   const isAnalyzing =
     aiAnalysisRunning ||
-    (!hasMeaningfulSummary &&
+    (!hasSummary &&
       (report?.status === "uploaded" ||
         report?.status === "processing" ||
         initialAnalyzing));
@@ -157,7 +153,7 @@ export function ReportDetailClient({
     let base: typeof inProgress;
     if (aiSummary) {
       base = aiSummary;
-    } else if (hasMeaningfulSummary && analysis?.summary) {
+    } else if (hasSummary && analysis?.summary) {
       base = analysis.summary;
     } else if (isAnalyzing) {
       base = inProgress;
@@ -166,7 +162,7 @@ export function ReportDetailClient({
     }
     if (!result) return base;
     return repairClinicalSummary(base, extractDocumentText(result), result);
-  }, [aiSummary, analysis?.summary, hasMeaningfulSummary, isAnalyzing, result]);
+  }, [aiSummary, analysis?.summary, hasSummary, isAnalyzing, result]);
 
   const uploadedFiles = useMemo((): ReportUploadedFile[] => {
     if (!report) return [];

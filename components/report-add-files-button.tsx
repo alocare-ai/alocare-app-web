@@ -12,8 +12,10 @@ import {
   pipelineStepFromAiProgress,
   type AiAnalysisProgressState,
 } from "@/lib/ai-analysis-progress";
-import { mergeAnalyzeResponseIntoResult } from "@/lib/clinical-summary";
-import { waitForReportAnalysisReady } from "@/lib/wait-for-report-analysis";
+import {
+  hasAcceptableClinicalSummary,
+  mergeAnalyzeResponseIntoResult,
+} from "@/lib/clinical-summary";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
 import { runOcrStream } from "@/lib/api/ocr-stream";
 import {
@@ -176,13 +178,15 @@ export function ReportAddFilesButton({
         nextActions: analyzeExtras?.nextActions,
       });
 
+      if (!hasAcceptableClinicalSummary(merged)) {
+        throw new Error(
+          locale === "id"
+            ? "Ringkasan klinis tidak dapat dibuat dari berkas ini."
+            : "Could not build a clinical summary from these files.",
+        );
+      }
+
       queryClient.setQueryData(["report-result", reportId], merged);
-
-      const { report: savedReport, result: savedResult } =
-        await waitForReportAnalysisReady(reportId, { fallbackResult: merged });
-
-      queryClient.setQueryData(["report-result", reportId], savedResult);
-      queryClient.setQueryData(["report", reportId], savedReport);
 
       setPendingAnalysis(false);
       setStep("completed");

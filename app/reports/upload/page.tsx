@@ -21,10 +21,9 @@ import {
 } from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
 import {
-  hasMeaningfulClinicalSummary,
+  hasAcceptableClinicalSummary,
   mergeAnalyzeResponseIntoResult,
 } from "@/lib/clinical-summary";
-import { waitForReportAnalysisReady } from "@/lib/wait-for-report-analysis";
 import { pipelineStepFromAiProgress } from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
 import { runOcrStream } from "@/lib/api/ocr-stream";
@@ -222,7 +221,7 @@ export default function UploadReportPage() {
           nextActions: analyzeExtras?.nextActions,
         });
 
-        if (!hasMeaningfulClinicalSummary(merged)) {
+        if (!hasAcceptableClinicalSummary(merged)) {
           throw new Error(
             locale === "id"
               ? "Ringkasan klinis tidak dapat dibuat dari laporan ini."
@@ -231,29 +230,21 @@ export default function UploadReportPage() {
         }
 
         queryClient.setQueryData(["report-result", reportId], merged);
+        queryClient.setQueryData(["report", reportId], {
+          ...report,
+          status: "completed",
+        });
 
-        const persistIdx = Math.max(
-          0,
-          AI_SAVING_PHASES.findIndex((p) => p.id === "persist_analysis"),
-        );
         handleAiProgress({
           stage: "saving",
-          phaseIndex: persistIdx,
+          phaseIndex: AI_SAVING_PHASES.length - 1,
           phases: AI_SAVING_PHASES,
           detail:
             locale === "id"
-              ? "Menyimpan ringkasan klinis…"
-              : "Saving clinical summary…",
-          progress: 92,
+              ? "Ringkasan klinis siap"
+              : "Clinical summary ready",
+          progress: 98,
         });
-
-        const { report: savedReport, result: savedResult } =
-          await waitForReportAnalysisReady(reportId, {
-            fallbackResult: merged,
-          });
-
-        queryClient.setQueryData(["report-result", reportId], savedResult);
-        queryClient.setQueryData(["report", reportId], savedReport);
       } catch (analysisErr) {
         const message =
           analysisErr instanceof Error

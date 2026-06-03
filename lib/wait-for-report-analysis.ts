@@ -1,5 +1,8 @@
 import { getReport, getReportResult } from "@/lib/api/reports";
-import { hasMeaningfulClinicalSummary } from "@/lib/clinical-summary";
+import {
+  hasAcceptableClinicalSummary,
+  hasMeaningfulClinicalSummary,
+} from "@/lib/clinical-summary";
 import type { Report, ReportResult } from "@/lib/types/api";
 
 function sleep(ms: number): Promise<void> {
@@ -38,7 +41,8 @@ export async function waitForReportAnalysisReady(
   const intervalMs = options?.intervalMs ?? 750;
   const deadline = Date.now() + timeoutMs;
   const syncDeadline =
-    options?.fallbackResult && hasMeaningfulClinicalSummary(options.fallbackResult)
+    options?.fallbackResult &&
+    hasAcceptableClinicalSummary(options.fallbackResult)
       ? Date.now() + syncTimeoutMs
       : deadline;
 
@@ -65,7 +69,7 @@ export async function waitForReportAnalysisReady(
 
   if (
     options?.fallbackResult &&
-    hasMeaningfulClinicalSummary(options.fallbackResult)
+    hasAcceptableClinicalSummary(options.fallbackResult)
   ) {
     const report = await getReport(reportId);
     return { report, result: options.fallbackResult };

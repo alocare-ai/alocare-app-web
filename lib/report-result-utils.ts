@@ -1,4 +1,7 @@
-import { hasMeaningfulClinicalSummary } from "@/lib/clinical-summary";
+import {
+  hasAcceptableClinicalSummary,
+  hasMeaningfulClinicalSummary,
+} from "@/lib/clinical-summary";
 
 export { hasMeaningfulClinicalSummary };
 import type { Locale } from "@/lib/i18n";
@@ -15,7 +18,10 @@ export function hasClinicalSummary(
 export function hasDisplayableClinicalSummary(
   result: ReportResult | null | undefined,
 ): boolean {
-  return hasMeaningfulClinicalSummary(result);
+  return (
+    hasMeaningfulClinicalSummary(result) ||
+    hasAcceptableClinicalSummary(result)
+  );
 }
 
 export function hasDoctorSummaryContent(
@@ -66,9 +72,9 @@ export function reportNeedsAiClinicalSummary(
   result: ReportResult | null | undefined,
 ): boolean {
   if (!report || report.status === "failed") return false;
-  if (hasMeaningfulClinicalSummary(result)) return false;
+  if (hasAcceptableClinicalSummary(result)) return false;
   if (report.status === "completed" || report.status === "validated") {
-    return !hasMeaningfulClinicalSummary(result);
+    return !hasAcceptableClinicalSummary(result);
   }
   if (hasDoctorSummaryContent(result)) return true;
   if ((result?.key_findings?.length ?? 0) > 0) return true;
