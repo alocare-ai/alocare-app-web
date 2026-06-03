@@ -27,17 +27,21 @@ const nextConfig: NextConfig = {
   ...(siblingDesignSystem ? { outputFileTracingRoot: monorepoRoot } : {}),
   async rewrites() {
     const apiBase = apiRewriteBase.replace(/\/$/, "");
-    return [
-      {
-        source: "/v1/:path*",
-        destination: `${apiBase}/v1/:path*`,
-      },
-      /** Multipart uploads: outside /api so Vercel does not apply the 4.5 MB function cap. */
-      {
-        source: "/upstream-api/:path*",
-        destination: `${apiBase}/:path*`,
-      },
-    ];
+    return {
+      /** Must run before App Router filesystem — array rewrites only run afterFiles and 404. */
+      beforeFiles: [
+        {
+          source: "/upstream-api/:path*",
+          destination: `${apiBase}/:path*`,
+        },
+      ],
+      afterFiles: [
+        {
+          source: "/v1/:path*",
+          destination: `${apiBase}/v1/:path*`,
+        },
+      ],
+    };
   },
   turbopack: {
     resolveAlias: {

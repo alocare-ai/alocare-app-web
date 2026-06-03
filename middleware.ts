@@ -4,7 +4,7 @@ import { AUTH_COOKIES, PROTECTED_PREFIXES } from "@/lib/auth/cookies";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/api/")) {
+  if (pathname.startsWith("/api/") || pathname.startsWith("/upstream-api/")) {
     return NextResponse.next();
   }
 
