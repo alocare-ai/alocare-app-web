@@ -108,7 +108,7 @@ export default function HealthPage() {
               />
               <MetricCard
                 title={locale === "id" ? "Peringatan" : "Alerts"}
-                value={String(data.early_warnings.length)}
+                value={String(data.early_warnings?.length ?? 0)}
               />
             </div>
 
@@ -127,7 +127,7 @@ export default function HealthPage() {
               </Card>
             ) : null}
 
-            {data.early_warnings.length > 0 ? (
+            {(data.early_warnings?.length ?? 0) > 0 ? (
               <Card>
                 <CardHeader>
                   <CardTitle>
@@ -136,7 +136,7 @@ export default function HealthPage() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2 text-sm">
-                    {data.early_warnings.map((w) => (
+                    {(data.early_warnings ?? []).map((w) => (
                       <li
                         key={w.code}
                         className="rounded-lg border border-amber-100 bg-amber-50 px-3 py-2 text-amber-900"
@@ -209,14 +209,14 @@ export default function HealthPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
-                {data.ai_recommendations.length > 0 ? (
+                {(data.ai_recommendations?.length ?? 0) > 0 ? (
                   <ul className="list-disc space-y-1 pl-5 text-slate-700">
-                    {data.ai_recommendations.map((rec) => (
+                    {(data.ai_recommendations ?? []).map((rec) => (
                       <li key={rec}>{rec}</li>
                     ))}
                   </ul>
                 ) : null}
-                {data.upcoming_tests.map((t) => (
+                {(data.upcoming_tests ?? []).map((t) => (
                   <p key={t} className="text-slate-600">
                     {t}
                   </p>

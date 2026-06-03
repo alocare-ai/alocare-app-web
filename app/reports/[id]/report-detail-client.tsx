@@ -33,7 +33,6 @@ import {
   mapKeyFindings,
   parseReportResult,
   pickDoctorSummaryText,
-  pickLocaleText,
 } from "@/lib/report-analysis";
 import type { Report, ReportResult } from "@/lib/types/api";
 

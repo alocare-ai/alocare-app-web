@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader } from "@alocare/design-system";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
-import type { PatientAccountSummary, UserProfile } from "@/lib/types/api";
+import type { UserProfile } from "@/lib/types/api";
 
 type Props = {
   user: UserProfile;
