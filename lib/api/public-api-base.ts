@@ -8,7 +8,7 @@ export function getPublicApiBase(): string {
 }
 
 /**
- * Production: same-origin `/api/upstream/*` rewrite → API (no CORS, no function body cap).
+ * Production: `/upstream-api/*` rewrite → API (one file per request, ≤ 4.5 MB each).
  * Development: `/api/backend/*` BFF with httpOnly cookies.
  */
 export function shouldUseUpstreamRewriteUpload(): boolean {

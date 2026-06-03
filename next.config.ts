@@ -32,9 +32,9 @@ const nextConfig: NextConfig = {
         source: "/v1/:path*",
         destination: `${apiBase}/v1/:path*`,
       },
-      /** Same-origin multipart uploads (edge proxy → API; avoids CORS + serverless 4.5 MB). */
+      /** Multipart uploads: outside /api so Vercel does not apply the 4.5 MB function cap. */
       {
-        source: "/api/upstream/:path*",
+        source: "/upstream-api/:path*",
         destination: `${apiBase}/:path*`,
       },
     ];

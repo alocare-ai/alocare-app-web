@@ -7,6 +7,10 @@ import type {
 import { apiFetch } from "./client";
 import { shouldUseUpstreamRewriteUpload } from "@/lib/api/public-api-base";
 import {
+  upstreamUploadUrl,
+  VERCEL_MAX_UPLOAD_BYTES,
+} from "@/lib/api/upload-proxy-path";
+import {
   fetchUploadCredentials,
   parseDirectUploadError,
   proxiedUploadNetworkError,
@@ -48,13 +52,26 @@ async function uploadReportFilesViaBff(
   return res.json() as Promise<ReportUploadResult>;
 }
 
-/** Production: POST to same-origin path; Vercel rewrites to api.alocare.net. */
+function assertFileWithinUploadLimit(file: File): void {
+  if (file.size > VERCEL_MAX_UPLOAD_BYTES) {
+    throw new Error(
+      `${file.name} exceeds the 4.5 MB per-file upload limit. Compress the file or upload fewer pages at a time.`,
+    );
+  }
+}
+
+/** Production: same-origin rewrite → API (one multipart request). */
 async function uploadReportFilesViaUpstreamRewrite(
   reportId: string,
-  form: FormData,
+  files: File[],
 ): Promise<ReportUploadResult> {
   const credentials = await fetchUploadCredentials();
-  const url = `/api/upstream/reports/${reportId}/upload`;
+  const url = upstreamUploadUrl(reportId);
+
+  const form = new FormData();
+  for (const file of files) {
+    form.append("files", file);
+  }
 
   let res: Response;
   try {
@@ -82,15 +99,22 @@ export async function uploadReportFiles(
     throw new Error("No files selected");
   }
 
+  for (const file of files) {
+    assertFileWithinUploadLimit(file);
+  }
+
+  if (shouldUseUpstreamRewriteUpload()) {
+    let last: ReportUploadResult | undefined;
+    for (const file of files) {
+      last = await uploadReportFilesViaUpstreamRewrite(reportId, [file]);
+    }
+    return last!;
+  }
+
   const form = new FormData();
   for (const file of files) {
     form.append("files", file);
   }
-
-  if (shouldUseUpstreamRewriteUpload()) {
-    return uploadReportFilesViaUpstreamRewrite(reportId, form);
-  }
-
   return uploadReportFilesViaBff(reportId, form);
 }
 

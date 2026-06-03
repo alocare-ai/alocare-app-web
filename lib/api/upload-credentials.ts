@@ -54,7 +54,7 @@ function extractUploadErrorDetail(body: unknown): string | undefined {
 export async function parseDirectUploadError(res: Response): Promise<string> {
   const fallback =
     res.status === 413
-      ? "Upload too large for the server limit."
+      ? "Upload too large (max 4.5 MB per file on this portal). Try one file at a time or a smaller PDF."
       : `Upload failed (${res.status})`;
 
   try {

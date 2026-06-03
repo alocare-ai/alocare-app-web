@@ -4,7 +4,7 @@ import { AUTH_COOKIES } from "@/lib/auth/cookies";
 import { getPublicApiBase } from "@/lib/api/public-api-base";
 
 /**
- * Exposes the httpOnly access token for browser uploads via /api/upstream rewrite
+ * Exposes the httpOnly access token for browser uploads via /upstream-api rewrite
  * (production) or /api/backend BFF (local dev).
  */
 export async function GET() {
