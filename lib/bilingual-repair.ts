@@ -39,18 +39,6 @@ function shouldUseEnClinicalForId(en: string, id: string): boolean {
   return false;
 }
 
-function shouldUseEnDoctorForId(en: string, id: string): boolean {
-  if (!en.trim()) return false;
-  if (!id.trim()) return true;
-  if (en === id) return true;
-  if (needsLocalizationToId(id)) return true;
-  if (looksEnglish(id)) return true;
-  if (isRawOcrDump(id)) return true;
-  if (isDoctorBriefWithOcrExcerpt(id)) return true;
-  if (isGenericLabClinicalTemplate(id)) return true;
-  return false;
-}
-
 /** Fix ID slots that were assigned the wrong summary type. */
 function fixSwappedIndonesianSlots(
   summary: BilingualText,

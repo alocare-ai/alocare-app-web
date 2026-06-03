@@ -263,8 +263,9 @@ export type AiAnalysisProgressState = {
 };
 
 export function pipelineStepFromAiProgress(
-  _state: AiAnalysisProgressState,
+  state: AiAnalysisProgressState,
 ): ReportPipelineStep {
+  void state;
   return "analyzing";
 }
 

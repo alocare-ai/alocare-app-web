@@ -195,7 +195,7 @@ function OcrFileSubsteps({
   locale: Locale;
   ocrFilesProgress: OcrFilesProgressState;
 }) {
-  const items = getOcrFileStatuses(ocrFilesProgress.files, locale);
+  const items = getOcrFileStatuses(ocrFilesProgress.files);
   if (items.length <= 1) return null;
 
   return (

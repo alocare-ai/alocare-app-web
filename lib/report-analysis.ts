@@ -5,10 +5,6 @@ import {
 } from "@/lib/clinical-summary";
 import { repairAnalysisFromResult } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
-import {
-  looksEnglish,
-  needsLocalizationToId,
-} from "@/lib/locale-detect";
 import type { Locale } from "@/hooks/use-locale";
 import type { ReportResult } from "@/lib/types/api";
 

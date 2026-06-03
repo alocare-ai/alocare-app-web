@@ -170,7 +170,6 @@ export function applyOcrStreamEvent(
 
 export function getOcrFileStatuses(
   files: OcrFileItem[],
-  locale: Locale,
 ): { label: string; status: OcrFileStatus; detail?: string }[] {
   return files.map((file) => ({
     label: file.name,

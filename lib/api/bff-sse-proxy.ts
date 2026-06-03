@@ -16,8 +16,9 @@ export async function proxyAuthenticatedSse(
   const jar = await cookies();
   const refreshCookie = jar.get(AUTH_COOKIES.refresh)?.value;
 
-  let { token, refreshed } = await getAccessTokenForBff();
-  let tokensToSet: RefreshedTokens | null = refreshed;
+  const initial = await getAccessTokenForBff();
+  let token = initial.token;
+  let tokensToSet: RefreshedTokens | null = initial.refreshed;
 
   if (!token) {
     return new Response(JSON.stringify({ detail: "Not authenticated" }), {
