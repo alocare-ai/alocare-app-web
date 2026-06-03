@@ -49,6 +49,7 @@ export function ClinicalSummarySection({
   );
 
   const showFileDetails = shouldShowClinicalFileDetails(display);
+  const hasOverview = Boolean(display.overview.trim());
   const fileCount = display.fileSections.length;
   const patientPanelLabel =
     locale === "id" ? "Identitas pasien" : "Patient identity";
@@ -104,7 +105,7 @@ export function ClinicalSummarySection({
                 {loadingMessage ?? defaultLoadingMessage}
               </span>
             </div>
-          ) : (
+          ) : hasOverview ? (
             <>
               <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                 {locale === "id" ? "Ringkasan klinis" : "Clinical overview"}
@@ -113,7 +114,7 @@ export function ClinicalSummarySection({
                 {display.overview}
               </p>
             </>
-          )}
+          ) : null}
         </div>
       </div>
 

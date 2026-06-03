@@ -5,7 +5,7 @@ import {
   RecommendationList,
   Spinner,
 } from "@alocare/design-system";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getPatient } from "@/lib/api/patients";
 import { useMemo, type ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
@@ -22,6 +22,7 @@ import {
   hasDisplayableClinicalSummary,
   hasMeaningfulClinicalSummary,
 } from "@/lib/report-result-utils";
+import { bilingual } from "@/lib/i18n";
 import { repairClinicalSummary } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
 import { extractDocumentText } from "@/lib/report-document";
@@ -66,11 +67,24 @@ export function ReportDetailClient({
   analyzingBanner = null,
 }: ReportDetailClientProps) {
   const { locale } = useLocale();
+  const queryClient = useQueryClient();
+
+  const cachedResult = queryClient.getQueryData<ReportResult>([
+    "report-result",
+    reportId,
+  ]);
+  const cachedReport = queryClient.getQueryData<Report>(["report", reportId]);
 
   const { data: report, isLoading: reportLoading } = useQuery({
     queryKey: ["report", reportId],
     queryFn: () => getReport(reportId),
-    initialData: initialReport ?? undefined,
+    initialData:
+      cachedReport ??
+      initialReport ??
+      undefined,
+    refetchOnMount: (query) =>
+      query.state.data?.status === "uploaded" ||
+      query.state.data?.status === "processing",
     refetchInterval: (query) => {
       const status = query.state.data?.status;
       if (status === "processing" || status === "uploaded") {
@@ -89,13 +103,18 @@ export function ReportDetailClient({
   const { data: result, isLoading: resultLoading } = useQuery({
     queryKey: ["report-result", reportId],
     queryFn: () => getReportResult(reportId),
-    initialData: initialResult ?? undefined,
+    initialData:
+      cachedResult && hasMeaningfulClinicalSummary(cachedResult)
+        ? cachedResult
+        : initialResult ?? undefined,
+    refetchOnMount: (query) =>
+      !hasMeaningfulClinicalSummary(query.state.data),
     refetchInterval: (query) => {
+      if (hasMeaningfulClinicalSummary(query.state.data)) {
+        return false;
+      }
       const status = report?.status;
       if (status === "processing" || status === "uploaded") {
-        return 3000;
-      }
-      if (!hasMeaningfulClinicalSummary(query.state.data)) {
         return 3000;
       }
       return false;
@@ -131,17 +150,23 @@ export function ReportDetailClient({
         initialAnalyzing));
 
   const summary = useMemo(() => {
-    const base =
-      aiSummary ??
-      (hasMeaningfulSummary && analysis?.summary
-        ? analysis.summary
-        : {
-            en: "Analysis in progress…",
-            id: "Analisis sedang berlangsung…",
-          });
+    const inProgress = bilingual(
+      "Analysis in progress…",
+      "Analisis sedang berlangsung…",
+    );
+    let base: typeof inProgress;
+    if (aiSummary) {
+      base = aiSummary;
+    } else if (hasMeaningfulSummary && analysis?.summary) {
+      base = analysis.summary;
+    } else if (isAnalyzing) {
+      base = inProgress;
+    } else {
+      base = bilingual("", "");
+    }
     if (!result) return base;
     return repairClinicalSummary(base, extractDocumentText(result), result);
-  }, [aiSummary, analysis?.summary, hasMeaningfulSummary, result]);
+  }, [aiSummary, analysis?.summary, hasMeaningfulSummary, isAnalyzing, result]);
 
   const uploadedFiles = useMemo((): ReportUploadedFile[] => {
     if (!report) return [];
@@ -351,7 +376,9 @@ export function ReportDetailClient({
             <ClinicalSummarySection
               summary={summary}
               locale={locale}
-              loading={!hasSummary && isAnalyzing}
+              loading={
+                !hasSummary && (isAnalyzing || aiSummaryGenerating)
+              }
               fileAnalyses={fileAnalyses}
               patientFields={clinicalSummaryPatientFields}
             />

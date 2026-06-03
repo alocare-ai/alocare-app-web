@@ -13,6 +13,7 @@ import {
   type AiAnalysisProgressState,
 } from "@/lib/ai-analysis-progress";
 import { mergeAnalyzeResponseIntoResult } from "@/lib/clinical-summary";
+import { waitForReportAnalysisReady } from "@/lib/wait-for-report-analysis";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
 import { runOcrStream } from "@/lib/api/ocr-stream";
 import {
@@ -177,10 +178,11 @@ export function ReportAddFilesButton({
 
       queryClient.setQueryData(["report-result", reportId], merged);
 
-      await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
-      await queryClient.invalidateQueries({
-        queryKey: ["report-result", reportId],
-      });
+      const { report: savedReport, result: savedResult } =
+        await waitForReportAnalysisReady(reportId, { fallbackResult: merged });
+
+      queryClient.setQueryData(["report-result", reportId], savedResult);
+      queryClient.setQueryData(["report", reportId], savedReport);
 
       setPendingAnalysis(false);
       setStep("completed");

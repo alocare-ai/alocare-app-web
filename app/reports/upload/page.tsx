@@ -15,9 +15,16 @@ import {
   type ReportPipelineStep,
 } from "@/components/ocr-process-modal";
 import { useLocale } from "@/hooks/use-locale";
-import type { AiAnalysisProgressState } from "@/lib/ai-analysis-progress";
+import {
+  AI_SAVING_PHASES,
+  type AiAnalysisProgressState,
+} from "@/lib/ai-analysis-progress";
 import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
-import { mergeAnalyzeResponseIntoResult } from "@/lib/clinical-summary";
+import {
+  hasMeaningfulClinicalSummary,
+  mergeAnalyzeResponseIntoResult,
+} from "@/lib/clinical-summary";
+import { waitForReportAnalysisReady } from "@/lib/wait-for-report-analysis";
 import { pipelineStepFromAiProgress } from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
 import { runOcrStream } from "@/lib/api/ocr-stream";
@@ -215,11 +222,38 @@ export default function UploadReportPage() {
           nextActions: analyzeExtras?.nextActions,
         });
 
+        if (!hasMeaningfulClinicalSummary(merged)) {
+          throw new Error(
+            locale === "id"
+              ? "Ringkasan klinis tidak dapat dibuat dari laporan ini."
+              : "Could not build a clinical summary from this report.",
+          );
+        }
+
         queryClient.setQueryData(["report-result", reportId], merged);
-        queryClient.setQueryData(["report", reportId], {
-          ...report,
-          status: "completed",
+
+        const persistIdx = Math.max(
+          0,
+          AI_SAVING_PHASES.findIndex((p) => p.id === "persist_analysis"),
+        );
+        handleAiProgress({
+          stage: "saving",
+          phaseIndex: persistIdx,
+          phases: AI_SAVING_PHASES,
+          detail:
+            locale === "id"
+              ? "Menyimpan ringkasan klinis…"
+              : "Saving clinical summary…",
+          progress: 92,
         });
+
+        const { report: savedReport, result: savedResult } =
+          await waitForReportAnalysisReady(reportId, {
+            fallbackResult: merged,
+          });
+
+        queryClient.setQueryData(["report-result", reportId], savedResult);
+        queryClient.setQueryData(["report", reportId], savedReport);
       } catch (analysisErr) {
         const message =
           analysisErr instanceof Error
