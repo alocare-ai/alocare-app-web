@@ -1,13 +1,14 @@
 "use client";
 
 import {
+  Button,
   UploadDropzone,
-  UploadPreview,
   type UploadDropzoneState,
 } from "@alocare/design-system";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { AppShell } from "@/components/app-shell";
+import { UploadedFileRow } from "@/components/uploaded-file-row";
 import {
   OcrProcessModal,
   type ReportPipelineStep,
@@ -24,15 +25,13 @@ import {
 } from "@/lib/ocr-file-progress";
 import {
   createReport,
+  deleteReportFile,
+  getReportFiles,
   saveReportFileAnalyses,
   uploadReportFiles,
 } from "@/lib/api/reports";
 import { generatePerFileSummaries } from "@/lib/per-file-summary";
-import type { ReportResult } from "@/lib/types/api";
-import {
-  readReportFileContent,
-  readReportFilesContent,
-} from "@/lib/report-analysis";
+import type { Report, ReportResult, ReportUploadedFile } from "@/lib/types/api";
 
 type PipelineStep = "idle" | ReportPipelineStep;
 
@@ -55,20 +54,15 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-function formatFileLabel(files: File[], locale: "en" | "id"): string {
-  if (files.length === 1) return files[0].name;
-  const names = files.map((f) => f.name).join(", ");
-  if (names.length <= 72) return names;
-  return locale === "id"
-    ? `${files.length} berkas dipilih`
-    : `${files.length} files selected`;
-}
-
 export default function UploadReportPage() {
   const { locale } = useLocale();
   const router = useRouter();
   const [dropState, setDropState] = useState<UploadDropzoneState>("empty");
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [report, setReport] = useState<Report | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<ReportUploadedFile[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [isRemoving, setIsRemoving] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState<PipelineStep>("idle");
   const [error, setError] = useState<string | null>(null);
   const [processModalOpen, setProcessModalOpen] = useState(false);
@@ -78,108 +72,38 @@ export default function UploadReportPage() {
     null,
   );
 
-  const fileLabel =
-    selectedFiles.length > 0
-      ? formatFileLabel(selectedFiles, locale)
-      : null;
+  const reportId = report?.id ?? null;
+  const canSubmit = Boolean(reportId && uploadedFiles.length > 0 && !isUploading);
+  const isBusy = isUploading || isSubmitting;
+
+  const refreshUploadedFiles = useCallback(async (id: string) => {
+    const list = await getReportFiles(id);
+    setUploadedFiles(list);
+    return list;
+  }, []);
 
   const handleFiles = useCallback(
     async (files: FileList) => {
       const fileList = Array.from(files);
-      if (!fileList.length) return;
+      if (!fileList.length || isBusy) return;
 
       setError(null);
-      setOcrFilesProgress(null);
-      setAiProgress(null);
-      setSelectedFiles(fileList);
+      setIsUploading(true);
       setDropState("uploading");
-      setStep("uploaded");
-      setProcessModalOpen(true);
 
       try {
-        const report = await createReport({
-          title: buildReportTitle(fileList),
-          file_reference: formatFileReference(fileList),
-        });
-
-        setDropState("success");
-
-        const uploadResult = await uploadReportFiles(report.id, fileList);
-
-        setStep("ocr");
-
-        const initialOcr = createOcrFilesProgress(
-          fileList.map((f) => f.name),
-        );
-        setOcrFilesProgress(initialOcr);
-
-        const ocrText = await runOcrStream(report.id, (event) => {
-          setOcrFilesProgress((prev) =>
-            applyOcrStreamEvent(prev ?? initialOcr, event, locale),
-          );
-        });
-
-        let fileContent = ocrText.trim();
-        if (!fileContent) {
-          fileContent =
-            fileList.length === 1
-              ? await readReportFileContent(fileList[0])
-              : await readReportFilesContent(fileList);
-        }
-
-        setStep("analyzing");
-
-        try {
-          await generateClinicalSummaryFromAI({
-            report,
-            reportId: report.id,
-            locale,
-            documentText: fileContent,
-            fileCount: fileList.length,
-            onProgress: setAiProgress,
-            result: {
-              id: report.id,
-              status: report.status,
-              summary: null,
-              doctor_summary: fileContent,
-              next_actions: [],
-            } satisfies ReportResult,
+        let activeReport = report;
+        if (!activeReport) {
+          activeReport = await createReport({
+            title: buildReportTitle(fileList),
+            file_reference: formatFileReference(fileList),
           });
-
-          if (fileList.length > 1) {
-            const sizeByFilename = new Map(
-              uploadResult.files.map((f) => [f.filename, f.size]),
-            );
-            for (const file of fileList) {
-              if (!sizeByFilename.has(file.name)) {
-                sizeByFilename.set(file.name, file.size);
-              }
-            }
-            const perFile = await generatePerFileSummaries({
-              report,
-              reportId: report.id,
-              locale,
-              documentText: fileContent,
-              sizeByFilename,
-            });
-            if (perFile.length) {
-              await saveReportFileAnalyses(report.id, perFile);
-            }
-          }
-        } catch (analysisErr) {
-          const message =
-            analysisErr instanceof Error
-              ? analysisErr.message
-              : locale === "id"
-                ? "Analisis AI gagal"
-                : "AI analysis failed";
-          setError(message);
-          setDropState("error");
-          return;
+          setReport(activeReport);
         }
 
-        setStep("completed");
-        router.push(`/reports/${report.id}`);
+        await uploadReportFiles(activeReport.id, fileList);
+        await refreshUploadedFiles(activeReport.id);
+        setDropState("empty");
       } catch (err) {
         setDropState("error");
         const detail =
@@ -190,19 +114,153 @@ export default function UploadReportPage() {
               ? "Unggah gagal. Periksa koneksi API."
               : "Upload failed. Check API connection."),
         );
+      } finally {
+        setIsUploading(false);
       }
     },
-    [locale, router],
+    [isBusy, locale, refreshUploadedFiles, report],
   );
 
+  const handleRemoveFile = useCallback(
+    async (filename: string) => {
+      if (!reportId || isBusy) return;
+      setError(null);
+      setIsRemoving(filename);
+      try {
+        await deleteReportFile(reportId, filename);
+        const remaining = await refreshUploadedFiles(reportId);
+        if (remaining.length === 0) {
+          setReport(null);
+          setDropState("empty");
+        }
+      } catch (err) {
+        const detail =
+          err instanceof ApiError || err instanceof Error ? err.message : null;
+        setError(
+          detail ??
+            (locale === "id" ? "Gagal menghapus berkas" : "Failed to remove file"),
+        );
+      } finally {
+        setIsRemoving(null);
+      }
+    },
+    [isBusy, locale, refreshUploadedFiles, reportId],
+  );
+
+  const handleSubmit = useCallback(async () => {
+    if (!report || !reportId || uploadedFiles.length === 0 || isBusy) return;
+
+    setError(null);
+    setIsSubmitting(true);
+    setOcrFilesProgress(null);
+    setAiProgress(null);
+    setStep("uploaded");
+    setProcessModalOpen(true);
+
+    const fileNames = uploadedFiles.map((f) => f.filename);
+    const fileCount = uploadedFiles.length;
+
+    try {
+      setStep("ocr");
+
+      const initialOcr = createOcrFilesProgress(fileNames);
+      setOcrFilesProgress(initialOcr);
+
+      const ocrText = await runOcrStream(reportId, (event) => {
+        setOcrFilesProgress((prev) =>
+          applyOcrStreamEvent(prev ?? initialOcr, event, locale),
+        );
+      });
+
+      const fileContent = ocrText.trim();
+      if (!fileContent) {
+        throw new Error(
+          locale === "id"
+            ? "Tidak ada teks yang diekstrak dari berkas. Coba berkas PDF berbasis teks."
+            : "No text could be extracted from the files. Try text-based PDFs.",
+        );
+      }
+
+      setStep("analyzing");
+
+      try {
+        await generateClinicalSummaryFromAI({
+          report,
+          reportId,
+          locale,
+          documentText: fileContent,
+          fileCount,
+          onProgress: setAiProgress,
+          result: {
+            id: report.id,
+            status: report.status,
+            summary: null,
+            doctor_summary: fileContent,
+            next_actions: [],
+          } satisfies ReportResult,
+        });
+
+        if (fileCount > 1) {
+          const sizeByFilename = new Map(
+            uploadedFiles.map((f) => [f.filename, f.size_bytes ?? 0]),
+          );
+          const perFile = await generatePerFileSummaries({
+            report,
+            reportId,
+            locale,
+            documentText: fileContent,
+            sizeByFilename,
+          });
+          if (perFile.length) {
+            await saveReportFileAnalyses(reportId, perFile);
+          }
+        }
+      } catch (analysisErr) {
+        const message =
+          analysisErr instanceof Error
+            ? analysisErr.message
+            : locale === "id"
+              ? "Analisis AI gagal"
+              : "AI analysis failed";
+        setError(message);
+        return;
+      }
+
+      setStep("completed");
+      router.push(`/reports/${reportId}`);
+    } catch (err) {
+      const detail =
+        err instanceof ApiError || err instanceof Error ? err.message : null;
+      setError(
+        detail ??
+          (locale === "id"
+            ? "Pemrosesan gagal. Periksa koneksi API."
+            : "Processing failed. Check API connection."),
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [isBusy, locale, report, reportId, router, uploadedFiles]);
+
   const pipelineStep = step === "idle" ? "uploaded" : step;
+
+  const submitLabel =
+    locale === "id"
+      ? `Mulai analisis (${uploadedFiles.length} berkas)`
+      : `Start analysis (${uploadedFiles.length} file${uploadedFiles.length === 1 ? "" : "s"})`;
 
   return (
     <AppShell>
       <OcrProcessModal
         open={processModalOpen}
         locale={locale}
-        fileName={fileLabel}
+        fileName={
+          uploadedFiles.length === 1
+            ? uploadedFiles[0].filename
+            : locale === "id"
+              ? `${uploadedFiles.length} berkas`
+              : `${uploadedFiles.length} files`
+        }
         step={pipelineStep}
         ocrFilesProgress={ocrFilesProgress}
         aiProgress={aiProgress}
@@ -216,39 +274,87 @@ export default function UploadReportPage() {
           </h1>
           <p className="mt-1 text-sm text-slate-600">
             {locale === "id"
-              ? "Unggah beberapa PDF atau gambar laporan medis — teks digabung untuk analisis yang lebih lengkap."
-              : "Upload multiple PDFs or images of medical reports — text is combined for richer analysis."}
+              ? "Unggah berkas satu per satu atau beberapa sekaligus. Setelah semua berkas siap, mulai analisis."
+              : "Add files one at a time or in batches. When everything is uploaded, start analysis."}
           </p>
         </div>
 
         <UploadDropzone
           lang={locale}
-          state={dropState}
+          state={isUploading ? "uploading" : dropState}
           multiple
           onFilesSelected={handleFiles}
           hideHeader
           className="[&>span]:hidden [&>h2]:hidden [&>p]:hidden"
         />
 
-        {fileLabel && !processModalOpen ? (
-          <div className="space-y-2">
-            {selectedFiles.map((file) => (
-              <UploadPreview
-                key={`${file.name}-${file.size}-${file.lastModified}`}
-                fileName={file.name}
-                fileSize={formatFileSize(file.size)}
-                lang={locale}
-                uploaded={step !== "idle"}
-              />
-            ))}
-          </div>
+        {uploadedFiles.length > 0 ? (
+          <section className="space-y-3" aria-label={locale === "id" ? "Berkas terunggah" : "Uploaded files"}>
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-sm font-semibold text-slate-900">
+                {locale === "id"
+                  ? `Berkas terunggah (${uploadedFiles.length})`
+                  : `Uploaded files (${uploadedFiles.length})`}
+              </h2>
+              <p className="text-xs text-slate-500">
+                {locale === "id"
+                  ? "Tambah berkas lagi di atas jika perlu"
+                  : "Add more files above if needed"}
+              </p>
+            </div>
+            <ul className="space-y-2">
+              {uploadedFiles.map((file) => (
+                <li key={file.filename}>
+                  <UploadedFileRow
+                    fileName={file.filename}
+                    fileSize={formatFileSize(file.size_bytes ?? 0)}
+                    locale={locale}
+                    onRemove={
+                      isSubmitting
+                        ? undefined
+                        : () => void handleRemoveFile(file.filename)
+                    }
+                    removeDisabled={isBusy}
+                    removing={isRemoving === file.filename}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
         ) : null}
 
         {error && !processModalOpen ? (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="whitespace-pre-line text-sm text-red-600" role="alert">
             {error}
           </p>
         ) : null}
+
+        <div className="flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-slate-600">
+            {uploadedFiles.length === 0
+              ? locale === "id"
+                ? "Unggah minimal satu berkas untuk melanjutkan."
+                : "Upload at least one file to continue."
+              : locale === "id"
+                ? "Semua berkas sudah di server. Mulai OCR dan analisis AI saat siap."
+                : "All files are on the server. Start OCR and AI analysis when ready."}
+          </p>
+          <Button
+            type="button"
+            variant="primary"
+            size="lg"
+            disabled={!canSubmit || isSubmitting}
+            loading={isSubmitting}
+            onClick={() => void handleSubmit()}
+            className="shrink-0 sm:min-w-[12rem]"
+          >
+            {uploadedFiles.length === 0
+              ? locale === "id"
+                ? "Mulai analisis"
+                : "Start analysis"
+              : submitLabel}
+          </Button>
+        </div>
       </div>
     </AppShell>
   );

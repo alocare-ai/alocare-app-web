@@ -67,7 +67,12 @@ export async function parseDirectUploadError(res: Response): Promise<string> {
 
 export function directUploadNetworkError(err: unknown, apiUrl: string): string {
   if (err instanceof TypeError) {
-    return `Could not reach the API at ${apiUrl}. If this persists, ensure CORS_ORIGINS on the API includes your app origin (e.g. https://app.alocare.net).`;
+    const isLocal =
+      apiUrl.includes("127.0.0.1") || apiUrl.includes("localhost");
+    if (isLocal) {
+      return `Could not reach the API at ${apiUrl}. Start alocare-api (port 8080) or use npm run dev from alocare-tech-stack.`;
+    }
+    return `Could not reach the API at ${apiUrl}. Ensure CORS_ORIGINS on the API includes https://app.alocare.net.`;
   }
   if (err instanceof Error) return err.message;
   return "Upload failed.";

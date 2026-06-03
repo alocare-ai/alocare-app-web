@@ -5,6 +5,7 @@ import type {
   ReportUploadedFile,
 } from "@/lib/types/api";
 import { apiFetch } from "./client";
+import { shouldUseDirectReportUpload } from "@/lib/api/public-api-base";
 import {
   directUploadNetworkError,
   fetchUploadCredentials,
@@ -31,21 +32,29 @@ export type ReportUploadResult = {
   size: number;
 };
 
-export async function uploadReportFiles(
+async function uploadReportFilesViaBff(
   reportId: string,
-  files: File[],
+  form: FormData,
 ): Promise<ReportUploadResult> {
-  if (!files.length) {
-    throw new Error("No files selected");
+  const res = await fetch(`/api/backend/reports/${reportId}/upload`, {
+    method: "POST",
+    credentials: "include",
+    body: form,
+  });
+
+  if (!res.ok) {
+    throw new Error(await parseDirectUploadError(res));
   }
 
+  return res.json() as Promise<ReportUploadResult>;
+}
+
+async function uploadReportFilesDirect(
+  reportId: string,
+  form: FormData,
+): Promise<ReportUploadResult> {
   const credentials = await fetchUploadCredentials();
   const apiBase = resolveDirectUploadApiBase(credentials);
-
-  const form = new FormData();
-  for (const file of files) {
-    form.append("files", file);
-  }
 
   let res: Response;
   try {
@@ -63,6 +72,26 @@ export async function uploadReportFiles(
   }
 
   return res.json() as Promise<ReportUploadResult>;
+}
+
+export async function uploadReportFiles(
+  reportId: string,
+  files: File[],
+): Promise<ReportUploadResult> {
+  if (!files.length) {
+    throw new Error("No files selected");
+  }
+
+  const form = new FormData();
+  for (const file of files) {
+    form.append("files", file);
+  }
+
+  if (shouldUseDirectReportUpload()) {
+    return uploadReportFilesDirect(reportId, form);
+  }
+
+  return uploadReportFilesViaBff(reportId, form);
 }
 
 /** @deprecated Use uploadReportFiles */

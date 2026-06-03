@@ -1,6 +1,6 @@
 "use client";
 
-import { Upload } from "lucide-react";
+import { Sparkles, Upload } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -36,13 +36,6 @@ type ReportAddFilesButtonProps = {
   disabled?: boolean;
 };
 
-function formatAddedFilesLabel(files: File[], locale: Locale): string {
-  if (files.length === 1) return files[0].name;
-  return locale === "id"
-    ? `${files.length} berkas baru`
-    : `${files.length} new files`;
-}
-
 export function ReportAddFilesButton({
   reportId,
   report,
@@ -52,7 +45,9 @@ export function ReportAddFilesButton({
 }: ReportAddFilesButtonProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
-  const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [pendingAnalysis, setPendingAnalysis] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [step, setStep] = useState<ReportPipelineStep>("uploaded");
   const [error, setError] = useState<string | null>(null);
@@ -63,108 +58,149 @@ export function ReportAddFilesButton({
     null,
   );
 
-  const handleFiles = useCallback(
+  const busy = uploading || analyzing;
+
+  const handleUploadOnly = useCallback(
     async (fileList: File[]) => {
       if (!fileList.length || busy) return;
 
-      setBusy(true);
+      setUploading(true);
       setError(null);
-      setAiProgress(null);
-      setOcrFilesProgress(null);
-      setFileLabel(formatAddedFilesLabel(fileList, locale));
-      setStep("uploaded");
-      setModalOpen(true);
 
       try {
         await uploadReportFiles(reportId, fileList);
-
-        setStep("ocr");
-
-        const allFiles = await getReportFiles(reportId);
-        const initialOcr = createOcrFilesProgress(
-          allFiles.map((f) => f.filename),
-        );
-        setOcrFilesProgress(initialOcr);
-
-        const ocrText = await runOcrStream(reportId, (event) => {
-          setOcrFilesProgress((prev) =>
-            applyOcrStreamEvent(prev ?? initialOcr, event, locale),
-          );
-        });
-
-        const documentText = ocrText.trim();
-        if (!documentText) {
-          throw new Error(
-            locale === "id"
-              ? "Tidak ada teks yang diekstrak dari berkas."
-              : "No text could be extracted from the files.",
-          );
-        }
-
-        setStep("analyzing");
-
-        const workingResult =
-          result ?? (await getReportResult(reportId));
-        const resultForAnalysis: ReportResult = {
-          ...workingResult,
-          doctor_summary: documentText,
-        };
-
-        const fileCount = allFiles.length;
-
-        const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
-          report,
-          result: resultForAnalysis,
-          reportId,
-          locale,
-          documentText,
-          fileCount,
-          onProgress: setAiProgress,
-        });
-
-        const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {
-          summaryBilingual: summary,
-          doctorSummary: analyzeExtras?.doctorSummary,
-          nextActions: analyzeExtras?.nextActions,
-        });
-
-        queryClient.setQueryData(["report-result", reportId], merged);
-
-        if (fileCount > 1) {
-          await buildReportFileAnalyses(reportId);
-        }
-
+        setPendingAnalysis(true);
         await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
         await queryClient.invalidateQueries({
           queryKey: ["report-result", reportId],
         });
-
-        setStep("completed");
       } catch (err) {
         const message =
           err instanceof Error
             ? err.message
             : locale === "id"
-              ? "Gagal menambahkan berkas"
-              : "Failed to add files";
+              ? "Gagal mengunggah berkas"
+              : "Failed to upload files";
         setError(message);
       } finally {
-        setBusy(false);
+        setUploading(false);
         if (inputRef.current) {
           inputRef.current.value = "";
         }
       }
     },
-    [busy, locale, queryClient, report, reportId, result],
+    [busy, locale, queryClient, reportId],
   );
+
+  const handleRunAnalysis = useCallback(async () => {
+    if (busy) return;
+
+    setAnalyzing(true);
+    setError(null);
+    setAiProgress(null);
+    setOcrFilesProgress(null);
+    setStep("uploaded");
+    setModalOpen(true);
+
+    try {
+      const allFiles = await getReportFiles(reportId);
+      if (!allFiles.length) {
+        throw new Error(
+          locale === "id"
+            ? "Tidak ada berkas pada laporan ini."
+            : "No files on this report.",
+        );
+      }
+
+      setFileLabel(
+        allFiles.length === 1
+          ? allFiles[0].filename
+          : locale === "id"
+            ? `${allFiles.length} berkas`
+            : `${allFiles.length} files`,
+      );
+
+      setStep("ocr");
+
+      const initialOcr = createOcrFilesProgress(
+        allFiles.map((f) => f.filename),
+      );
+      setOcrFilesProgress(initialOcr);
+
+      const ocrText = await runOcrStream(reportId, (event) => {
+        setOcrFilesProgress((prev) =>
+          applyOcrStreamEvent(prev ?? initialOcr, event, locale),
+        );
+      });
+
+      const documentText = ocrText.trim();
+      if (!documentText) {
+        throw new Error(
+          locale === "id"
+            ? "Tidak ada teks yang diekstrak dari berkas."
+            : "No text could be extracted from the files.",
+        );
+      }
+
+      setStep("analyzing");
+
+      const workingResult = result ?? (await getReportResult(reportId));
+      const resultForAnalysis: ReportResult = {
+        ...workingResult,
+        doctor_summary: documentText,
+      };
+
+      const fileCount = allFiles.length;
+
+      const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
+        report,
+        result: resultForAnalysis,
+        reportId,
+        locale,
+        documentText,
+        fileCount,
+        onProgress: setAiProgress,
+      });
+
+      const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {
+        summaryBilingual: summary,
+        doctorSummary: analyzeExtras?.doctorSummary,
+        nextActions: analyzeExtras?.nextActions,
+      });
+
+      queryClient.setQueryData(["report-result", reportId], merged);
+
+      if (fileCount > 1) {
+        await buildReportFileAnalyses(reportId);
+      }
+
+      await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
+      await queryClient.invalidateQueries({
+        queryKey: ["report-result", reportId],
+      });
+
+      setPendingAnalysis(false);
+      setStep("completed");
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : locale === "id"
+            ? "Gagal menjalankan analisis"
+            : "Failed to run analysis";
+      setError(message);
+    } finally {
+      setAnalyzing(false);
+    }
+  }, [busy, locale, queryClient, report, reportId, result]);
 
   const onInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const list = event.target.files;
       if (!list?.length) return;
-      void handleFiles(Array.from(list));
+      void handleUploadOnly(Array.from(list));
     },
-    [handleFiles],
+    [handleUploadOnly],
   );
 
   const showUploadMore =
@@ -193,15 +229,52 @@ export function ReportAddFilesButton({
         tabIndex={-1}
         onChange={onInputChange}
       />
-      <button
-        type="button"
-        disabled={disabled || busy}
-        onClick={() => inputRef.current?.click()}
-        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900 disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <Upload className="h-3.5 w-3.5 shrink-0" aria-hidden />
-        {locale === "id" ? "Unggah berkas lagi" : "Upload more files"}
-      </button>
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        {pendingAnalysis ? (
+          <span className="text-xs text-amber-800">
+            {locale === "id"
+              ? "Berkas baru terunggah — jalankan analisis"
+              : "New files uploaded — run analysis"}
+          </span>
+        ) : null}
+        {error && !modalOpen ? (
+          <span className="text-xs text-red-600" role="alert">
+            {error}
+          </span>
+        ) : null}
+        <button
+          type="button"
+          disabled={disabled || busy}
+          onClick={() => inputRef.current?.click()}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-900 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Upload className="h-3.5 w-3.5 shrink-0" aria-hidden />
+          {uploading
+            ? locale === "id"
+              ? "Mengunggah…"
+              : "Uploading…"
+            : locale === "id"
+              ? "Unggah berkas lagi"
+              : "Upload more files"}
+        </button>
+        {pendingAnalysis ? (
+          <button
+            type="button"
+            disabled={disabled || busy}
+            onClick={() => void handleRunAnalysis()}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-teal-600 bg-teal-600 px-3 py-1.5 text-xs font-medium text-white shadow-sm transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Sparkles className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            {analyzing
+              ? locale === "id"
+                ? "Menganalisis…"
+                : "Analyzing…"
+              : locale === "id"
+                ? "Jalankan analisis"
+                : "Run analysis"}
+          </button>
+        ) : null}
+      </div>
     </>
   );
 }
