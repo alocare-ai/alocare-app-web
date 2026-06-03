@@ -31,7 +31,6 @@ export type AiAnalysisPhaseId =
   | "biomarkers_sync"
   | "persist_analysis"
   | "file_analyses"
-  | "report_refresh"
   | "finalize";
 
 export type AiAnalysisPhase = {
@@ -231,13 +230,6 @@ export const AI_SAVING_PHASES: AiAnalysisPhase[] = [
     idLabel: "Menyimpan bagian analisis per berkas",
     detailEn: "Storing collapsible summaries for each uploaded file",
     detailId: "Menyimpan ringkasan yang dapat dilipat untuk setiap berkas yang diunggah",
-  },
-  {
-    id: "report_refresh",
-    en: "Refreshing report data",
-    idLabel: "Memuat ulang data laporan",
-    detailEn: "Loading the latest saved analysis from the server",
-    detailId: "Memuat analisis tersimpan terbaru dari server",
   },
   {
     id: "finalize",

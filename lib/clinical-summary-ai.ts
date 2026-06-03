@@ -4,12 +4,10 @@ import {
 } from "@/lib/ai-analysis-progress";
 import { runAnalyzeStream } from "@/lib/api/analyze-stream";
 import { createAISession } from "@/lib/api/chat";
-import { getReportResult } from "@/lib/api/reports";
 import {
   isPlaceholderClinicalSummary,
   isUnusableStreamSummary,
   mergeAnalyzeResponseIntoResult,
-  resolveClinicalSummary,
 } from "@/lib/clinical-summary";
 import { bilingual, type BilingualText, type Locale } from "@/lib/i18n";
 import {
@@ -155,28 +153,6 @@ export async function generateClinicalSummaryFromAI(params: {
     }
 
     progressCtrl?.advanceSaving("bilingual_merge");
-
-    try {
-      progressCtrl?.advanceSaving("report_refresh");
-      const fresh = await getReportResult(params.reportId);
-      const resolved = resolveClinicalSummary(fresh);
-      const rejectPersistedVendorFraming =
-        fileCount > 1 && isFramedAsSingleVendorReport(resolved.en);
-      if (
-        !isPlaceholderClinicalSummary(resolved.en) &&
-        !rejectPersistedVendorFraming
-      ) {
-        summary = bilingual(resolved.en, summary.id || resolved.id || resolved.en);
-      }
-      if (
-        !isPlaceholderClinicalSummary(resolved.id) &&
-        !(fileCount > 1 && isFramedAsSingleVendorReport(resolved.id))
-      ) {
-        summary = bilingual(summary.en || resolved.en, resolved.id);
-      }
-    } catch {
-      /* use narrative from stream + document */
-    }
 
     if (isPlaceholderClinicalSummary(summary.en)) {
       summary = bilingual(narrativeEn, summary.id);
