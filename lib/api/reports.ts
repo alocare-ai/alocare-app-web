@@ -62,7 +62,38 @@ function assertFileWithinUploadLimit(file: File): void {
   }
 }
 
-/** Production: browser → api.alocare.net (requires CORS on API). */
+/** Production: same-origin streaming proxy (no browser CORS). */
+async function uploadReportFilesViaAppProxy(
+  reportId: string,
+  files: File[],
+): Promise<ReportUploadResult> {
+  const credentials = await fetchUploadCredentials();
+  const url = upstreamUploadUrl(reportId);
+
+  const form = new FormData();
+  for (const file of files) {
+    form.append("files", file);
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${credentials.accessToken}` },
+      body: form,
+    });
+  } catch (err) {
+    throw new Error(proxiedUploadNetworkError(err));
+  }
+
+  if (!res.ok) {
+    throw new Error(await parseDirectUploadError(res));
+  }
+
+  return res.json() as Promise<ReportUploadResult>;
+}
+
+/** Production fallback: browser → api.alocare.net when CORS is configured on API. */
 async function uploadReportFilesDirectApi(
   reportId: string,
   files: File[],
@@ -95,48 +126,18 @@ async function uploadReportFilesDirectApi(
   return res.json() as Promise<ReportUploadResult>;
 }
 
-/** Production fallback: same-origin streaming proxy (no Vercel /api/* limit). */
-async function uploadReportFilesViaAppProxy(
-  reportId: string,
-  files: File[],
-): Promise<ReportUploadResult> {
-  const credentials = await fetchUploadCredentials();
-  const url = upstreamUploadUrl(reportId);
-
-  const form = new FormData();
-  for (const file of files) {
-    form.append("files", file);
-  }
-
-  let res: Response;
-  try {
-    res = await fetch(url, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${credentials.accessToken}` },
-      body: form,
-    });
-  } catch (err) {
-    throw new Error(proxiedUploadNetworkError(err));
-  }
-
-  if (!res.ok) {
-    throw new Error(await parseDirectUploadError(res));
-  }
-
-  return res.json() as Promise<ReportUploadResult>;
-}
-
 async function uploadOneFileProduction(
   reportId: string,
   file: File,
 ): Promise<ReportUploadResult> {
   try {
-    return await uploadReportFilesDirectApi(reportId, [file]);
-  } catch (err) {
-    if (err instanceof TypeError) {
-      return uploadReportFilesViaAppProxy(reportId, [file]);
+    return await uploadReportFilesViaAppProxy(reportId, [file]);
+  } catch (proxyErr) {
+    try {
+      return await uploadReportFilesDirectApi(reportId, [file]);
+    } catch {
+      throw proxyErr instanceof Error ? proxyErr : new Error(String(proxyErr));
     }
-    throw err;
   }
 }
 

@@ -20,7 +20,7 @@ export function getPublicApiBase(): string {
 }
 
 /**
- * Production: direct POST to api.alocare.net (CORS), fallback `/upstream-api` route.
+ * Production: `/upstream-api` same-origin proxy first; direct API if proxy fails.
  * Development: `/api/backend/*` BFF with httpOnly cookies.
  */
 export function shouldUseUpstreamRewriteUpload(): boolean {
