@@ -9,10 +9,20 @@ export type OcrStreamStep =
   | "identity"
   | "error";
 
+export type IdentityStreamSubstep =
+  | "started"
+  | "file"
+  | "file_result"
+  | "selecting"
+  | "saving"
+  | "cached"
+  | "complete";
+
 export type OcrStreamEvent = {
   step: OcrStreamStep;
   progress: number;
   message?: string;
+  substep?: IdentityStreamSubstep;
   page?: number;
   totalPages?: number;
   charCount?: number;
@@ -21,6 +31,10 @@ export type OcrStreamEvent = {
   fileIndex?: number;
   fileTotal?: number;
   patientIdentity?: Record<string, unknown>;
+  patientName?: string;
+  medicalRecordNumber?: string;
+  overallConfidence?: number;
+  found?: boolean;
 };
 
 export type OcrStreamHandlers = {

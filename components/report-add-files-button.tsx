@@ -133,6 +133,9 @@ export function ReportAddFilesButton({
       setOcrFilesProgress(initialOcr);
 
       const ocrText = await runOcrStream(reportId, (event) => {
+        if (event.step === "identity") {
+          setStep("identity");
+        }
         setOcrFilesProgress((prev) =>
           applyOcrStreamEvent(prev ?? initialOcr, event, locale),
         );

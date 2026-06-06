@@ -11,10 +11,32 @@ export type OcrFileItem = {
   charCount?: number;
 };
 
+export type IdentityFileStatus = "pending" | "active" | "done" | "skipped";
+
+export type IdentityFileItem = {
+  name: string;
+  status: IdentityFileStatus;
+  detail: string;
+  patientName?: string;
+};
+
+export type IdentityPhaseStatus = "pending" | "active" | "done";
+
+export type IdentityPhaseItem = {
+  id: string;
+  label: string;
+  status: IdentityPhaseStatus;
+  detail?: string;
+};
+
 export type OcrFilesProgressState = {
   files: OcrFileItem[];
   overallProgress: number;
   detail: string;
+  identityProgress?: number;
+  identityDetail?: string;
+  identityFiles?: IdentityFileItem[];
+  identityPhases?: IdentityPhaseItem[];
 };
 
 export function createOcrFilesProgress(fileNames: string[]): OcrFilesProgressState {
@@ -47,6 +69,10 @@ function eventDetail(locale: Locale, event: OcrStreamEvent): string {
         : `OCR page ${event.page ?? 1}…`;
     case "started":
       return locale === "id" ? "Memulai…" : "Starting…";
+    case "identity":
+      return locale === "id"
+        ? "Mengekstrak identitas pasien…"
+        : "Extracting patient identity…";
     default:
       return locale === "id" ? "Memindai…" : "Scanning…";
   }
@@ -68,7 +94,163 @@ function overallFromFiles(files: OcrFileItem[]): number {
     return acc;
   }, 0);
   const ratio = sum / files.length / 100;
-  return Math.min(58, Math.round(12 + ratio * 46));
+  return Math.min(52, Math.round(12 + ratio * 40));
+}
+
+function defaultIdentityPhases(locale: Locale): IdentityPhaseItem[] {
+  return [
+    {
+      id: "selecting",
+      label:
+        locale === "id" ? "Memilih kecocokan terbaik" : "Selecting best match",
+      status: "pending",
+    },
+    {
+      id: "saving",
+      label: locale === "id" ? "Menyimpan identitas" : "Saving identity",
+      status: "pending",
+    },
+  ];
+}
+
+function initIdentityFiles(
+  state: OcrFilesProgressState,
+  fileTotal: number,
+): IdentityFileItem[] {
+  if (state.identityFiles?.length) {
+    return state.identityFiles.map((item) => ({ ...item }));
+  }
+  return state.files.slice(0, fileTotal).map((file) => ({
+    name: file.name,
+    status: "pending" as const,
+    detail: "",
+  }));
+}
+
+function findIdentityFileIndex(
+  identityFiles: IdentityFileItem[],
+  event: OcrStreamEvent,
+): number {
+  if (event.file) {
+    const idx = identityFiles.findIndex((f) => f.name === event.file);
+    if (idx >= 0) return idx;
+  }
+  if (event.fileIndex != null && event.fileIndex >= 1) {
+    return event.fileIndex - 1;
+  }
+  return -1;
+}
+
+function applyIdentityEvent(
+  state: OcrFilesProgressState,
+  event: OcrStreamEvent,
+  locale: Locale,
+): OcrFilesProgressState {
+  const detail = event.message ?? eventDetail(locale, event);
+  const fileTotal = event.fileTotal ?? state.files.length;
+  const doneOcrFiles = state.files.map((f) =>
+    f.status === "done"
+      ? f
+      : {
+          ...f,
+          status: "done" as const,
+          progress: 100,
+          detail: f.detail || doneDetail(locale, f.charCount),
+        },
+  );
+
+  let identityFiles = initIdentityFiles(state, fileTotal);
+  let identityPhases =
+    state.identityPhases?.map((phase) => ({ ...phase })) ??
+    defaultIdentityPhases(locale);
+
+  const substep = event.substep;
+
+  if (substep === "started") {
+    identityFiles = identityFiles.map((file) => ({ ...file, status: "pending", detail: "" }));
+    identityPhases = defaultIdentityPhases(locale);
+  }
+
+  if (substep === "file") {
+    const idx = findIdentityFileIndex(identityFiles, event);
+    if (idx >= 0) {
+      identityFiles[idx] = {
+        ...identityFiles[idx],
+        status: "active",
+        detail:
+          locale === "id"
+            ? "Mengekstrak nama, MRN, dan demografi…"
+            : "Extracting name, MRN, and demographics…",
+      };
+    }
+  }
+
+  if (substep === "file_result") {
+    const idx = findIdentityFileIndex(identityFiles, event);
+    if (idx >= 0) {
+      const found = event.found !== false && Boolean(event.patientName);
+      identityFiles[idx] = {
+        ...identityFiles[idx],
+        status: found ? "done" : "skipped",
+        patientName: event.patientName,
+        detail: found
+          ? event.patientName!
+          : locale === "id"
+            ? "Tidak ada nama pasien"
+            : "No patient name",
+      };
+    }
+  }
+
+  if (substep === "selecting") {
+    identityPhases = identityPhases.map((phase) =>
+      phase.id === "selecting"
+        ? { ...phase, status: "active", detail }
+        : phase,
+    );
+  }
+
+  if (substep === "saving") {
+    identityPhases = identityPhases.map((phase) => {
+      if (phase.id === "selecting") {
+        return { ...phase, status: "done", detail: phase.detail ?? detail };
+      }
+      if (phase.id === "saving") {
+        return { ...phase, status: "active", detail };
+      }
+      return phase;
+    });
+  }
+
+  if (substep === "cached" || substep === "complete") {
+    identityPhases = identityPhases.map((phase) => ({
+      ...phase,
+      status: "done",
+      detail: phase.id === "saving" ? detail : phase.detail,
+    }));
+    if (substep === "complete" && event.found === false) {
+      identityFiles = identityFiles.map((file) =>
+        file.status === "pending"
+          ? {
+              ...file,
+              status: "skipped" as const,
+              detail:
+                locale === "id" ? "Tidak ada nama pasien" : "No patient name",
+            }
+          : file,
+      );
+    }
+  }
+
+  return {
+    files: doneOcrFiles,
+    overallProgress: 52,
+    detail,
+    identityProgress: event.progress ?? state.identityProgress ?? 95,
+    identityDetail: detail,
+    identityFiles,
+    identityPhases,
+  };
 }
 
 export function applyOcrStreamEvent(
@@ -76,6 +258,10 @@ export function applyOcrStreamEvent(
   event: OcrStreamEvent,
   locale: Locale,
 ): OcrFilesProgressState {
+  if (event.step === "identity") {
+    return applyIdentityEvent(state, event, locale);
+  }
+
   const total = event.fileTotal ?? state.files.length;
   const fileName = event.file;
 
@@ -101,6 +287,7 @@ export function applyOcrStreamEvent(
       };
     }
     return {
+      ...state,
       files,
       overallProgress: overallFromFiles(files),
       detail: event.message ?? state.detail,
@@ -119,6 +306,7 @@ export function applyOcrStreamEvent(
       };
     }
     return {
+      ...state,
       files,
       overallProgress: overallFromFiles(files),
       detail:
@@ -141,8 +329,9 @@ export function applyOcrStreamEvent(
           },
     );
     return {
+      ...state,
       files: doneFiles,
-      overallProgress: 58,
+      overallProgress: 52,
       detail:
         event.message ??
         (locale === "id" ? "Semua berkas digabung" : "All files combined"),
@@ -160,11 +349,10 @@ export function applyOcrStreamEvent(
   }
 
   return {
+    ...state,
     files,
     overallProgress: overallFromFiles(files),
-    detail: fileName
-      ? eventDetail(locale, event)
-      : state.detail,
+    detail: fileName ? eventDetail(locale, event) : state.detail,
   };
 }
 
@@ -178,5 +366,30 @@ export function getOcrFileStatuses(
       file.status === "done" || file.status === "active"
         ? file.detail
         : undefined,
+  }));
+}
+
+export function getIdentityFileStatuses(
+  files: IdentityFileItem[],
+): { label: string; status: IdentityFileStatus; detail?: string }[] {
+  return files.map((file) => ({
+    label: file.name,
+    status: file.status,
+    detail:
+      file.status === "done" ||
+      file.status === "active" ||
+      file.status === "skipped"
+        ? file.detail
+        : undefined,
+  }));
+}
+
+export function getIdentityPhaseStatuses(
+  phases: IdentityPhaseItem[],
+): { label: string; status: IdentityPhaseStatus; detail?: string }[] {
+  return phases.map((phase) => ({
+    label: phase.label,
+    status: phase.status,
+    detail: phase.detail,
   }));
 }

@@ -1,6 +1,7 @@
 export type ReportPipelineStep =
   | "uploaded"
   | "ocr"
+  | "identity"
   | "analyzing"
   | "completed";
 
@@ -8,6 +9,7 @@ export type ReportPipelineStep =
 export const REPORT_PIPELINE_ORDER: ReportPipelineStep[] = [
   "uploaded",
   "ocr",
+  "identity",
   "analyzing",
   "completed",
 ];

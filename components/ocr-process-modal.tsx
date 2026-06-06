@@ -13,6 +13,8 @@ import {
 export type { ReportPipelineStep } from "@/lib/report-pipeline";
 import type { OcrStreamEvent } from "@/lib/api/ocr-stream";
 import {
+  getIdentityFileStatuses,
+  getIdentityPhaseStatuses,
   getOcrFileStatuses,
   type OcrFilesProgressState,
 } from "@/lib/ocr-file-progress";
@@ -43,6 +45,10 @@ function stepLabels(locale: Locale): Record<
     ocr: {
       title: locale === "id" ? "Pemindaian OCR" : "OCR scanning",
       done: locale === "id" ? "Teks diekstrak" : "Text extracted",
+    },
+    identity: {
+      title: locale === "id" ? "Identitas pasien" : "Patient identity",
+      done: locale === "id" ? "Identitas diekstrak" : "Identity extracted",
     },
     analyzing: {
       title: locale === "id" ? "Analisis AI" : "AI analysis",
@@ -79,6 +85,14 @@ function activeDetail(
       }
       return locale === "id" ? "Memulai OCR…" : "Starting OCR…";
     }
+    case "identity":
+      return (
+        ocrFilesProgress?.identityDetail ??
+        ocrEvent?.message ??
+        (locale === "id"
+          ? "Mengekstrak identitas pasien dari dokumen…"
+          : "Extracting patient identity from documents…")
+      );
     case "analyzing":
       return (
         aiProgress?.detail ??
@@ -102,10 +116,15 @@ function overallProgress(
   if (step === "ocr") {
     if (ocrFilesProgress) return ocrFilesProgress.overallProgress;
     const ocrPct = ocrEvent?.progress ?? 0;
-    return Math.min(58, 12 + ocrPct * 0.46);
+    return Math.min(52, 12 + ocrPct * 0.4);
+  }
+  if (step === "identity") {
+    const identityPct =
+      ocrFilesProgress?.identityProgress ?? ocrEvent?.progress ?? 95;
+    return Math.min(62, Math.round(52 + (identityPct / 100) * 10));
   }
   if (step === "analyzing") {
-    return aiProgress?.progress ?? 60;
+    return aiProgress?.progress ?? 65;
   }
   if (step === "completed") return 100;
   if (step === "uploaded") return 10;
@@ -199,16 +218,111 @@ function OcrFileSubsteps({
   if (items.length <= 1) return null;
 
   return (
+    <SubstepList
+      ariaLabel={locale === "id" ? "Pemindaian per berkas" : "Per-file scanning"}
+      items={items.map((sub) => ({
+        key: sub.label,
+        label: sub.label,
+        status:
+          sub.status === "error"
+            ? "error"
+            : sub.status === "done"
+              ? "done"
+              : sub.status === "active"
+                ? "active"
+                : "pending",
+        detail: sub.detail,
+        truncate: true,
+      }))}
+    />
+  );
+}
+
+function IdentitySubsteps({
+  locale,
+  ocrFilesProgress,
+}: {
+  locale: Locale;
+  ocrFilesProgress: OcrFilesProgressState;
+}) {
+  const fileItems = ocrFilesProgress.identityFiles
+    ? getIdentityFileStatuses(ocrFilesProgress.identityFiles)
+    : [];
+  const phaseItems = ocrFilesProgress.identityPhases
+    ? getIdentityPhaseStatuses(ocrFilesProgress.identityPhases)
+    : [];
+
+  const items = [
+    ...fileItems.map((sub) => ({
+      key: sub.label,
+      label: sub.label,
+      status:
+        sub.status === "skipped"
+          ? ("done" as const)
+          : sub.status === "done"
+            ? ("done" as const)
+            : sub.status === "active"
+              ? ("active" as const)
+              : ("pending" as const),
+      detail:
+        sub.status === "skipped"
+          ? sub.detail ??
+            (locale === "id" ? "Tidak ada nama pasien" : "No patient name")
+          : sub.detail,
+      truncate: true,
+      mutedDone: sub.status === "skipped",
+    })),
+    ...phaseItems.map((sub) => ({
+      key: sub.label,
+      label: sub.label,
+      status: sub.status,
+      detail: sub.detail,
+      truncate: false,
+      mutedDone: false,
+    })),
+  ];
+
+  if (!items.length) return null;
+
+  return (
+    <SubstepList
+      ariaLabel={
+        locale === "id"
+          ? "Langkah ekstraksi identitas pasien"
+          : "Patient identity extraction steps"
+      }
+      items={items}
+    />
+  );
+}
+
+function SubstepList({
+  ariaLabel,
+  items,
+}: {
+  ariaLabel: string;
+  items: {
+    key: string;
+    label: string;
+    status: "done" | "active" | "pending" | "error";
+    detail?: string;
+    truncate?: boolean;
+    mutedDone?: boolean;
+  }[];
+}) {
+  return (
     <ul
-      className="space-y-1 border-l-2 border-teal-200 pl-2.5"
-      aria-label={locale === "id" ? "Pemindaian per berkas" : "Per-file scanning"}
+      className="max-h-44 space-y-1 overflow-y-auto scroll-smooth border-l-2 border-teal-200 py-0.5 pl-2.5 pr-1"
+      aria-label={ariaLabel}
     >
       {items.map((sub) => (
         <li
-          key={sub.label}
+          key={sub.key}
           className={`flex items-start gap-1.5 text-xs ${
             sub.status === "done"
-              ? "text-emerald-700"
+              ? sub.mutedDone
+                ? "text-slate-500"
+                : "text-emerald-700"
               : sub.status === "active"
                 ? "font-medium text-teal-800"
                 : sub.status === "error"
@@ -216,26 +330,22 @@ function OcrFileSubsteps({
                   : "text-slate-400"
           }`}
         >
-          <SubstepMarker
-            status={
-              sub.status === "error"
-                ? "error"
-                : sub.status === "done"
-                  ? "done"
-                  : sub.status === "active"
-                    ? "active"
-                    : "pending"
-            }
-          />
+          <SubstepMarker status={sub.status} />
           <span className="min-w-0 flex-1">
-            <span className="block truncate" title={sub.label}>
+            <span
+              className={`block leading-snug ${sub.truncate ? "truncate" : ""}`}
+              title={sub.label}
+            >
               {sub.label}
             </span>
-            {sub.status === "active" && sub.detail ? (
-              <span className="block font-normal text-slate-600">{sub.detail}</span>
-            ) : null}
-            {sub.status === "done" && sub.detail ? (
-              <span className="block font-normal text-emerald-600/90">
+            {(sub.status === "active" || sub.status === "done") && sub.detail ? (
+              <span
+                className={`mt-0.5 block font-normal ${
+                  sub.status === "done" && !sub.mutedDone
+                    ? "text-emerald-600/90"
+                    : "text-slate-600"
+                }`}
+              >
                 {sub.detail}
               </span>
             ) : null}
@@ -282,6 +392,12 @@ export function OcrProcessModal({
     ocrFilesProgress &&
     ocrFilesProgress.files.length > 1 &&
     !hasError;
+  const showIdentitySubsteps =
+    step === "identity" &&
+    ocrFilesProgress &&
+    (ocrFilesProgress.identityFiles?.length ||
+      ocrFilesProgress.identityPhases?.length) &&
+    !hasError;
 
   return (
     <div
@@ -321,6 +437,11 @@ export function OcrProcessModal({
                   ? `${ocrFilesProgress.files.length} berkas — teks digabung`
                   : `${ocrFilesProgress.files.length} files — text combined`);
 
+              const identityDoneSummary =
+                key === "identity" &&
+                state === "done" &&
+                ocrFilesProgress?.identityDetail;
+
               return (
                 <li
                   key={key}
@@ -343,7 +464,7 @@ export function OcrProcessModal({
                     </p>
                     {state === "active" ? (
                       <div className="mt-1 space-y-2">
-                        {!showOcrSubsteps && !aiSubsteps ? (
+                        {!showOcrSubsteps && !showIdentitySubsteps && !aiSubsteps ? (
                           <p
                             className={`text-xs ${
                               hasError ? "text-red-600" : "text-slate-600"
@@ -367,6 +488,23 @@ export function OcrProcessModal({
                             ocrFilesProgress={ocrFilesProgress}
                           />
                         ) : null}
+                        {showIdentitySubsteps ? (
+                          <>
+                            {ocrFilesProgress.identityDetail ? (
+                              <p
+                                className="text-xs text-slate-600"
+                                role="status"
+                                aria-live="polite"
+                              >
+                                {ocrFilesProgress.identityDetail}
+                              </p>
+                            ) : null}
+                            <IdentitySubsteps
+                              locale={locale}
+                              ocrFilesProgress={ocrFilesProgress}
+                            />
+                          </>
+                        ) : null}
                         {showAiSubsteps &&
                         key === step &&
                         aiProgress &&
@@ -386,7 +524,9 @@ export function OcrProcessModal({
                       </div>
                     ) : state === "done" ? (
                       <p className="mt-0.5 text-xs text-emerald-700">
-                        {ocrDoneSummary || label.done}
+                        {ocrDoneSummary ||
+                          identityDoneSummary ||
+                          label.done}
                       </p>
                     ) : null}
                   </div>

@@ -249,9 +249,9 @@ const STAGE_PROGRESS_BAND: Record<
   AiPipelineStage,
   { start: number; end: number }
 > = {
-  prep: { start: 55, end: 68 },
-  generating: { start: 68, end: 86 },
-  saving: { start: 86, end: 98 },
+  prep: { start: 63, end: 75 },
+  generating: { start: 75, end: 90 },
+  saving: { start: 90, end: 98 },
 };
 
 export type AiAnalysisProgressState = {
