@@ -103,7 +103,8 @@ export function ReportDetailClient({
         ? cachedResult
         : initialResult ?? undefined,
     refetchOnMount: (query) =>
-      !hasDisplayableClinicalSummary(query.state.data),
+      !hasDisplayableClinicalSummary(query.state.data) ||
+      !resolvePatientIdentity(query.state.data),
     refetchInterval: (query) => {
       if (hasDisplayableClinicalSummary(query.state.data)) {
         return false;
