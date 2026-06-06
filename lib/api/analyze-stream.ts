@@ -43,6 +43,40 @@ export type AnalyzeStreamHandlers = {
   onError: (message: string) => void;
 };
 
+function dispatchAnalyzeEvent(
+  event: AnalyzeStreamEvent,
+  handlers: AnalyzeStreamHandlers,
+): void {
+  handlers.onEvent(event);
+  if (event.step === "complete") {
+    handlers.onComplete(event);
+  } else if (event.step === "error") {
+    const message = event.message ?? "AI analysis failed";
+    handlers.onError(message);
+    throw new Error(message);
+  }
+}
+
+function consumeSseBuffer(
+  buffer: string,
+  handlers: AnalyzeStreamHandlers,
+  lastComplete: AnalyzeStreamEvent | null,
+): { remainder: string; lastComplete: AnalyzeStreamEvent | null } {
+  const parts = buffer.split("\n\n");
+  const remainder = parts.pop() ?? "";
+
+  for (const part of parts) {
+    const event = parseSseChunk(part);
+    if (!event) continue;
+    dispatchAnalyzeEvent(event, handlers);
+    if (event.step === "complete") {
+      lastComplete = event;
+    }
+  }
+
+  return { remainder, lastComplete };
+}
+
 function parseSseChunk(chunk: string): AnalyzeStreamEvent | null {
   for (const line of chunk.split("\n")) {
     if (!line.startsWith("data:")) continue;
@@ -150,26 +184,25 @@ export async function streamAnalyze(
   try {
     while (true) {
       const { done, value } = await reader.read();
-      if (done) break;
+      if (value) {
+        buffer += decoder.decode(value, { stream: true });
+      }
 
-      buffer += decoder.decode(value, { stream: true });
-      const parts = buffer.split("\n\n");
-      buffer = parts.pop() ?? "";
+      const consumed = consumeSseBuffer(buffer, handlers, lastComplete);
+      buffer = consumed.remainder;
+      lastComplete = consumed.lastComplete;
 
-      for (const part of parts) {
-        const event = parseSseChunk(part);
-        if (!event) continue;
-
-        handlers.onEvent(event);
-
-        if (event.step === "complete") {
-          lastComplete = event;
-          handlers.onComplete(event);
-        } else if (event.step === "error") {
-          const message = event.message ?? "AI analysis failed";
-          handlers.onError(message);
-          throw new Error(message);
+      if (done) {
+        if (buffer.trim()) {
+          const trailing = parseSseChunk(buffer);
+          if (trailing) {
+            dispatchAnalyzeEvent(trailing, handlers);
+            if (trailing.step === "complete") {
+              lastComplete = trailing;
+            }
+          }
         }
+        break;
       }
     }
   } finally {
