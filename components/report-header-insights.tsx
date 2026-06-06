@@ -2,11 +2,12 @@
 
 import type { Locale } from "@/lib/i18n";
 import {
-  AI_HEALTHCARE_MARKET_GROWTH,
   IMPACT_BENCHMARKS,
   MARKET_HIGHLIGHTS,
   PLATFORM_PILLARS,
 } from "@/lib/alocare-presentation-metrics";
+import { PatientIdentityPanel } from "@/components/patient-identity-panel";
+import type { PatientDisplayField } from "@/lib/report-patient-identity";
 
 export type ReportKeyFindingChartItem = {
   label: string;
@@ -17,6 +18,7 @@ export type ReportKeyFindingChartItem = {
 type ReportHeaderInsightsProps = {
   locale: Locale;
   keyFindings?: ReportKeyFindingChartItem[];
+  patientFields?: PatientDisplayField[];
 };
 
 const STATUS_LABELS: Record<
@@ -42,82 +44,6 @@ function parseScore0to100(value: string): number | null {
   const n = Number.parseInt(match[0], 10);
   if (Number.isNaN(n) || n < 0 || n > 100) return null;
   return n;
-}
-
-function MarketGrowthChart({ locale }: { locale: Locale }) {
-  const data = AI_HEALTHCARE_MARKET_GROWTH;
-  const max = Math.max(...data.map((d) => d.value));
-  const min = Math.min(...data.map((d) => d.value));
-  const range = max - min || 1;
-  const width = 280;
-  const height = 72;
-  const padX = 4;
-  const padY = 8;
-  const innerW = width - padX * 2;
-  const innerH = height - padY * 2;
-
-  const points = data.map((d, i) => {
-    const x = padX + (i / (data.length - 1)) * innerW;
-    const y = padY + innerH - ((d.value - min) / range) * innerH;
-    return `${x},${y}`;
-  });
-
-  const areaPoints = `${points.join(" ")} ${padX + innerW},${padY + innerH} ${padX},${padY + innerH}`;
-
-  return (
-    <div className="h-full">
-      <p className="text-xs font-medium text-slate-700">
-        {locale === "id"
-          ? "Pertumbuhan pasar AI kesehatan global ($B)"
-          : "AI healthcare market growth ($B)"}
-      </p>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="mt-2 w-full max-w-[280px]"
-        role="img"
-        aria-label={
-          locale === "id"
-            ? "Grafik pertumbuhan pasar AI kesehatan"
-            : "AI healthcare market growth chart"
-        }
-      >
-        <defs>
-          <linearGradient id="marketFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#0d9488" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#0d9488" stopOpacity="0.02" />
-          </linearGradient>
-        </defs>
-        <polygon fill="url(#marketFill)" points={areaPoints} />
-        <polyline
-          fill="none"
-          stroke="#0f766e"
-          strokeWidth="2"
-          strokeLinejoin="round"
-          points={points.join(" ")}
-        />
-        {data.filter((_, i) => i % 3 === 0 || i === data.length - 1).map((d) => {
-          const i = data.indexOf(d);
-          const x = padX + (i / (data.length - 1)) * innerW;
-          return (
-            <text
-              key={d.year}
-              x={x}
-              y={height - 1}
-              textAnchor="middle"
-              className="fill-slate-400 text-[8px]"
-            >
-              {d.year}
-            </text>
-          );
-        })}
-      </svg>
-      <p className="mt-1 text-[10px] text-slate-500">
-        {locale === "id"
-          ? "Sumber: ringkasan strategis Alocare AI (2026)"
-          : "Source: Alocare AI strategic overview (2026)"}
-      </p>
-    </div>
-  );
 }
 
 function KeyFindingsChart({
@@ -218,6 +144,7 @@ function ImpactBenchmarksChart({ locale }: { locale: Locale }) {
 export function ReportHeaderInsights({
   locale,
   keyFindings = [],
+  patientFields = [],
 }: ReportHeaderInsightsProps) {
   const pillars = PLATFORM_PILLARS[locale];
   const highlights = MARKET_HIGHLIGHTS[locale];
@@ -275,7 +202,7 @@ export function ReportHeaderInsights({
             : "md:grid-cols-2"
         }`}
       >
-        <MarketGrowthChart locale={locale} />
+        <PatientIdentityPanel locale={locale} fields={patientFields} />
         <ImpactBenchmarksChart locale={locale} />
         {hasKeyFindingsChart ? (
           <KeyFindingsChart locale={locale} findings={keyFindings} />

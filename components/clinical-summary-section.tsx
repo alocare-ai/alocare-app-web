@@ -10,7 +10,7 @@ import {
   buildClinicalSummaryDisplay,
   shouldShowClinicalFileDetails,
 } from "@/lib/clinical-summary-display";
-import type { PatientDisplayField } from "@/lib/report-patient-heading";
+import type { PatientDisplayField } from "@/lib/report-patient-identity";
 import type { ReportFileAnalysis } from "@/lib/types/api";
 
 type ClinicalSummarySectionProps = {

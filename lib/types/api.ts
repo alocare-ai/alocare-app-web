@@ -107,6 +107,34 @@ export interface ReportFileAnalysis {
   key_findings?: ReportKeyFinding[];
 }
 
+export interface ReportPatientIdentity {
+  name?: string | null;
+  medical_record_number?: string | null;
+  medicalRecordNumber?: string | null;
+  date_of_birth?: string | null;
+  dateOfBirth?: string | null;
+  gender?: string | null;
+  age?: string | null;
+  address?: string | null;
+  hospital?: string | null;
+  report_type?: string | null;
+  reportType?: string | null;
+  report_date?: string | null;
+  reportDate?: string | null;
+  file_count?: number | null;
+  fileCount?: number | null;
+  matched_patient_id?: string | null;
+  matchedPatientId?: string | null;
+  match_level?: string | null;
+  matchLevel?: string | null;
+  requires_review?: boolean | null;
+  requiresReview?: boolean | null;
+  overall_confidence?: number | null;
+  overallConfidence?: number | null;
+  source_filename?: string | null;
+  sourceFilename?: string | null;
+}
+
 export interface ReportResult {
   id: string;
   status: ReportStatus;
@@ -121,6 +149,8 @@ export interface ReportResult {
   risk_indicator?: string | null;
   uploaded_files?: ReportUploadedFile[];
   file_analyses?: ReportFileAnalysis[];
+  patient_identity?: ReportPatientIdentity | null;
+  patientIdentity?: ReportPatientIdentity | null;
 }
 
 export interface WorklistItem {

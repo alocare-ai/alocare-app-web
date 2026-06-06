@@ -6,6 +6,7 @@ export type OcrStreamStep =
   | "ocr"
   | "file_complete"
   | "complete"
+  | "identity"
   | "error";
 
 export type OcrStreamEvent = {
@@ -19,6 +20,7 @@ export type OcrStreamEvent = {
   file?: string;
   fileIndex?: number;
   fileTotal?: number;
+  patientIdentity?: Record<string, unknown>;
 };
 
 export type OcrStreamHandlers = {
@@ -26,6 +28,10 @@ export type OcrStreamHandlers = {
   onComplete: (event: OcrStreamEvent) => void;
   onError: (message: string) => void;
 };
+
+function isTerminalComplete(event: OcrStreamEvent): boolean {
+  return event.step === "complete" && event.fileTotal != null;
+}
 
 export function streamReportOcr(
   reportId: string,
@@ -38,11 +44,14 @@ export function streamReportOcr(
       const event = JSON.parse(message.data) as OcrStreamEvent;
       handlers.onEvent(event);
 
-      if (event.step === "complete") {
-        handlers.onComplete(event);
-        source.close();
-      } else if (event.step === "error") {
+      if (event.step === "error") {
         handlers.onError(event.message ?? "OCR failed");
+        source.close();
+        return;
+      }
+
+      if (isTerminalComplete(event)) {
+        handlers.onComplete(event);
         source.close();
       }
     } catch {
@@ -69,11 +78,9 @@ export function runOcrStream(
     const close = streamReportOcr(reportId, {
       onEvent,
       onComplete: (event) => {
-        close();
         resolve(event.text ?? "");
       },
       onError: (message) => {
-        close();
         reject(new Error(message));
       },
     });

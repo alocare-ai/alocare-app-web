@@ -60,6 +60,9 @@ export function useReportAiAnalysis({
         (workingResult.key_findings?.length ?? 0) === 0
       ) {
         ocrDocument = (await runOcrStream(reportId, () => {})).trim();
+        await queryClient.invalidateQueries({
+          queryKey: ["report-result", reportId],
+        });
       }
 
       const documentText =

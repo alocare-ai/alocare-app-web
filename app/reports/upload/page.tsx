@@ -180,6 +180,10 @@ export default function UploadReportPage() {
         );
       });
 
+      await queryClient.invalidateQueries({
+        queryKey: ["report-result", reportId],
+      });
+
       const fileContent = ocrText.trim();
       if (!fileContent) {
         throw new Error(
@@ -233,6 +237,12 @@ export default function UploadReportPage() {
         queryClient.setQueryData(["report", reportId], {
           ...report,
           status: "completed",
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ["report-result", reportId],
+        });
+        await queryClient.invalidateQueries({
+          queryKey: ["report", reportId],
         });
 
         handleAiProgress({

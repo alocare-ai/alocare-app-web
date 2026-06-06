@@ -6,7 +6,6 @@ import {
   Spinner,
 } from "@alocare/design-system";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPatient } from "@/lib/api/patients";
 import { useMemo, type ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { DoctorSummaryCard } from "@/components/doctor-summary-card";
@@ -29,13 +28,11 @@ import {
   resolveDoctorSummaryForLocale,
   pickLocaleText,
 } from "@/lib/report-analysis";
-import { parseClinicalSummaryParts } from "@/lib/clinical-summary-display";
 import {
-  ageFromDateOfBirth,
-  buildReportPageHeading,
-  extractReportSubject,
-  patientDisplayFields,
-} from "@/lib/report-patient-heading";
+  patientIdentityDisplayFields,
+  patientIdentityPageHeading,
+} from "@/lib/report-patient-identity";
+import type { ReportPatientIdentity } from "@/lib/types/api";
 import {
   buildReportChatMeta,
   type ReportChatMeta,
@@ -54,6 +51,13 @@ type ReportDetailClientProps = {
   chatMeta: ReportChatMeta;
   analyzingBanner?: ReactNode;
 };
+
+function resolvePatientIdentity(
+  result: ReportResult | null | undefined,
+): ReportPatientIdentity | null {
+  if (!result) return null;
+  return result.patient_identity ?? result.patientIdentity ?? null;
+}
 
 export function ReportDetailClient({
   reportId,
@@ -89,12 +93,6 @@ export function ReportDetailClient({
       }
       return false;
     },
-  });
-
-  const { data: linkedPatient } = useQuery({
-    queryKey: ["patient", report?.patient_id],
-    queryFn: () => getPatient(report!.patient_id!),
-    enabled: Boolean(report?.patient_id),
   });
 
   const { data: result, isLoading: resultLoading } = useQuery({
@@ -203,52 +201,24 @@ export function ReportDetailClient({
     [report, result, locale, chatMeta],
   );
 
-  const reportSubject = useMemo(() => {
-    const clinicalText = summary ? pickLocaleText(summary, locale) : "";
-    const clinicalOverview = clinicalText
-      ? parseClinicalSummaryParts(clinicalText).overview
-      : "";
-    return extractReportSubject({
-      clinicalSummary: clinicalOverview || clinicalText,
-      doctorSummary: doctorText,
-      documentText: result ? extractDocumentText(result) : "",
-      fileAnalyses,
-      uploadedFilenames: uploadedFiles.map((f) => f.filename),
-      fileCount: uploadedFiles.length,
-      linkedPatient: linkedPatient
-        ? {
-            fullName: linkedPatient.full_name,
-            age: ageFromDateOfBirth(linkedPatient.date_of_birth),
-            gender: linkedPatient.gender,
-          }
-        : null,
-    });
-  }, [
-    summary,
-    locale,
-    doctorText,
-    result,
-    uploadedFiles,
-    fileAnalyses,
-    linkedPatient,
-  ]);
+  const persistedIdentity = useMemo(
+    () => resolvePatientIdentity(result),
+    [result],
+  );
 
   const pageHeading = useMemo(
     () =>
-      buildReportPageHeading(reportSubject, locale, report?.title ?? "", {
-        fileCount: uploadedFiles.length,
-      }),
-    [reportSubject, locale, report?.title, uploadedFiles.length],
+      patientIdentityPageHeading(
+        persistedIdentity,
+        locale,
+        report?.title ?? "",
+      ),
+    [persistedIdentity, locale, report?.title],
   );
 
   const clinicalSummaryPatientFields = useMemo(
-    () =>
-      patientDisplayFields(reportSubject, locale, {
-        fileCount: uploadedFiles.length,
-        mrn: linkedPatient?.mrn ?? null,
-        dateOfBirth: linkedPatient?.date_of_birth ?? null,
-      }),
-    [reportSubject, locale, uploadedFiles.length, linkedPatient],
+    () => patientIdentityDisplayFields(persistedIdentity, locale),
+    [persistedIdentity, locale],
   );
 
   if ((reportLoading || resultLoading) && !report) {
@@ -294,7 +264,11 @@ export function ReportDetailClient({
   return (
     <AppShell>
       <div className="space-y-6">
-        <ReportHeaderInsights locale={locale} keyFindings={findings} />
+        <ReportHeaderInsights
+          locale={locale}
+          keyFindings={findings}
+          patientFields={clinicalSummaryPatientFields}
+        />
 
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="min-w-0">
