@@ -55,46 +55,60 @@ export async function getMe(): Promise<UserProfile> {
   return apiFetch<UserProfile>("/users/me");
 }
 
-export type RegisterPayload = {
-  email: string;
-  password: string;
-  full_name: string;
-  role: "PATIENT" | "DOCTOR" | "CLINICIAN";
-  language: string;
-};
-
-export type RegisterResult = {
-  message: string;
-  email: string;
-};
-
-export async function register(payload: RegisterPayload): Promise<RegisterResult> {
-  const res = await fetch("/api/auth/register", {
+export async function requestPasswordReset(
+  email: string,
+  language: string,
+): Promise<string> {
+  const res = await fetch("/api/auth/forgot-password", {
     method: "POST",
     credentials: "include",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ email, language }),
   });
 
   const body = (await res.json().catch(() => ({}))) as {
     message?: string;
-    email?: string;
     error?: string;
     detail?: string;
   };
 
   if (!res.ok) {
     throw new ApiError(
-      body.error ?? body.detail ?? "Registration failed",
+      body.error ?? body.detail ?? "Could not request password reset",
       res.status,
       body.detail,
     );
   }
 
-  return {
-    message: body.message ?? "Registration successful.",
-    email: body.email ?? payload.email,
+  return body.message ?? "If an account exists for this email, a password reset link has been sent.";
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<string> {
+  const res = await fetch("/api/auth/reset-password", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password }),
+  });
+
+  const body = (await res.json().catch(() => ({}))) as {
+    message?: string;
+    error?: string;
+    detail?: string;
   };
+
+  if (!res.ok) {
+    throw new ApiError(
+      body.error ?? body.detail ?? "Password reset failed",
+      res.status,
+      body.detail,
+    );
+  }
+
+  return body.message ?? "Password updated successfully.";
 }
 
 export async function verifyEmail(token: string): Promise<string> {

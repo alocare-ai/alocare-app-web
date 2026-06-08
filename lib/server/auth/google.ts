@@ -1,4 +1,5 @@
 import { getEnv } from "@/lib/server/config";
+import { encodeOAuthState, type OAuthMode } from "@/lib/server/auth/oauth-state";
 
 export type GoogleTokenResponse = {
   access_token: string;
@@ -7,7 +8,11 @@ export type GoogleTokenResponse = {
   expires_in: number;
 };
 
-export function getPortalGoogleAuthUrl(state: string, origin?: string): string | null {
+export function getPortalGoogleAuthUrl(
+  mode: OAuthMode,
+  returnPath: string,
+  origin?: string,
+): string | null {
   const { PORTAL_GOOGLE_CLIENT_ID, NEXT_PUBLIC_APP_URL } = getEnv();
   if (!PORTAL_GOOGLE_CLIENT_ID) return null;
 
@@ -18,7 +23,7 @@ export function getPortalGoogleAuthUrl(state: string, origin?: string): string |
     redirect_uri: redirectUri,
     response_type: "code",
     scope: "openid email profile",
-    state,
+    state: encodeOAuthState(mode, returnPath),
     prompt: "select_account",
   });
   return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;

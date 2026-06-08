@@ -4,8 +4,11 @@ import { getRequestOrigin } from "@/lib/server/auth/request-origin";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const from = url.searchParams.get("from") ?? "/dashboard";
-  const authUrl = getPortalGoogleAuthUrl(from, getRequestOrigin(request));
+  const mode = url.searchParams.get("mode") === "link" ? "link" : "login";
+  const from =
+    url.searchParams.get("from") ??
+    (mode === "link" ? "/settings" : "/dashboard");
+  const authUrl = getPortalGoogleAuthUrl(mode, from, getRequestOrigin(request));
 
   if (!authUrl) {
     return NextResponse.json(

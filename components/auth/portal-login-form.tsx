@@ -41,10 +41,39 @@ function oauthErrorMessage(locale: "en" | "id", code: string | null): string | n
       ? "Layanan API belum mendukung login Google portal. Deploy alocare-api terbaru dan set PORTAL_GOOGLE_CLIENT_ID."
       : "The API does not support portal Google login yet. Deploy the latest alocare-api and set PORTAL_GOOGLE_CLIENT_ID.";
   }
+  if (code === "google_not_linked") {
+    return locale === "id"
+      ? "Google belum terhubung. Masuk dengan email dan kata sandi, lalu hubungkan Google di Pengaturan."
+      : "Google is not connected. Sign in with email and password, then connect Google in Settings.";
+  }
+  if (code === "google_no_account") {
+    return locale === "id"
+      ? "Tidak ada akun portal untuk email Google ini. Hubungi administrator."
+      : "No portal account exists for this Google email. Contact your administrator.";
+  }
+  if (code === "google_disabled") {
+    return locale === "id"
+      ? "Login Google dinonaktifkan untuk akun ini. Gunakan email dan kata sandi."
+      : "Google sign-in is disabled for this account. Use email and password.";
+  }
   if (code === "forbidden") {
     return locale === "id"
       ? "Akun Google ini tidak dapat masuk ke portal."
       : "This Google account cannot sign in to the portal.";
+  }
+  return null;
+}
+
+function noticeMessage(locale: "en" | "id", code: string | null): string | null {
+  if (code === "registration_disabled") {
+    return locale === "id"
+      ? "Pendaftaran mandiri dinonaktifkan. Hubungi administrator untuk akun portal."
+      : "Self-registration is disabled. Contact your administrator for a portal account.";
+  }
+  if (code === "reset") {
+    return locale === "id"
+      ? "Kata sandi berhasil diperbarui. Silakan masuk."
+      : "Password updated successfully. Please sign in.";
   }
   return null;
 }
@@ -56,10 +85,12 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
   const searchParams = useSearchParams();
   const from = searchParams.get("from") ?? "/dashboard";
   const sessionError = searchParams.get("error");
+  const notice = searchParams.get("notice") ?? searchParams.get("reset");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -71,12 +102,21 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
     const oauthError = oauthErrorMessage(locale, sessionError);
     if (oauthError) {
       setError(oauthError);
+      return;
     }
-  }, [sessionError, locale]);
+    const noticeText = noticeMessage(
+      locale,
+      notice === "1" ? "reset" : notice,
+    );
+    if (noticeText) {
+      setInfo(noticeText);
+    }
+  }, [sessionError, notice, locale]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setInfo(null);
     setLoading(true);
     try {
       await logout();
@@ -169,6 +209,12 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
               autoComplete="current-password"
             />
 
+            {info ? (
+              <p className="text-sm text-blue-700" role="status">
+                {info}
+              </p>
+            ) : null}
+
             {error ? (
               <p className="whitespace-pre-line text-sm text-red-600" role="alert">
                 {error}
@@ -182,19 +228,17 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
 
           <div className="mt-4 text-center">
             <Link
-              href="#"
+              href="/forgot-password"
               className="text-sm text-blue-600 hover:underline"
-              onClick={(e) => e.preventDefault()}
             >
               {locale === "id" ? "Lupa kata sandi?" : "Forgot password?"}
             </Link>
           </div>
 
           <p className="mt-4 text-center text-sm text-slate-600">
-            {locale === "id" ? "Belum punya akun? " : "Don't have an account? "}
-            <Link href="/register" className="text-blue-600 hover:underline">
-              {locale === "id" ? "Daftar" : "Register"}
-            </Link>
+            {locale === "id"
+              ? "Butuh akun? Hubungi administrator organisasi Anda."
+              : "Need an account? Contact your organization administrator."}
           </p>
         </CardContent>
       </Card>

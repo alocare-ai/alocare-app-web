@@ -69,6 +69,12 @@ export interface UserProfile {
   tenant_id: string | null;
   patient_id?: string | null;
   patient?: PatientAccountSummary | null;
+  google_linked?: boolean;
+  google_sign_in_disabled?: boolean;
+}
+
+export interface MessageResponse {
+  message: string;
 }
 
 export interface Report {
