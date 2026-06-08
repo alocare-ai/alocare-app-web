@@ -3964,7 +3964,7 @@ function r0({ size: e = "md", className: a, label: l = "Loading" }) {
   );
 }
 const za = he(
-  "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -4663,7 +4663,7 @@ function u2({
             onClick: () => a(n),
             "aria-pressed": c,
             className: u(
-              "rounded-full px-3 py-1.5 transition-colors",
+              "cursor-pointer rounded-full px-3 py-1.5 transition-colors",
               c ? i ? "bg-slate-950 text-white" : "bg-slate-900 text-white" : i ? "text-slate-700 hover:bg-slate-100" : "text-slate-600 hover:text-slate-900"
             ),
             children: rl[n]
@@ -5347,7 +5347,11 @@ function F0({
 }
 const Ue = {
   login: "POST /auth/login",
+  forgotPassword: "POST /auth/forgot-password",
+  resetPassword: "POST /auth/reset-password",
+  changePassword: "POST /auth/change-password",
   google: "POST /auth/google",
+  googleLink: "POST /auth/google/link",
   logout: "POST /auth/logout",
   refresh: "POST /auth/refresh",
   profile: "GET /users/me"
