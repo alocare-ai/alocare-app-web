@@ -99,3 +99,12 @@ body {
   background-size: 200% auto;
   animation: ai-chat-shimmer 4s linear infinite;
 }
+
+[role="dialog"] button:not(:disabled):not([disabled]),
+[aria-modal="true"] button:not(:disabled):not([disabled]) {
+  cursor: pointer;
+}
+
+[role="group"][aria-label="Language"] button:not(:disabled):not([disabled]) {
+  cursor: pointer;
+}
