@@ -4,10 +4,7 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
   Spinner,
-  SystemHealthBadge,
 } from "@alocare/design-system";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
@@ -34,46 +31,46 @@ export default function DashboardPage() {
 
   const quickActions = isPatient
     ? [
-        { href: "/my-health", en: "My health portal", id: "Portal kesehatan" },
+        { href: "/my-health", en: "My health", id: "Kesehatan saya" },
         {
           href: user?.patient_id
             ? `/patients/${user.patient_id}/health`
             : "/my-health",
-          en: "Health intelligence",
-          id: "Intelijen kesehatan",
+          en: "Health insights",
+          id: "Wawasan kesehatan",
         },
-        { href: "/reports/upload", en: "Upload checkup", id: "Unggah MCU" },
+        { href: "/reports/upload", en: "Upload report", id: "Unggah laporan" },
         { href: "/chat", en: "Ask AI", id: "Tanya AI" },
       ]
     : [
-        {
-          href: "/reports/upload",
-          en: "Upload report",
-          id: "Unggah laporan",
-        },
+        { href: "/review", en: "Review queue", id: "Antrian review" },
+        { href: "/patients", en: "Patients", id: "Pasien" },
+        { href: "/reports/upload", en: "Upload report", id: "Unggah laporan" },
         { href: "/chat", en: "Ask AI", id: "Tanya AI" },
-        {
-          href: "/telemedicine/new",
-          en: "Start consultation",
-          id: "Mulai konsultasi",
-        },
-        { href: "/patients", en: "View patients", id: "Lihat pasien" },
       ];
+
+  const recentItems = worklist?.items.slice(0, 5) ?? [];
 
   return (
     <AppShell>
-      <div className="space-y-6">
+      <div className="space-y-8">
         <div>
           <h1 className="font-heading text-2xl font-bold text-slate-900">
-            {locale === "id" ? "Dasbor" : "Dashboard"}
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
             {user
               ? locale === "id"
                 ? `Selamat datang, ${user.full_name}`
                 : `Welcome back, ${user.full_name}`
-              : null}
-          </p>
+              : locale === "id"
+                ? "Dasbor"
+                : "Dashboard"}
+          </h1>
+          {!isPatient ? (
+            <p className="mt-1 text-sm text-slate-600">
+              {locale === "id"
+                ? "Ringkasan worklist dan aksi cepat."
+                : "Your worklist summary and quick actions."}
+            </p>
+          ) : null}
         </div>
 
         {isPatient && user ? (
@@ -81,56 +78,48 @@ export default function DashboardPage() {
         ) : null}
 
         {!isPatient ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard
-            title={locale === "id" ? "Menunggu review" : "Pending review"}
-            value={isLoading ? "—" : String(pending)}
-          />
-          <MetricCard
-            title={locale === "id" ? "Sedang diproses" : "In progress"}
-            value={isLoading ? "—" : String(inProgress)}
-          />
-          <MetricCard
-            title={locale === "id" ? "Item worklist" : "Worklist items"}
-            value={isLoading ? "—" : String(worklist?.total ?? 0)}
-          />
-          <MetricCard
-            title={locale === "id" ? "Peran" : "Role"}
-            value={user?.role ?? "—"}
-          />
-        </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <MetricCard
+              title={locale === "id" ? "Menunggu review" : "Pending review"}
+              value={isLoading ? "—" : String(pending)}
+            />
+            <MetricCard
+              title={locale === "id" ? "Sedang diproses" : "In progress"}
+              value={isLoading ? "—" : String(inProgress)}
+            />
+            <MetricCard
+              title={locale === "id" ? "Total worklist" : "Total worklist"}
+              value={isLoading ? "—" : String(worklist?.total ?? 0)}
+            />
+          </div>
         ) : null}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {locale === "id" ? "Aksi cepat" : "Quick actions"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-3">
+        <section>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+            {locale === "id" ? "Aksi cepat" : "Quick actions"}
+          </h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {quickActions.map((action) => (
               <Link key={action.href} href={action.href}>
-                <Button variant="secondary" className="cursor-pointer">
+                <Button
+                  variant="secondary"
+                  className="h-auto w-full cursor-pointer justify-center px-4 py-3"
+                >
                   {locale === "id" ? action.id : action.en}
                 </Button>
               </Link>
             ))}
-          </CardContent>
-        </Card>
+          </div>
+        </section>
 
-        {!isPatient ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {locale === "id" ? "Aktivitas terbaru" : "Recent activity"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <Spinner />
-            ) : worklist?.items.length ? (
+        {!isPatient && !isLoading && recentItems.length > 0 ? (
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                {locale === "id" ? "Aktivitas terbaru" : "Recent activity"}
+              </h2>
               <ul className="divide-y divide-slate-100">
-                {worklist.items.slice(0, 5).map((item) => (
+                {recentItems.map((item) => (
                   <li
                     key={item.id}
                     className="flex items-center justify-between py-3 text-sm"
@@ -144,21 +133,15 @@ export default function DashboardPage() {
                   </li>
                 ))}
               </ul>
-            ) : (
-              <p className="text-sm text-slate-500">
-                {locale === "id"
-                  ? "Belum ada aktivitas."
-                  : "No recent activity yet."}
-              </p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
         ) : null}
 
-        <div className="grid gap-3 sm:grid-cols-2">
-          <SystemHealthBadge variant="privacy" />
-          <SystemHealthBadge variant="encryption" />
-        </div>
+        {!isPatient && isLoading ? (
+          <div className="flex justify-center py-8">
+            <Spinner />
+          </div>
+        ) : null}
       </div>
     </AppShell>
   );
@@ -169,7 +152,7 @@ function MetricCard({ title, value }: { title: string; value: string }) {
     <Card>
       <CardContent className="pt-6">
         <p className="text-sm text-slate-600">{title}</p>
-        <p className="mt-1 font-heading text-2xl font-bold text-slate-900">
+        <p className="mt-1 font-heading text-3xl font-bold text-slate-900">
           {value}
         </p>
       </CardContent>

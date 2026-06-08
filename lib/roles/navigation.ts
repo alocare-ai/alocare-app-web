@@ -42,45 +42,23 @@ const HR_ROLES: UserRole[] = ["HR_ADMIN"];
 const ADMIN_ROLES: UserRole[] = ["SUPER_ADMIN", "TENANT_ADMIN", "AUDITOR"];
 
 export function getDefaultNavItems(): NavItem[] {
-  return [
-    item("dashboard"),
-    item("reports"),
-    item("patients"),
-    item("settings"),
-  ];
+  return [item("reports"), item("patients"), item("chat")];
 }
 
 export function getNavItemsForRole(role: UserRole): NavItem[] {
   if (role === "PATIENT") {
-    return [
-      item("healthIntel"),
-      item("myReports"),
-      item("settings"),
-    ];
+    return [item("healthIntel"), item("myReports"), item("chat"), item("settings")];
   }
 
   if (HR_ROLES.includes(role)) {
-    return [item("dashboard"), item("enterprise"), item("reports")];
+    return [item("enterprise"), item("reports")];
   }
 
   if (ADMIN_ROLES.includes(role) && !DOCTOR_ROLES.includes(role)) {
-    return [
-      item("dashboard"),
-      item("reports"),
-      item("patients"),
-      item("enterprise"),
-      item("settings"),
-    ];
+    return [item("patients"), item("reports"), item("enterprise"), item("settings")];
   }
 
-  return [
-    item("dashboard"),
-    item("reviewQueue"),
-    item("reports"),
-    item("patients"),
-    item("healthIntel"),
-    item("telemedicine"),
-  ];
+  return [item("reviewQueue"), item("patients"), item("reports"), item("chat")];
 }
 
 export function labelNav(item: NavItem, locale: Locale): string {
