@@ -1,7 +1,13 @@
 export declare const colors: {
     readonly primary: {
-        readonly 600: "#2563EB";
-        readonly 700: "#1D4ED8";
+        readonly 600: "#1078E0";
+        readonly 700: "#003CDC";
+    };
+    readonly brand: {
+        readonly navy: "#001450";
+        readonly primary: "#1078E0";
+        readonly primaryDark: "#003CDC";
+        readonly white: "#FFFFFF";
     };
     readonly medical: {
         readonly teal: "#14B8A6";

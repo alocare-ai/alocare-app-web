@@ -1,6 +1,7 @@
 import { jsx as _jsx, Fragment as _Fragment, jsxs as _jsxs } from "react/jsx-runtime";
 import { Text } from "@react-email/components";
 import { EmailLayout } from "../shared/layout.js";
+import { emailTextStyle } from "../shared/styles.js";
 const copy = {
     en: {
         preview: "Your Alocare appointment is confirmed",
@@ -23,8 +24,7 @@ const copy = {
 };
 export function AppointmentConfirmation({ name, appointmentDate, doctorName, location, language = "en", }) {
     const t = copy[language];
-    return (_jsxs(EmailLayout, { preview: t.preview, title: t.title, language: language, children: [_jsx(Text, { style: text, children: t.greeting(name) }), _jsx(Text, { style: text, children: t.body }), _jsx(Text, { style: label, children: t.date }), _jsx(Text, { style: value, children: appointmentDate }), doctorName ? (_jsxs(_Fragment, { children: [_jsx(Text, { style: label, children: t.doctor }), _jsx(Text, { style: value, children: doctorName })] })) : null, location ? (_jsxs(_Fragment, { children: [_jsx(Text, { style: label, children: t.location }), _jsx(Text, { style: value, children: location })] })) : null] }));
+    return (_jsxs(EmailLayout, { preview: t.preview, title: t.title, language: language, children: [_jsx(Text, { style: emailTextStyle, children: t.greeting(name) }), _jsx(Text, { style: emailTextStyle, children: t.body }), _jsx(Text, { style: label, children: t.date }), _jsx(Text, { style: value, children: appointmentDate }), doctorName ? (_jsxs(_Fragment, { children: [_jsx(Text, { style: label, children: t.doctor }), _jsx(Text, { style: value, children: doctorName })] })) : null, location ? (_jsxs(_Fragment, { children: [_jsx(Text, { style: label, children: t.location }), _jsx(Text, { style: value, children: location })] })) : null] }));
 }
-const text = { color: "#334155", fontSize: "15px", lineHeight: "24px" };
 const label = { color: "#64748b", fontSize: "12px", fontWeight: 600, marginBottom: "4px" };
-const value = { color: "#0f172a", fontSize: "15px", marginTop: 0, marginBottom: "16px" };
+const value = { color: "#001450", fontSize: "15px", marginTop: 0, marginBottom: "16px" };

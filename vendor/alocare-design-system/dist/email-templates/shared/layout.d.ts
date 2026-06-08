@@ -6,7 +6,7 @@ interface EmailLayoutProps {
     children: ReactNode;
     footer?: string;
     language?: EmailLanguage;
-    /** Absolute URL for the header logo (defaults to app.alocare.net PNG; Storybook uses `/logo-alocare.png`). */
+    /** Absolute URL for the header logo (defaults to app.alocare.net PNG; Storybook uses `/alocare-ai.png`). */
     logoUrl?: string;
 }
 export declare function EmailLayout({ preview, title, children, footer, language, logoUrl, }: EmailLayoutProps): import("react/jsx-runtime").JSX.Element;
