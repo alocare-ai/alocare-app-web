@@ -106,13 +106,18 @@ function failureStatus(failure: UpstreamFailure): number {
 }
 
 export function upstreamFailureResponse(failure: UpstreamFailure): Response {
+  const status =
+    failure.status && failure.status >= 400 && failure.status < 500
+      ? failure.status
+      : failureStatus(failure);
   return Response.json(
     {
       error: failure.message,
+      detail: failure.message,
       code: failure.kind,
       ...(failure.hint ? { hint: failure.hint } : {}),
     },
-    { status: failureStatus(failure) },
+    { status },
   );
 }
 

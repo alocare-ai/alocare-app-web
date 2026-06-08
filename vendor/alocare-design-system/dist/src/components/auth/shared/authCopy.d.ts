@@ -17,12 +17,6 @@ export declare const authCopy: {
     readonly brandTagline: import('../../../utils/i18n').BilingualText;
     readonly continueWithGoogle: import('../../../utils/i18n').BilingualText;
     readonly orDivider: import('../../../utils/i18n').BilingualText;
-    readonly demoHint: import('../../../utils/i18n').BilingualText;
-    readonly demoAccountTitle: import('../../../utils/i18n').BilingualText;
-    readonly demoNotesTitle: import('../../../utils/i18n').BilingualText;
-    readonly demoEmailLabel: import('../../../utils/i18n').BilingualText;
-    readonly demoPasswordLabel: import('../../../utils/i18n').BilingualText;
-    readonly demoAdditionalNote: import('../../../utils/i18n').BilingualText;
     readonly secureSession: import('../../../utils/i18n').BilingualText;
 };
 //# sourceMappingURL=authCopy.d.ts.map

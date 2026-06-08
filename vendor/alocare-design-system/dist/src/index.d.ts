@@ -28,7 +28,7 @@ export { ChatMessage } from './components/chat/ChatMessage/ChatMessage';
 export { ChatInput } from './components/chat/ChatInput/ChatInput';
 export { EmployeeHealthCard } from './components/hr/EmployeeHealthCard/EmployeeHealthCard';
 export { SystemHealthBadge } from './components/telemetry/SystemHealthBadge/SystemHealthBadge';
-export { AUTH_API, authCopy, LoginForm, AlocareLogo, LoginBrand, LoginBrandPanel, LoginGoogleButton, LoginDivider, LoginDemoNotes, DEFAULT_DEMO_EMAIL, DEFAULT_DEMO_PASSWORD, LoginLayout, LoginCard, LoginCardHeader, LoginCardContent, loginSizing, loginShadows, LoginMenuBar, type LoginSize, type LoginMenuBarProps, LoginFooter, LoginErrorAlert, LoginPasswordField, PortalLogin, AdminLogin, HRPortalLogin, type LoginCredentials, type LoginFormProps, type PortalLoginProps, } from './components/auth';
+export { AUTH_API, authCopy, LoginForm, AlocareLogo, LoginBrand, LoginBrandPanel, LoginGoogleButton, LoginDivider, LoginLayout, LoginCard, LoginCardHeader, LoginCardContent, loginSizing, loginShadows, LoginMenuBar, type LoginSize, type LoginMenuBarProps, LoginFooter, LoginErrorAlert, LoginPasswordField, PortalLogin, AdminLogin, HRPortalLogin, type LoginCredentials, type LoginFormProps, type PortalLoginProps, } from './components/auth';
 export { AuthLoginShowcase } from './templates/auth/AuthLoginShowcase/AuthLoginShowcase';
 export { EMR_API, EMRTabletShell, EMRLogin, EMRWorklist, EMRPatientBanner, EMRConsultationSOAP, EMRMedicationOrders, EMRLabRadOrders, EMRAIVoiceConsultation, EMRReports, } from './components/emr';
 export { EMRWorkflowTablet } from './templates/emr/EMRWorkflowTablet/EMRWorkflowTablet';

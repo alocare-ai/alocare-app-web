@@ -9,7 +9,6 @@ export { AlocareLogo, type AlocareLogoProps } from './shared/AlocareLogo';
 export { LoginBrand, LoginBrandPanel, type LoginBrandProps } from './shared/LoginBrand';
 export { LoginGoogleButton, type LoginGoogleButtonProps } from './shared/LoginGoogleButton';
 export { LoginDivider } from './shared/LoginDivider';
-export { LoginDemoNotes, DEFAULT_DEMO_EMAIL, DEFAULT_DEMO_PASSWORD, type LoginDemoNotesProps, } from './shared/LoginDemoNotes';
 export { LoginErrorAlert } from './shared/LoginErrorAlert';
 export { LoginPasswordField } from './shared/LoginPasswordField';
 export { LoginFooter, type LoginFooterProps } from './shared/LoginFooter';

@@ -6,9 +6,8 @@ export type LoginFooterProps = {
     showForgotPassword?: boolean;
     showLanguageSwitcher?: boolean;
     languageVariant?: "default" | "marketing";
-    showDemoHint?: boolean;
     showApiHint?: boolean;
     className?: string;
 };
-export declare function LoginFooter({ lang, onLocaleChange, onForgotPassword, showForgotPassword, showLanguageSwitcher, languageVariant, showDemoHint, showApiHint, className, }: LoginFooterProps): import("react/jsx-runtime").JSX.Element;
+export declare function LoginFooter({ lang, onLocaleChange, onForgotPassword, showForgotPassword, showLanguageSwitcher, languageVariant, showApiHint, className, }: LoginFooterProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=LoginFooter.d.ts.map
