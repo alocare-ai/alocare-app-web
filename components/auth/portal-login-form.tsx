@@ -272,6 +272,29 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
               {locale === "id" ? "Hubungi kami" : "Contact us"}
             </Link>
           </p>
+
+          <div
+            className="mt-4 rounded-xl border border-blue-100 bg-blue-50/80 px-4 py-3 text-left text-sm text-blue-900"
+            role="note"
+          >
+            <p className="font-semibold">
+              {locale === "id" ? "Akun demo" : "Demo account"}
+            </p>
+            <ul className="mt-1 space-y-1 text-blue-800">
+              <li>
+                <span className="font-medium">
+                  {locale === "id" ? "Dokter: " : "Clinician: "}
+                </span>
+                doctor@alocare.net / doctor123
+              </li>
+              <li>
+                <span className="font-medium">
+                  {locale === "id" ? "Pasien: " : "Patient: "}
+                </span>
+                patient@alocare.net / patient123
+              </li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>
