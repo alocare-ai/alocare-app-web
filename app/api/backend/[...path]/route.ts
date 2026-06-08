@@ -10,6 +10,25 @@ const COOKIE_OPTS = {
   path: "/",
 };
 
+const EMPTY_BODY_STATUSES = new Set([204, 205, 304]);
+
+function buildProxyResponse(
+  status: number,
+  body: string,
+  contentType: string | null,
+): NextResponse {
+  if (EMPTY_BODY_STATUSES.has(status)) {
+    return new NextResponse(null, { status });
+  }
+
+  return new NextResponse(body, {
+    status,
+    headers: {
+      "Content-Type": contentType ?? "application/json",
+    },
+  });
+}
+
 async function refreshAccessToken(
   refresh: string,
 ): Promise<{ access_token: string; refresh_token: string } | null> {
@@ -60,13 +79,11 @@ async function forward(
   const upstream = await fetch(url, init);
   const responseBody = await upstream.text();
 
-  return new NextResponse(responseBody, {
-    status: upstream.status,
-    headers: {
-      "Content-Type":
-        upstream.headers.get("content-type") ?? "application/json",
-    },
-  });
+  return buildProxyResponse(
+    upstream.status,
+    responseBody,
+    upstream.headers.get("content-type"),
+  );
 }
 
 async function proxyRequest(
@@ -83,13 +100,11 @@ async function proxyRequest(
     const tokens = await refreshAccessToken(refresh);
     if (tokens) {
       response = await forward(request, path, tokens.access_token);
-      const nextResponse = new NextResponse(await response.text(), {
-        status: response.status,
-        headers: {
-          "Content-Type":
-            response.headers.get("content-type") ?? "application/json",
-        },
-      });
+      const nextResponse = buildProxyResponse(
+        response.status,
+        await response.text(),
+        response.headers.get("content-type"),
+      );
       nextResponse.cookies.set(AUTH_COOKIES.access, tokens.access_token, {
         ...COOKIE_OPTS,
         maxAge: 60 * 60,
