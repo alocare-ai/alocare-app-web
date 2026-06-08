@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import { AppShell } from "@/components/app-shell";
 import { PatientAccountCard } from "@/components/patient-account-card";
 import { GoogleConnectCard } from "@/components/settings/google-connect-card";
+import { ChangePasswordForm } from "@/components/settings/change-password-form";
 import { useAuth } from "@/hooks/use-auth";
 import { useLocale } from "@/hooks/use-locale";
 
@@ -39,12 +40,8 @@ export function SettingsContent({ googleEnabled }: SettingsContentProps) {
     {
       title: locale === "id" ? "Keamanan" : "Security",
       content: (
-        <div className="space-y-4">
-          <p className="text-sm text-slate-600">
-            {locale === "id"
-              ? "Sesi diamankan dengan token JWT httpOnly."
-              : "Sessions secured with httpOnly JWT tokens."}
-          </p>
+        <div className="space-y-6">
+          <ChangePasswordForm locale={locale} />
           <Suspense fallback={null}>
             <GoogleConnectCard locale={locale} googleEnabled={googleEnabled} />
           </Suspense>

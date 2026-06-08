@@ -111,6 +111,37 @@ export async function resetPassword(
   return body.message ?? "Password updated successfully.";
 }
 
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<string> {
+  const res = await fetch("/api/auth/change-password", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      current_password: currentPassword,
+      new_password: newPassword,
+    }),
+  });
+
+  const body = (await res.json().catch(() => ({}))) as {
+    message?: string;
+    error?: string;
+    detail?: string;
+  };
+
+  if (!res.ok) {
+    throw new ApiError(
+      body.error ?? body.detail ?? "Password change failed",
+      res.status,
+      body.detail,
+    );
+  }
+
+  return body.message ?? "Password changed successfully.";
+}
+
 export async function verifyEmail(token: string): Promise<string> {
   const res = await fetch("/api/auth/verify-email", {
     method: "POST",
