@@ -100,6 +100,12 @@ jobs:
         run: vercel pull --yes --environment=${{ steps.target.outputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build
+        env:
+          PORTAL_GOOGLE_CLIENT_ID: ${{ secrets.PORTAL_GOOGLE_CLIENT_ID }}
+          PORTAL_GOOGLE_CLIENT_SECRET: ${{ secrets.PORTAL_GOOGLE_CLIENT_SECRET }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.alocare.net' }}
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL || 'https://app.alocare.net' }}
+          API_PROXY_URL: ${{ vars.API_PROXY_URL || 'https://api.alocare.net' }}
         run: vercel build ${{ steps.target.outputs.prod_flag }} --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy
