@@ -1,0 +1,26 @@
+{
+  "secrets": {
+    "PORTAL_GOOGLE_CLIENT_ID": {
+      "env": "PORTAL_GOOGLE_CLIENT_ID",
+      "required": true
+    },
+    "PORTAL_GOOGLE_CLIENT_SECRET": {
+      "env": "PORTAL_GOOGLE_CLIENT_SECRET",
+      "required": true
+    }
+  },
+  "variables": {
+    "NEXT_PUBLIC_API_URL": {
+      "env": "NEXT_PUBLIC_API_URL",
+      "default": "https://api.alocare.net"
+    },
+    "NEXT_PUBLIC_APP_URL": {
+      "env": "NEXT_PUBLIC_APP_URL",
+      "default": "https://app.alocare.net"
+    },
+    "API_PROXY_URL": {
+      "env": "API_PROXY_URL",
+      "default": "https://api.alocare.net"
+    }
+  }
+}

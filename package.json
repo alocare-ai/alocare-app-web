@@ -3,9 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "generate-env": "node scripts/generate-env.cjs",
+    "login": "./scripts/gcloud-login.sh --login",
+    "login:setup": "./scripts/gcloud-login.sh",
+    "generate-env": "tsx scripts/generate-env.ts",
+    "generate-env:help": "tsx scripts/generate-env.ts --help",
+    "seed-secrets": "bash scripts/seed-secret-manager.sh",
+    "seed-github-config": "bash scripts/seed-github-config.sh",
     "setup-git": "node scripts/setup-git.cjs",
-    "postinstall": "node scripts/setup-git.cjs && node scripts/generate-env.cjs",
+    "postinstall": "node scripts/setup-git.cjs",
     "sync-design-system": "node scripts/sync-design-system-vendor.cjs",
     "dev": "next dev",
     "dev:turbo": "next dev --turbopack",
@@ -29,13 +34,16 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@google-cloud/secret-manager": "^6.1.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chalk": "^4.1.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.18",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   },
   "overrides": {

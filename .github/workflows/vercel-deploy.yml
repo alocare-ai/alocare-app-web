@@ -1,5 +1,8 @@
 # Deploy to Vercel only when this workflow runs (not via Vercel Git auto-deploy).
-# Required GitHub secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Required GitHub secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID,
+#   PORTAL_GOOGLE_CLIENT_ID, PORTAL_GOOGLE_CLIENT_SECRET
+# Optional GitHub variables: NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_URL, API_PROXY_URL
+# Seed from local .env: npm run seed-github-config
 # See alocare-tech-stack/deployment/app-web.md
 
 name: Deploy to Vercel
@@ -63,11 +66,13 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          PORTAL_GOOGLE_CLIENT_ID: ${{ secrets.PORTAL_GOOGLE_CLIENT_ID }}
+          PORTAL_GOOGLE_CLIENT_SECRET: ${{ secrets.PORTAL_GOOGLE_CLIENT_SECRET }}
         run: |
-          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID PORTAL_GOOGLE_CLIENT_ID PORTAL_GOOGLE_CLIENT_SECRET; do
             val=$(printenv "$name")
             if [ -z "$val" ]; then
-              echo "::error::Missing secret ${name}. Add it under Settings → Secrets and variables → Actions."
+              echo "::error::Missing secret ${name}. Add it under Settings → Secrets and variables → Actions (npm run seed-github-config)."
               exit 1
             fi
           done
@@ -80,6 +85,16 @@ jobs:
 
       - name: Install Vercel CLI
         run: npm install -g vercel@latest
+
+      - name: Sync Vercel environment variables
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PORTAL_GOOGLE_CLIENT_ID: ${{ secrets.PORTAL_GOOGLE_CLIENT_ID }}
+          PORTAL_GOOGLE_CLIENT_SECRET: ${{ secrets.PORTAL_GOOGLE_CLIENT_SECRET }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://api.alocare.net' }}
+          NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL || 'https://app.alocare.net' }}
+          API_PROXY_URL: ${{ vars.API_PROXY_URL || 'https://api.alocare.net' }}
+        run: bash scripts/deploy/sync-vercel-env.sh ${{ steps.target.outputs.environment }}
 
       - name: Pull Vercel environment
         run: vercel pull --yes --environment=${{ steps.target.outputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}

@@ -1,18 +1,18 @@
-import { jsx as t, jsxs as r, Fragment as J2 } from "react/jsx-runtime";
+import { jsx as t, jsxs as r, Fragment as S2 } from "react/jsx-runtime";
 import * as C from "react";
 import q0, { createContext as e1, useState as _, useMemo as t1, useContext as a1, forwardRef as d2, createElement as Z2, useRef as l1, useCallback as s1 } from "react";
 import "react-dom";
-const V2 = {
+const G2 = {
   navy: "#001450",
   primary: "#1078E0",
   primaryDark: "#003CDC",
   white: "#FFFFFF"
-}, _s = "/alocare-ai.svg", Ls = "/alocare-ai.png", K0 = 1434 / 405, Is = {
+}, Is = "/alocare-ai.svg", Ts = "/alocare-ai.png", K0 = 1434 / 405, Rs = {
   primary: {
-    600: V2.primary,
-    700: V2.primaryDark
+    600: G2.primary,
+    700: G2.primaryDark
   },
-  brand: V2,
+  brand: G2,
   medical: {
     teal: "#14B8A6",
     green: "#22C55E"
@@ -35,7 +35,7 @@ const V2 = {
     900: "#0F172A"
   },
   white: "#FFFFFF"
-}, Ts = {
+}, js = {
   0: "0",
   1: "0.25rem",
   2: "0.5rem",
@@ -49,7 +49,7 @@ const V2 = {
   16: "4rem",
   20: "5rem",
   24: "6rem"
-}, Rs = {
+}, Ds = {
   fontFamily: {
     sans: '"Inter", ui-sans-serif, system-ui, sans-serif',
     heading: '"Manrope", "Inter", ui-sans-serif, system-ui, sans-serif'
@@ -71,18 +71,18 @@ const V2 = {
     semibold: "600",
     bold: "700"
   }
-}, js = {
+}, Os = {
   sm: "8px",
   md: "12px",
   lg: "16px",
   xl: "24px",
   full: "9999px"
-}, Ds = {
+}, $s = {
   card: "0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.06)",
   floating: "0 10px 40px -12px rgb(15 23 42 / 0.18), 0 4px 16px -4px rgb(15 23 42 / 0.08)",
   modal: "0 25px 50px -12px rgb(15 23 42 / 0.25)",
   focus: "0 0 0 3px rgb(37 99 235 / 0.35)"
-}, Os = {
+}, Bs = {
   base: 0,
   dropdown: 1e3,
   sticky: 1100,
@@ -90,7 +90,7 @@ const V2 = {
   modal: 1300,
   popover: 1400,
   tooltip: 1500
-}, $s = {
+}, Vs = {
   duration: {
     fast: 150,
     normal: 250,
@@ -124,7 +124,7 @@ function i1({
   );
   return /* @__PURE__ */ t(J0.Provider, { value: i, children: e });
 }
-function Bs() {
+function Gs() {
   const e = a1(J0);
   return e || {
     locale: "en",
@@ -133,7 +133,7 @@ function Bs() {
     t: (a) => b(a, "en")
   };
 }
-function Vs({
+function Fs({
   children: e,
   defaultLocale: a = "en"
 }) {
@@ -166,7 +166,7 @@ const r1 = (e, a) => {
   nextPart: e,
   validators: a,
   classGroupId: l
-}), S2 = "-", z0 = [], o1 = "arbitrary..", c1 = (e) => {
+}), P2 = "-", z0 = [], o1 = "arbitrary..", c1 = (e) => {
   const a = m1(e), {
     conflictingClassGroups: l,
     conflictingClassGroupModifiers: s
@@ -175,7 +175,7 @@ const r1 = (e, a) => {
     getClassGroupId: (c) => {
       if (c.startsWith("[") && c.endsWith("]"))
         return d1(c);
-      const o = c.split(S2), m = o[0] === "" && o.length > 1 ? 1 : 0;
+      const o = c.split(P2), m = o[0] === "" && o.length > 1 ? 1 : 0;
       return X0(o, m, a);
     },
     getConflictingClassGroupIds: (c, o) => {
@@ -197,11 +197,11 @@ const r1 = (e, a) => {
   const c = l.validators;
   if (c === null)
     return;
-  const o = a === 0 ? e.join(S2) : e.slice(a).join(S2), m = c.length;
+  const o = a === 0 ? e.join(P2) : e.slice(a).join(P2), m = c.length;
   for (let h = 0; h < m; h++) {
-    const p = c[h];
-    if (p.validator(o))
-      return p.classGroupId;
+    const f = c[h];
+    if (f.validator(o))
+      return f.classGroupId;
   }
 }, d1 = (e) => e.slice(1, -1).indexOf(":") === -1 ? void 0 : (() => {
   const a = e.slice(1, -1), l = a.indexOf(":"), s = a.slice(0, l);
@@ -252,7 +252,7 @@ const r1 = (e, a) => {
   }
 }, ee = (e, a) => {
   let l = e;
-  const s = a.split(S2), i = s.length;
+  const s = a.split(P2), i = s.length;
   for (let n = 0; n < i; n++) {
     const c = s[n];
     let o = l.nextPart.get(c);
@@ -297,32 +297,32 @@ const r1 = (e, a) => {
   let s = (i) => {
     const n = [];
     let c = 0, o = 0, m = 0, h;
-    const p = i.length;
-    for (let M = 0; M < p; M++) {
-      const S = i[M];
+    const f = i.length;
+    for (let z = 0; z < f; z++) {
+      const S = i[z];
       if (c === 0 && o === 0) {
         if (S === E0) {
-          n.push(i.slice(m, M)), m = M + 1;
+          n.push(i.slice(m, z)), m = z + 1;
           continue;
         }
         if (S === "/") {
-          h = M;
+          h = z;
           continue;
         }
       }
       S === "[" ? c++ : S === "]" ? c-- : S === "(" ? o++ : S === ")" && o--;
     }
-    const f = n.length === 0 ? i : i.slice(m);
-    let w = f, y = !1;
-    f.endsWith(Y2) ? (w = f.slice(0, -1), y = !0) : (
+    const p = n.length === 0 ? i : i.slice(m);
+    let y = p, w = !1;
+    p.endsWith(Y2) ? (y = p.slice(0, -1), w = !0) : (
       /**
        * In Tailwind CSS v3 the important modifier was at the start of the base class name. This is still supported for legacy reasons.
        * @see https://github.com/dcastil/tailwind-merge/issues/513#issuecomment-2614029864
        */
-      f.startsWith(Y2) && (w = f.slice(1), y = !0)
+      p.startsWith(Y2) && (y = p.slice(1), w = !0)
     );
-    const z = h && h > m ? h - m : void 0;
-    return C0(n, y, w, z);
+    const M = h && h > m ? h - m : void 0;
+    return C0(n, w, y, M);
   };
   if (a) {
     const i = a + E0, n = s;
@@ -370,38 +370,38 @@ const r1 = (e, a) => {
     postfixLookupClassGroupIds: c
   } = a, o = [], m = e.trim().split(M1);
   let h = "";
-  for (let p = m.length - 1; p >= 0; p -= 1) {
-    const f = m[p], {
-      isExternal: w,
-      modifiers: y,
-      hasImportantModifier: z,
-      baseClassName: M,
+  for (let f = m.length - 1; f >= 0; f -= 1) {
+    const p = m[f], {
+      isExternal: y,
+      modifiers: w,
+      hasImportantModifier: M,
+      baseClassName: z,
       maybePostfixModifierPosition: S
-    } = l(f);
-    if (w) {
-      h = f + (h.length > 0 ? " " + h : h);
+    } = l(p);
+    if (y) {
+      h = p + (h.length > 0 ? " " + h : h);
       continue;
     }
     let A = !!S, L;
     if (A) {
-      const H = M.substring(0, S);
+      const H = z.substring(0, S);
       L = s(H);
-      const g = L && c[L] ? s(M) : void 0;
+      const g = L && c[L] ? s(z) : void 0;
       g && g !== L && (L = g, A = !1);
     } else
-      L = s(M);
+      L = s(z);
     if (!L) {
       if (!A) {
-        h = f + (h.length > 0 ? " " + h : h);
+        h = p + (h.length > 0 ? " " + h : h);
         continue;
       }
-      if (L = s(M), !L) {
-        h = f + (h.length > 0 ? " " + h : h);
+      if (L = s(z), !L) {
+        h = p + (h.length > 0 ? " " + h : h);
         continue;
       }
       A = !1;
     }
-    const G = y.length === 0 ? "" : y.length === 1 ? y[0] : n(y).join(":"), U = z ? G + Y2 : G, q = U + L;
+    const G = w.length === 0 ? "" : w.length === 1 ? w[0] : n(w).join(":"), U = M ? G + Y2 : G, q = U + L;
     if (o.indexOf(q) > -1)
       continue;
     o.push(q);
@@ -410,7 +410,7 @@ const r1 = (e, a) => {
       const g = Q[H];
       o.push(U + g);
     }
-    h = f + (h.length > 0 ? " " + h : h);
+    h = p + (h.length > 0 ? " " + h : h);
   }
   return h;
 }, E1 = (...e) => {
@@ -428,20 +428,20 @@ const r1 = (e, a) => {
 }, C1 = (e, ...a) => {
   let l, s, i, n;
   const c = (m) => {
-    const h = a.reduce((p, f) => f(p), e());
+    const h = a.reduce((f, p) => p(f), e());
     return l = k1(h), s = l.cache.get, i = l.cache.set, n = o, o(m);
   }, o = (m) => {
     const h = s(m);
     if (h)
       return h;
-    const p = z1(m, l);
-    return i(m, p), p;
+    const f = z1(m, l);
+    return i(m, f), f;
   };
   return n = c, (...m) => n(E1(...m));
 }, A1 = [], T = (e) => {
   const a = (l) => l[e] || A1;
   return a.isThemeGetter = !0, a;
-}, ae = /^\[(?:(\w[\w-]*):)?(.+)\]$/i, le = /^\((?:(\w[\w-]*):)?(.+)\)$/i, S1 = /^\d+(?:\.\d+)?\/\d+(?:\.\d+)?$/, P1 = /^(\d+(\.\d+)?)?(xs|sm|md|lg|xl)$/, _1 = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|ch|ex|r?lh|cq(w|h|i|b|min|max))|\b(calc|min|max|clamp)\(.+\)|^0$/, L1 = /^(rgba?|hsla?|hwb|(ok)?(lab|lch)|color-mix)\(.+\)$/, I1 = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/, T1 = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/, X = (e) => S1.test(e), E = (e) => !!e && !Number.isNaN(Number(e)), K = (e) => !!e && Number.isInteger(Number(e)), G2 = (e) => e.endsWith("%") && E(e.slice(0, -1)), J = (e) => P1.test(e), se = () => !0, R1 = (e) => (
+}, ae = /^\[(?:(\w[\w-]*):)?(.+)\]$/i, le = /^\((?:(\w[\w-]*):)?(.+)\)$/i, S1 = /^\d+(?:\.\d+)?\/\d+(?:\.\d+)?$/, P1 = /^(\d+(\.\d+)?)?(xs|sm|md|lg|xl)$/, _1 = /\d+(%|px|r?em|[sdl]?v([hwib]|min|max)|pt|pc|in|cm|mm|cap|ch|ex|r?lh|cq(w|h|i|b|min|max))|\b(calc|min|max|clamp)\(.+\)|^0$/, L1 = /^(rgba?|hsla?|hwb|(ok)?(lab|lch)|color-mix)\(.+\)$/, I1 = /^(inset_)?-?((\d+)?\.?(\d+)[a-z]+|0)_-?((\d+)?\.?(\d+)[a-z]+|0)/, T1 = /^(url|image|image-set|cross-fade|element|(repeating-)?(linear|radial|conic)-gradient)\(.+\)$/, X = (e) => S1.test(e), E = (e) => !!e && !Number.isNaN(Number(e)), K = (e) => !!e && Number.isInteger(Number(e)), F2 = (e) => e.endsWith("%") && E(e.slice(0, -1)), J = (e) => P1.test(e), se = () => !0, R1 = (e) => (
   // `colorFunctionRegex` check is necessary because color functions can have percentages in them which which would be incorrectly classified as lengths.
   // For example, `hsl(0 0% 0%)` would be classified as a length without this check.
   // I could also use lookbehind assertion in `lengthUnitRegex` but that isn't supported widely enough.
@@ -453,7 +453,7 @@ const r1 = (e, a) => {
   const s = le.exec(e);
   return s ? s[1] ? a(s[1]) : l : !1;
 }, ie = (e) => e === "position" || e === "percentage", re = (e) => e === "image" || e === "url", ne = (e) => e === "length" || e === "size" || e === "bg-size", oe = (e) => e === "length", K1 = (e) => e === "number", ce = (e) => e === "family-name", de = (e) => e === "number" || e === "weight", me = (e) => e === "shadow", J1 = () => {
-  const e = T("color"), a = T("font"), l = T("text"), s = T("font-weight"), i = T("tracking"), n = T("leading"), c = T("breakpoint"), o = T("container"), m = T("spacing"), h = T("radius"), p = T("shadow"), f = T("inset-shadow"), w = T("text-shadow"), y = T("drop-shadow"), z = T("blur"), M = T("perspective"), S = T("aspect"), A = T("ease"), L = T("animate"), G = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], U = () => [
+  const e = T("color"), a = T("font"), l = T("text"), s = T("font-weight"), i = T("tracking"), n = T("leading"), c = T("breakpoint"), o = T("container"), m = T("spacing"), h = T("radius"), f = T("shadow"), p = T("inset-shadow"), y = T("text-shadow"), w = T("drop-shadow"), M = T("blur"), z = T("perspective"), S = T("aspect"), A = T("ease"), L = T("animate"), G = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], U = () => [
     "center",
     "top",
     "bottom",
@@ -473,13 +473,13 @@ const r1 = (e, a) => {
     "left-bottom"
   ], q = () => [...U(), v, x], Q = () => ["auto", "hidden", "clip", "visible", "scroll"], H = () => ["auto", "contain", "none"], g = () => [v, x, m], F = () => [X, "full", "auto", ...g()], x0 = () => [K, "none", "subgrid", v, x], g0 = () => ["auto", {
     span: ["full", K, v, x]
-  }, K, v, x], v2 = () => [K, "auto", v, x], v0 = () => ["auto", "min", "max", "fr", v, x], j2 = () => ["start", "end", "center", "between", "around", "evenly", "stretch", "baseline", "center-safe", "end-safe"], c2 = () => ["start", "end", "center", "stretch", "center-safe", "end-safe"], W = () => ["auto", ...g()], i2 = () => [X, "auto", "full", "dvw", "dvh", "lvw", "lvh", "svw", "svh", "min", "max", "fit", ...g()], D2 = () => [X, "screen", "full", "dvw", "lvw", "svw", "min", "max", "fit", ...g()], O2 = () => [X, "screen", "full", "lh", "dvh", "lvh", "svh", "min", "max", "fit", ...g()], k = () => [e, v, x], y0 = () => [...U(), P0, S0, {
+  }, K, v, x], v2 = () => [K, "auto", v, x], v0 = () => ["auto", "min", "max", "fr", v, x], D2 = () => ["start", "end", "center", "between", "around", "evenly", "stretch", "baseline", "center-safe", "end-safe"], c2 = () => ["start", "end", "center", "stretch", "center-safe", "end-safe"], W = () => ["auto", ...g()], i2 = () => [X, "auto", "full", "dvw", "dvh", "lvw", "lvh", "svw", "svh", "min", "max", "fit", ...g()], O2 = () => [X, "screen", "full", "dvw", "lvw", "svw", "min", "max", "fit", ...g()], $2 = () => [X, "screen", "full", "lh", "dvh", "lvh", "svh", "min", "max", "fit", ...g()], k = () => [e, v, x], y0 = () => [...U(), P0, S0, {
     position: [v, x]
   }], w0 = () => ["no-repeat", {
     repeat: ["", "x", "y", "space", "round"]
   }], k0 = () => ["auto", "cover", "contain", W1, B1, {
     size: [v, x]
-  }], $2 = () => [G2, p2, r2], B = () => [
+  }], B2 = () => [F2, p2, r2], B = () => [
     // Deprecated since Tailwind CSS v4.0.0
     "",
     "none",
@@ -487,14 +487,14 @@ const r1 = (e, a) => {
     h,
     v,
     x
-  ], V = () => ["", E, p2, r2], y2 = () => ["solid", "dashed", "dotted", "double"], N0 = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], R = () => [E, G2, P0, S0], M0 = () => [
+  ], V = () => ["", E, p2, r2], y2 = () => ["solid", "dashed", "dotted", "double"], N0 = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], R = () => [E, F2, P0, S0], M0 = () => [
     // Deprecated since Tailwind CSS v4.0.0
     "",
     "none",
-    z,
+    M,
     v,
     x
-  ], w2 = () => ["none", E, v, x], k2 = () => ["none", E, v, x], B2 = () => [E, v, x], N2 = () => [X, "full", ...g()];
+  ], w2 = () => ["none", E, v, x], k2 = () => ["none", E, v, x], V2 = () => [E, v, x], N2 = () => [X, "full", ...g()];
   return {
     cacheSize: 500,
     theme: {
@@ -935,7 +935,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/justify-content
        */
       "justify-content": [{
-        justify: [...j2(), "normal"]
+        justify: [...D2(), "normal"]
       }],
       /**
        * Justify Items
@@ -956,7 +956,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/align-content
        */
       "align-content": [{
-        content: ["normal", ...j2()]
+        content: ["normal", ...D2()]
       }],
       /**
        * Align Items
@@ -981,7 +981,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/place-content
        */
       "place-content": [{
-        "place-content": j2()
+        "place-content": D2()
       }],
       /**
        * Place Items
@@ -1191,42 +1191,42 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/width
        */
       "inline-size": [{
-        inline: ["auto", ...D2()]
+        inline: ["auto", ...O2()]
       }],
       /**
        * Min-Inline Size
        * @see https://tailwindcss.com/docs/min-width
        */
       "min-inline-size": [{
-        "min-inline": ["auto", ...D2()]
+        "min-inline": ["auto", ...O2()]
       }],
       /**
        * Max-Inline Size
        * @see https://tailwindcss.com/docs/max-width
        */
       "max-inline-size": [{
-        "max-inline": ["none", ...D2()]
+        "max-inline": ["none", ...O2()]
       }],
       /**
        * Block Size
        * @see https://tailwindcss.com/docs/height
        */
       "block-size": [{
-        block: ["auto", ...O2()]
+        block: ["auto", ...$2()]
       }],
       /**
        * Min-Block Size
        * @see https://tailwindcss.com/docs/min-height
        */
       "min-block-size": [{
-        "min-block": ["auto", ...O2()]
+        "min-block": ["auto", ...$2()]
       }],
       /**
        * Max-Block Size
        * @see https://tailwindcss.com/docs/max-height
        */
       "max-block-size": [{
-        "max-block": ["none", ...O2()]
+        "max-block": ["none", ...$2()]
       }],
       /**
        * Width
@@ -1319,7 +1319,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/font-stretch
        */
       "font-stretch": [{
-        "font-stretch": ["ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded", G2, x]
+        "font-stretch": ["ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded", F2, x]
       }],
       /**
        * Font Family
@@ -1609,21 +1609,21 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/gradient-color-stops
        */
       "gradient-from-pos": [{
-        from: $2()
+        from: B2()
       }],
       /**
        * Gradient Color Stops Via Position
        * @see https://tailwindcss.com/docs/gradient-color-stops
        */
       "gradient-via-pos": [{
-        via: $2()
+        via: B2()
       }],
       /**
        * Gradient Color Stops To Position
        * @see https://tailwindcss.com/docs/gradient-color-stops
        */
       "gradient-to-pos": [{
-        to: $2()
+        to: B2()
       }],
       /**
        * Gradient Color Stops From
@@ -1993,7 +1993,7 @@ const r1 = (e, a) => {
           // Deprecated since Tailwind CSS v4.0.0
           "",
           "none",
-          p,
+          f,
           z2,
           M2
         ]
@@ -2010,7 +2010,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/box-shadow#adding-an-inset-shadow
        */
       "inset-shadow": [{
-        "inset-shadow": ["none", f, z2, M2]
+        "inset-shadow": ["none", p, z2, M2]
       }],
       /**
        * Inset Box Shadow Color
@@ -2077,7 +2077,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/text-shadow
        */
       "text-shadow": [{
-        "text-shadow": ["none", w, z2, M2]
+        "text-shadow": ["none", y, z2, M2]
       }],
       /**
        * Text Shadow Color
@@ -2349,7 +2349,7 @@ const r1 = (e, a) => {
           // Deprecated since Tailwind CSS v4.0.0
           "",
           "none",
-          y,
+          w,
           z2,
           M2
         ]
@@ -2577,7 +2577,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/perspective
        */
       perspective: [{
-        perspective: [M, v, x]
+        perspective: [z, v, x]
       }],
       /**
        * Perspective Origin
@@ -2652,21 +2652,21 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/skew
        */
       skew: [{
-        skew: B2()
+        skew: V2()
       }],
       /**
        * Skew X
        * @see https://tailwindcss.com/docs/skew
        */
       "skew-x": [{
-        "skew-x": B2()
+        "skew-x": V2()
       }],
       /**
        * Skew Y
        * @see https://tailwindcss.com/docs/skew
        */
       "skew-y": [{
-        "skew-y": B2()
+        "skew-y": V2()
       }],
       /**
        * Transform
@@ -3168,28 +3168,28 @@ const _0 = (e) => typeof e == "boolean" ? `${e}` : e === 0 ? "0" : e, L0 = Y0, h
   var s;
   if ((a == null ? void 0 : a.variants) == null) return L0(e, l == null ? void 0 : l.class, l == null ? void 0 : l.className);
   const { variants: i, defaultVariants: n } = a, c = Object.keys(i).map((h) => {
-    const p = l == null ? void 0 : l[h], f = n == null ? void 0 : n[h];
-    if (p === null) return null;
-    const w = _0(p) || _0(f);
-    return i[h][w];
-  }), o = l && Object.entries(l).reduce((h, p) => {
-    let [f, w] = p;
-    return w === void 0 || (h[f] = w), h;
-  }, {}), m = a == null || (s = a.compoundVariants) === null || s === void 0 ? void 0 : s.reduce((h, p) => {
-    let { class: f, className: w, ...y } = p;
-    return Object.entries(y).every((z) => {
-      let [M, S] = z;
+    const f = l == null ? void 0 : l[h], p = n == null ? void 0 : n[h];
+    if (f === null) return null;
+    const y = _0(f) || _0(p);
+    return i[h][y];
+  }), o = l && Object.entries(l).reduce((h, f) => {
+    let [p, y] = f;
+    return y === void 0 || (h[p] = y), h;
+  }, {}), m = a == null || (s = a.compoundVariants) === null || s === void 0 ? void 0 : s.reduce((h, f) => {
+    let { class: p, className: y, ...w } = f;
+    return Object.entries(w).every((M) => {
+      let [z, S] = M;
       return Array.isArray(S) ? S.includes({
         ...n,
         ...o
-      }[M]) : {
+      }[z]) : {
         ...n,
         ...o
-      }[M] === S;
+      }[z] === S;
     }) ? [
       ...h,
-      f,
-      w
+      p,
+      y
     ] : h;
   }, []);
   return L0(e, c, m, l == null ? void 0 : l.class, l == null ? void 0 : l.className);
@@ -3258,7 +3258,7 @@ const tt = d2(
       ...o
     },
     [
-      ...c.map(([h, p]) => Z2(h, p)),
+      ...c.map(([h, f]) => Z2(h, f)),
       ...Array.isArray(n) ? n : [n]
     ]
   )
@@ -3637,7 +3637,7 @@ const Vt = [
   ["path", { d: "M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z", key: "131961" }],
   ["path", { d: "M19 10v2a7 7 0 0 1-14 0v-2", key: "1vc78b" }],
   ["line", { x1: "12", x2: "12", y1: "19", y2: "22", key: "x3vr5v" }]
-], T2 = N("mic", Vt);
+], R2 = N("mic", Vt);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -3900,7 +3900,7 @@ const ba = [
   ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
   ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
   ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
-], P2 = N("users", ba);
+], _2 = N("users", ba);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -4001,10 +4001,10 @@ const za = he(
     children: o,
     disabled: m,
     ...h
-  }, p) => /* @__PURE__ */ r(
+  }, f) => /* @__PURE__ */ r(
     "button",
     {
-      ref: p,
+      ref: f,
       className: u(za({ variant: a, size: l, fullWidth: s }), e),
       disabled: m || i,
       ...h,
@@ -4061,7 +4061,7 @@ function h2({
 }) {
   return /* @__PURE__ */ t("div", { className: u("flex items-start gap-3 border-b border-slate-100 px-5 py-4", e), ...l, children: a });
 }
-function Gs({
+function Hs({
   className: e,
   children: a,
   ...l
@@ -4082,7 +4082,7 @@ function $({
 }) {
   return /* @__PURE__ */ t("div", { className: u("px-5 py-4", e), ...l, children: a });
 }
-function Fs({
+function Ws({
   className: e,
   children: a,
   ...l
@@ -4091,7 +4091,7 @@ function Fs({
 }
 const e2 = d2(
   ({ className: e, label: a, helperText: l, errorText: s, lang: i = "en", labelClassName: n, id: c, ...o }, m) => {
-    const h = c ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), p = !!s;
+    const h = c ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), f = !!s;
     return /* @__PURE__ */ r("div", { className: "flex flex-col gap-1.5", children: [
       a ? /* @__PURE__ */ t(
         "label",
@@ -4109,10 +4109,10 @@ const e2 = d2(
           className: u(
             "h-10 w-full rounded-lg border bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-1",
-            p ? "border-red-300 focus-visible:ring-red-500" : "border-slate-200",
+            f ? "border-red-300 focus-visible:ring-red-500" : "border-slate-200",
             e
           ),
-          "aria-invalid": p,
+          "aria-invalid": f,
           "aria-describedby": l || s ? `${h}-desc` : void 0,
           ...o
         }
@@ -4123,7 +4123,7 @@ const e2 = d2(
           id: `${h}-desc`,
           className: u(
             "text-xs",
-            p ? "text-red-600" : "text-slate-500"
+            f ? "text-red-600" : "text-slate-500"
           ),
           children: b(s ?? l ?? "", i)
         }
@@ -4134,7 +4134,7 @@ const e2 = d2(
 e2.displayName = "Input";
 const t2 = d2(
   ({ className: e, label: a, helperText: l, errorText: s, lang: i = "en", id: n, rows: c = 4, ...o }, m) => {
-    const h = n ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), p = !!s;
+    const h = n ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), f = !!s;
     return /* @__PURE__ */ r("div", { className: "flex flex-col gap-1.5", children: [
       a ? /* @__PURE__ */ t("label", { htmlFor: h, className: "text-sm font-medium text-slate-700", children: b(a, i) }) : null,
       /* @__PURE__ */ t(
@@ -4146,14 +4146,14 @@ const t2 = d2(
           className: u(
             "w-full resize-y rounded-lg border bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-1",
-            p ? "border-red-300" : "border-slate-200",
+            f ? "border-red-300" : "border-slate-200",
             e
           ),
-          "aria-invalid": p,
+          "aria-invalid": f,
           ...o
         }
       ),
-      (l || s) && /* @__PURE__ */ t("p", { className: u("text-xs", p ? "text-red-600" : "text-slate-500"), children: b(s ?? l ?? "", i) })
+      (l || s) && /* @__PURE__ */ t("p", { className: u("text-xs", f ? "text-red-600" : "text-slate-500"), children: b(s ?? l ?? "", i) })
     ] });
   }
 );
@@ -4165,20 +4165,20 @@ function Ae(e, a = []) {
     o.displayName = n + "Context";
     const m = l.length;
     l = [...l, c];
-    const h = (f) => {
+    const h = (p) => {
       var A;
-      const { scope: w, children: y, ...z } = f, M = ((A = w == null ? void 0 : w[e]) == null ? void 0 : A[m]) || o, S = C.useMemo(() => z, Object.values(z));
-      return /* @__PURE__ */ t(M.Provider, { value: S, children: y });
+      const { scope: y, children: w, ...M } = p, z = ((A = y == null ? void 0 : y[e]) == null ? void 0 : A[m]) || o, S = C.useMemo(() => M, Object.values(M));
+      return /* @__PURE__ */ t(z.Provider, { value: S, children: w });
     };
     h.displayName = n + "Provider";
-    function p(f, w) {
-      var M;
-      const y = ((M = w == null ? void 0 : w[e]) == null ? void 0 : M[m]) || o, z = C.useContext(y);
-      if (z) return z;
+    function f(p, y) {
+      var z;
+      const w = ((z = y == null ? void 0 : y[e]) == null ? void 0 : z[m]) || o, M = C.useContext(w);
+      if (M) return M;
       if (c !== void 0) return c;
-      throw new Error(`\`${f}\` must be used within \`${n}\``);
+      throw new Error(`\`${p}\` must be used within \`${n}\``);
     }
-    return [h, p];
+    return [h, f];
   }
   const i = () => {
     const n = l.map((c) => C.createContext(c));
@@ -4202,8 +4202,8 @@ function Ca(...e) {
     }));
     return function(n) {
       const c = s.reduce((o, { useScope: m, scopeName: h }) => {
-        const f = m(n)[`__scope${h}`];
-        return { ...o, ...f };
+        const p = m(n)[`__scope${h}`];
+        return { ...o, ...p };
       }, {});
       return C.useMemo(() => ({ [`__scope${a.scopeName}`]: c }), [c]);
     };
@@ -4231,7 +4231,7 @@ function Aa(...e) {
       };
   };
 }
-var Sa = Symbol.for("react.lazy"), _2 = C[" use ".trim().toString()];
+var Sa = Symbol.for("react.lazy"), L2 = C[" use ".trim().toString()];
 function Pa(e) {
   return typeof e == "object" && e !== null && "then" in e;
 }
@@ -4242,11 +4242,11 @@ function Se(e) {
 function _a(e) {
   const a = /* @__PURE__ */ La(e), l = C.forwardRef((s, i) => {
     let { children: n, ...c } = s;
-    Se(n) && typeof _2 == "function" && (n = _2(n._payload));
+    Se(n) && typeof L2 == "function" && (n = L2(n._payload));
     const o = C.Children.toArray(n), m = o.find(Ta);
     if (m) {
-      const h = m.props.children, p = o.map((f) => f === m ? C.Children.count(h) > 1 ? C.Children.only(null) : C.isValidElement(h) ? h.props.children : null : f);
-      return /* @__PURE__ */ t(a, { ...c, ref: i, children: C.isValidElement(h) ? C.cloneElement(h, void 0, p) : null });
+      const h = m.props.children, f = o.map((p) => p === m ? C.Children.count(h) > 1 ? C.Children.only(null) : C.isValidElement(h) ? h.props.children : null : p);
+      return /* @__PURE__ */ t(a, { ...c, ref: i, children: C.isValidElement(h) ? C.cloneElement(h, void 0, f) : null });
     }
     return /* @__PURE__ */ t(a, { ...c, ref: i, children: n });
   });
@@ -4256,7 +4256,7 @@ function _a(e) {
 function La(e) {
   const a = C.forwardRef((l, s) => {
     let { children: i, ...n } = l;
-    if (Se(i) && typeof _2 == "function" && (i = _2(i._payload)), C.isValidElement(i)) {
+    if (Se(i) && typeof L2 == "function" && (i = L2(i._payload)), C.isValidElement(i)) {
       const c = ja(i), o = Ra(n, i.props);
       return i.type !== C.Fragment && (o.ref = s ? Aa(s, c) : c), C.cloneElement(i, o);
     }
@@ -4320,13 +4320,13 @@ var Da = [
     (i || i === 0) && !R0(i) && console.error(Ga(`${i}`, "Progress"));
     const o = R0(i) ? i : o0;
     s !== null && !j0(s, o) && console.error(Fa(`${s}`, "Progress"));
-    const m = j0(s, o) ? s : null, h = L2(m) ? n(m, o) : void 0;
+    const m = j0(s, o) ? s : null, h = I2(m) ? n(m, o) : void 0;
     return /* @__PURE__ */ t($a, { scope: l, value: m, max: o, children: /* @__PURE__ */ t(
       b2.div,
       {
         "aria-valuemax": o,
         "aria-valuemin": 0,
-        "aria-valuenow": L2(m) ? m : void 0,
+        "aria-valuenow": I2(m) ? m : void 0,
         "aria-valuetext": h,
         role: "progressbar",
         "data-state": Ie(m, o),
@@ -4361,14 +4361,14 @@ function Va(e, a) {
 function Ie(e, a) {
   return e == null ? "indeterminate" : e === a ? "complete" : "loading";
 }
-function L2(e) {
+function I2(e) {
   return typeof e == "number";
 }
 function R0(e) {
-  return L2(e) && !isNaN(e) && e > 0;
+  return I2(e) && !isNaN(e) && e > 0;
 }
 function j0(e, a) {
-  return L2(e) && !isNaN(e) && e <= a && e >= 0;
+  return I2(e) && !isNaN(e) && e <= a && e >= 0;
 }
 function Ga(e, a) {
   return `Invalid prop \`max\` of value \`${e}\` supplied to \`${a}\`. Only numbers greater than 0 are valid max values. Defaulting to \`${o0}\`.`;
@@ -4422,7 +4422,7 @@ function Ua(e) {
   }, []);
 }
 var X2 = globalThis != null && globalThis.document ? C.useLayoutEffect : () => {
-}, E2 = { exports: {} }, F2 = {};
+}, E2 = { exports: {} }, H2 = {};
 /**
  * @license React
  * use-sync-external-store-shim.production.js
@@ -4434,46 +4434,46 @@ var X2 = globalThis != null && globalThis.document ? C.useLayoutEffect : () => {
  */
 var D0;
 function qa() {
-  if (D0) return F2;
+  if (D0) return H2;
   D0 = 1;
   var e = q0;
-  function a(f, w) {
-    return f === w && (f !== 0 || 1 / f === 1 / w) || f !== f && w !== w;
+  function a(p, y) {
+    return p === y && (p !== 0 || 1 / p === 1 / y) || p !== p && y !== y;
   }
   var l = typeof Object.is == "function" ? Object.is : a, s = e.useState, i = e.useEffect, n = e.useLayoutEffect, c = e.useDebugValue;
-  function o(f, w) {
-    var y = w(), z = s({ inst: { value: y, getSnapshot: w } }), M = z[0].inst, S = z[1];
+  function o(p, y) {
+    var w = y(), M = s({ inst: { value: w, getSnapshot: y } }), z = M[0].inst, S = M[1];
     return n(
       function() {
-        M.value = y, M.getSnapshot = w, m(M) && S({ inst: M });
+        z.value = w, z.getSnapshot = y, m(z) && S({ inst: z });
       },
-      [f, y, w]
+      [p, w, y]
     ), i(
       function() {
-        return m(M) && S({ inst: M }), f(function() {
-          m(M) && S({ inst: M });
+        return m(z) && S({ inst: z }), p(function() {
+          m(z) && S({ inst: z });
         });
       },
-      [f]
-    ), c(y), y;
+      [p]
+    ), c(w), w;
   }
-  function m(f) {
-    var w = f.getSnapshot;
-    f = f.value;
+  function m(p) {
+    var y = p.getSnapshot;
+    p = p.value;
     try {
-      var y = w();
-      return !l(f, y);
+      var w = y();
+      return !l(p, w);
     } catch {
       return !0;
     }
   }
-  function h(f, w) {
-    return w();
+  function h(p, y) {
+    return y();
   }
-  var p = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? h : o;
-  return F2.useSyncExternalStore = e.useSyncExternalStore !== void 0 ? e.useSyncExternalStore : p, F2;
+  var f = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? h : o;
+  return H2.useSyncExternalStore = e.useSyncExternalStore !== void 0 ? e.useSyncExternalStore : f, H2;
 }
-var H2 = {};
+var W2 = {};
 /**
  * @license React
  * use-sync-external-store-shim.development.js
@@ -4486,55 +4486,55 @@ var H2 = {};
 var O0;
 function Ka() {
   return O0 || (O0 = 1, process.env.NODE_ENV !== "production" && (function() {
-    function e(y, z) {
-      return y === z && (y !== 0 || 1 / y === 1 / z) || y !== y && z !== z;
+    function e(w, M) {
+      return w === M && (w !== 0 || 1 / w === 1 / M) || w !== w && M !== M;
     }
-    function a(y, z) {
-      p || i.startTransition === void 0 || (p = !0, console.error(
+    function a(w, M) {
+      f || i.startTransition === void 0 || (f = !0, console.error(
         "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
       ));
-      var M = z();
-      if (!f) {
-        var S = z();
-        n(M, S) || (console.error(
+      var z = M();
+      if (!p) {
+        var S = M();
+        n(z, S) || (console.error(
           "The result of getSnapshot should be cached to avoid an infinite loop"
-        ), f = !0);
+        ), p = !0);
       }
       S = c({
-        inst: { value: M, getSnapshot: z }
+        inst: { value: z, getSnapshot: M }
       });
       var A = S[0].inst, L = S[1];
       return m(
         function() {
-          A.value = M, A.getSnapshot = z, l(A) && L({ inst: A });
+          A.value = z, A.getSnapshot = M, l(A) && L({ inst: A });
         },
-        [y, M, z]
+        [w, z, M]
       ), o(
         function() {
-          return l(A) && L({ inst: A }), y(function() {
+          return l(A) && L({ inst: A }), w(function() {
             l(A) && L({ inst: A });
           });
         },
-        [y]
-      ), h(M), M;
+        [w]
+      ), h(z), z;
     }
-    function l(y) {
-      var z = y.getSnapshot;
-      y = y.value;
+    function l(w) {
+      var M = w.getSnapshot;
+      w = w.value;
       try {
-        var M = z();
-        return !n(y, M);
+        var z = M();
+        return !n(w, z);
       } catch {
         return !0;
       }
     }
-    function s(y, z) {
-      return z();
+    function s(w, M) {
+      return M();
     }
     typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-    var i = q0, n = typeof Object.is == "function" ? Object.is : e, c = i.useState, o = i.useEffect, m = i.useLayoutEffect, h = i.useDebugValue, p = !1, f = !1, w = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? s : a;
-    H2.useSyncExternalStore = i.useSyncExternalStore !== void 0 ? i.useSyncExternalStore : w, typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
-  })()), H2;
+    var i = q0, n = typeof Object.is == "function" ? Object.is : e, c = i.useState, o = i.useEffect, m = i.useLayoutEffect, h = i.useDebugValue, f = !1, p = !1, y = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? s : a;
+    W2.useSyncExternalStore = i.useSyncExternalStore !== void 0 ? i.useSyncExternalStore : y, typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+  })()), W2;
 }
 var $0;
 function Ja() {
@@ -4601,13 +4601,13 @@ function tl(e, { referrerPolicy: a, crossOrigin: l }) {
   return X2(() => {
     o(B0(n, e));
   }, [n, e]), X2(() => {
-    const m = (f) => () => {
-      o(f);
+    const m = (p) => () => {
+      o(p);
     };
     if (!n) return;
-    const h = m("loaded"), p = m("error");
-    return n.addEventListener("load", h), n.addEventListener("error", p), a && (n.referrerPolicy = a), typeof l == "string" && (n.crossOrigin = l), () => {
-      n.removeEventListener("load", h), n.removeEventListener("error", p);
+    const h = m("loaded"), f = m("error");
+    return n.addEventListener("load", h), n.addEventListener("error", f), a && (n.referrerPolicy = a), typeof l == "string" && (n.crossOrigin = l), () => {
+      n.removeEventListener("load", h), n.removeEventListener("error", f);
     };
   }, [n, l, a]), c;
 }
@@ -4747,14 +4747,14 @@ function Ge({
   className: n,
   hideHeader: c = !1
 }) {
-  const [o, m] = _(!1), h = l1(null), p = s1(
-    (f) => {
-      f != null && f.length && (i == null || i(f));
+  const [o, m] = _(!1), h = l1(null), f = s1(
+    (p) => {
+      p != null && p.length && (i == null || i(p));
     },
     [i]
   );
   return /* @__PURE__ */ r("div", { className: u("max-w-md", n), children: [
-    c ? null : /* @__PURE__ */ r(J2, { children: [
+    c ? null : /* @__PURE__ */ r(S2, { children: [
       /* @__PURE__ */ t("h2", { className: "mb-1 font-heading text-2xl font-bold text-slate-900", children: b(Z.title, e) }),
       /* @__PURE__ */ t("p", { className: "mb-4 text-sm text-slate-600", children: b(Z.subtitle, e) })
     ] }),
@@ -4764,16 +4764,16 @@ function Ge({
         role: "button",
         tabIndex: 0,
         "aria-label": b(Z.drag, e),
-        onKeyDown: (f) => {
-          var w;
-          (f.key === "Enter" || f.key === " ") && (f.preventDefault(), (w = h.current) == null || w.click());
+        onKeyDown: (p) => {
+          var y;
+          (p.key === "Enter" || p.key === " ") && (p.preventDefault(), (y = h.current) == null || y.click());
         },
-        onDragOver: (f) => {
-          f.preventDefault(), m(!0);
+        onDragOver: (p) => {
+          p.preventDefault(), m(!0);
         },
         onDragLeave: () => m(!1),
-        onDrop: (f) => {
-          f.preventDefault(), m(!1), p(f.dataTransfer.files);
+        onDrop: (p) => {
+          p.preventDefault(), m(!1), f(p.dataTransfer.files);
         },
         className: u(
           "flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-12 text-center transition-colors",
@@ -4784,7 +4784,7 @@ function Ge({
           /* @__PURE__ */ t("div", { className: "mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm", children: a === "uploading" ? /* @__PURE__ */ t(r0, { size: "lg" }) : /* @__PURE__ */ t(Ct, { className: "h-8 w-8 text-blue-600", "aria-hidden": !0 }) }),
           /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(Z.drag, e) }),
           /* @__PURE__ */ t("p", { className: "mt-1 text-xs text-slate-500", children: b(Z.formats, e) }),
-          a === "success" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-emerald-600", children: b(Z.success, e) }) : a === "error" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-red-600", children: b(Z.error, e) }) : /* @__PURE__ */ r(J2, { children: [
+          a === "success" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-emerald-600", children: b(Z.success, e) }) : a === "error" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-red-600", children: b(Z.error, e) }) : /* @__PURE__ */ r(S2, { children: [
             /* @__PURE__ */ t(
               "input",
               {
@@ -4795,7 +4795,7 @@ function Ge({
                 multiple: s,
                 "aria-hidden": !0,
                 tabIndex: -1,
-                onChange: (f) => p(f.target.files)
+                onChange: (p) => f(p.target.files)
               }
             ),
             /* @__PURE__ */ t(
@@ -4805,8 +4805,8 @@ function Ge({
                 className: "mt-5 cursor-pointer",
                 leftIcon: /* @__PURE__ */ t(i0, { className: "h-4 w-4", "aria-hidden": !0 }),
                 onClick: () => {
-                  var f;
-                  return (f = h.current) == null ? void 0 : f.click();
+                  var p;
+                  return (p = h.current) == null ? void 0 : p.click();
                 },
                 children: b(Z.choose, e)
               }
@@ -4889,7 +4889,7 @@ const dl = {
   complete: d("AI Complete", "AI Selesai"),
   review: d("Needs Review", "Perlu Ditinjau")
 };
-function Hs({
+function Us({
   status: e = "processing",
   lang: a = "en",
   className: l
@@ -4908,7 +4908,7 @@ function Hs({
     }
   );
 }
-const W2 = d("Confidence Score", "Skor Kepercayaan"), ml = d(
+const U2 = d("Confidence Score", "Skor Kepercayaan"), ml = d(
   "High confidence in extracted insights",
   "Kepercayaan tinggi pada insight yang diekstrak"
 );
@@ -4926,8 +4926,8 @@ function d0({
       /* @__PURE__ */ t("div", { children: /* @__PURE__ */ t(
         j,
         {
-          label: W2,
-          secondaryLabel: s ? a === "en" ? W2.id : W2.en : void 0,
+          label: U2,
+          secondaryLabel: s ? a === "en" ? U2.id : U2.en : void 0,
           lang: a,
           as: "h3"
         }
@@ -4979,7 +4979,7 @@ function d0({
     ] })
   ] });
 }
-const U2 = d("Key Findings", "Temuan Utama"), hl = {
+const q2 = d("Key Findings", "Temuan Utama"), hl = {
   normal: { en: "Normal", id: "Normal" },
   low: { en: "Low", id: "Rendah" },
   high: { en: "High", id: "Tinggi" },
@@ -5000,8 +5000,8 @@ function m0({
     /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ t(
       j,
       {
-        label: U2,
-        secondaryLabel: l ? a === "en" ? U2.id : U2.en : void 0,
+        label: q2,
+        secondaryLabel: l ? a === "en" ? q2.id : q2.en : void 0,
         lang: a,
         as: "h3"
       }
@@ -5022,7 +5022,7 @@ function m0({
     )) }) })
   ] });
 }
-const q2 = d("Clinical Summary", "Ringkasan Klinis");
+const K2 = d("Clinical Summary", "Ringkasan Klinis");
 function x2({
   summary: e,
   lang: a = "en",
@@ -5041,8 +5041,8 @@ function x2({
       /* @__PURE__ */ t(
         j,
         {
-          label: q2,
-          secondaryLabel: i ? a === "en" ? q2.id : q2.en : void 0,
+          label: K2,
+          secondaryLabel: i ? a === "en" ? K2.id : K2.en : void 0,
           lang: a,
           as: "h3"
         }
@@ -5067,7 +5067,7 @@ const pl = {
   exercise: Ht,
   calendar: be,
   default: xe
-}, K2 = d("Suggested Next Actions", "Rekomendasi Tindak Lanjut");
+}, J2 = d("Suggested Next Actions", "Rekomendasi Tindak Lanjut");
 function He({
   items: e,
   lang: a = "en",
@@ -5078,8 +5078,8 @@ function He({
     /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ t(
       j,
       {
-        label: K2,
-        secondaryLabel: l ? a === "en" ? K2.id : K2.en : void 0,
+        label: J2,
+        secondaryLabel: l ? a === "en" ? J2.id : J2.en : void 0,
         lang: a,
         as: "h3"
       }
@@ -5133,7 +5133,7 @@ const gl = d("Review & Validate", "Tinjau & Validasi"), V0 = d("Assessment", "Pe
   "Add clinical notes or corrections…",
   "Tambahkan catatan klinis atau koreksi…"
 ), kl = d("Save & Continue", "Simpan & Lanjutkan");
-function Ws({
+function qs({
   lang: e = "en",
   onSubmit: a,
   className: l
@@ -5289,7 +5289,7 @@ function Nl({
     }
   );
 }
-function Us({
+function Ks({
   totalEmployees: e,
   trend: a = "+8.5% vs last month",
   trendUp: l = !0,
@@ -5313,7 +5313,7 @@ function Us({
         }
       )
     ] }),
-    /* @__PURE__ */ t("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50", children: /* @__PURE__ */ t(P2, { className: "h-6 w-6 text-emerald-600", "aria-hidden": !0 }) })
+    /* @__PURE__ */ t("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50", children: /* @__PURE__ */ t(_2, { className: "h-6 w-6 text-emerald-600", "aria-hidden": !0 }) })
   ] }) }) });
 }
 const Ml = {
@@ -5347,6 +5347,7 @@ function F0({
 }
 const Ue = {
   login: "POST /auth/login",
+  google: "POST /auth/google",
   logout: "POST /auth/logout",
   refresh: "POST /auth/refresh",
   profile: "GET /users/me"
@@ -5519,7 +5520,7 @@ function u0({
     }
   );
 }
-function qs({
+function Js({
   children: e,
   loginSize: a = "lg",
   className: l
@@ -5544,7 +5545,7 @@ function qe({
   return /* @__PURE__ */ t("div", { className: u(I.content[a], l), children: e });
 }
 const Ke = "data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='UTF-8'?%3e%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20103248.000000%2029160.000000'%20width='1434'%20height='405'%20role='img'%20aria-label='Alocare%20AI'%3e%3cg%20transform='translate(0.000000,29160.000000)%20scale(7.200000,-7.200000)'%3e%3cpath%20fill='%23001450'%20d='M6085%202627%20c-3%20-7%20-4%20-337%20-3%20-732%20l3%20-720%2023%20-50%20c48%20-104%20131%20-155%20256%20-158%2039%20-1%2092%202%20119%206%20l47%208%200%20120%200%20119%20-58%200%20c-48%200%20-62%204%20-80%2023%20l-22%2023%20-2%20685%20-3%20684%20-138%203%20c-106%202%20-139%200%20-142%20-11z'/%3e%3cpath%20fill='%23001450'%20d='M5198%202154%20c-79%20-19%20-171%20-67%20-218%20-114%20-43%20-43%20-100%20-135%20-100%20-162%200%20-13%2027%20-26%20110%20-52%2060%20-20%20116%20-36%20124%20-36%207%200%2019%2013%2026%2030%2035%2084%20147%20133%20254%20110%20101%20-21%20154%20-74%20163%20-162%20l6%20-55%20-34%20-12%20c-18%20-6%20-90%20-16%20-159%20-22%20-280%20-23%20-382%20-56%20-468%20-155%20-57%20-64%20-75%20-125%20-70%20-233%205%20-102%2030%20-163%2091%20-222%20147%20-144%20446%20-139%20593%209%2043%2044%2056%2051%2053%2030%20-1%20-7%20-1%20-37%200%20-65%20l1%20-53%20135%200%20135%200%200%20394%20c0%20219%20-4%20416%20-10%20446%20-32%20171%20-150%20288%20-329%20326%20-83%2017%20-228%2017%20-303%20-2z%20m359%20-723%20c-13%20-160%20-116%20-248%20-281%20-239%20-87%204%20-120%2022%20-150%2082%20-37%2074%2011%20159%20106%20185%2039%2011%20234%2037%20302%2040%20l29%201%20-6%20-69z'/%3e%3cpath%20fill='%23001450'%20d='M7070%202147%20c-163%20-50%20-279%20-146%20-349%20-290%20-53%20-107%20-71%20-181%20-71%20-291%200%20-179%2052%20-311%20169%20-426%20125%20-124%20246%20-173%20426%20-174%20277%200%20489%20148%20573%20401%2021%2066%2025%2097%2026%20198%200%20106%20-3%20130%20-28%20202%20-61%20182%20-183%20309%20-358%20371%20-107%2037%20-282%2042%20-388%209z%20m305%20-266%20c193%20-85%20244%20-385%2094%20-556%20-56%20-63%20-111%20-88%20-206%20-93%20-78%20-4%20-88%20-2%20-148%2027%20-118%2058%20-169%20152%20-169%20311%200%20100%2015%20151%2064%20220%2076%20107%20238%20147%20365%2091z'/%3e%3cpath%20fill='%23001450'%20d='M8436%202154%20c-250%20-61%20-418%20-275%20-433%20-554%20-20%20-362%20231%20-632%20587%20-634%20162%200%20285%2044%20388%20139%2054%2050%20122%20154%20122%20186%200%2012%20-96%2055%20-232%20104%20-12%205%20-22%20-4%20-37%20-33%20-47%20-92%20-137%20-137%20-260%20-130%20-122%207%20-194%2058%20-250%20178%20-22%2048%20-25%2069%20-25%20155%200%2089%203%20107%2028%20162%2065%20142%20201%20209%20342%20168%2073%20-21%20118%20-54%20157%20-116%20l29%20-48%2062%2024%20c155%2059%20178%2069%20183%2081%208%2023%20-50%20116%20-112%20180%20-68%2069%20-152%20116%20-247%20139%20-78%2018%20-224%2018%20-302%20-1z'/%3e%3cpath%20fill='%23001450'%20d='M9608%202154%20c-148%20-35%20-285%20-152%20-313%20-266%20-7%20-26%20-5%20-27%20104%20-62%2061%20-20%20117%20-36%20125%20-36%207%200%2019%2014%2026%2030%2034%2083%20150%20133%20258%20111%20109%20-22%20162%20-76%20162%20-167%200%20-50%20-1%20-53%20-32%20-63%20-18%20-6%20-101%20-17%20-184%20-25%20-306%20-30%20-415%20-80%20-486%20-226%20-18%20-36%20-22%20-63%20-23%20-140%200%20-84%203%20-101%2028%20-152%2068%20-139%20237%20-215%20420%20-189%20100%2014%20172%2046%20237%20107%20l50%2047%200%20-67%200%20-66%20134%200%20c113%200%20135%202%20140%2016%2010%2027%206%20735%20-5%20804%20-29%20179%20-147%20301%20-331%20345%20-78%2018%20-234%2018%20-310%20-1z%20m362%20-710%20c0%20-115%20-42%20-184%20-137%20-229%20-67%20-32%20-165%20-37%20-225%20-12%20-86%2036%20-104%20150%20-35%20213%2019%2018%2054%2038%2077%2044%2034%209%20229%2034%20303%2039%2014%201%2017%20-8%2017%20-55z'/%3e%3cpath%20fill='%23001450'%20d='M11720%202154%20c-104%20-27%20-192%20-78%20-261%20-152%20-114%20-121%20-160%20-244%20-162%20-432%20-2%20-185%2049%20-318%20167%20-436%20119%20-119%20241%20-168%20421%20-168%20163%200%20276%2036%20376%20119%2050%2042%20119%20130%20119%20151%200%209%20-43%2035%20-106%2064%20-106%2050%20-134%2058%20-134%2040%200%20-21%20-68%20-85%20-115%20-106%20-68%20-32%20-198%20-33%20-265%20-3%20-90%2040%20-170%20151%20-170%20234%20l0%2025%20415%200%20415%200%200%20103%20c0%20288%20-155%20504%20-402%20562%20-79%2019%20-226%2018%20-298%20-1z%20m234%20-231%20c98%20-27%20186%20-130%20186%20-217%200%20-14%20-27%20-16%20-275%20-16%20-311%200%20-293%20-6%20-254%2080%2044%2097%20146%20165%20253%20169%2016%201%2057%20-7%2090%20-16z'/%3e%3cpath%20fill='%23001450'%20d='M11047%202149%20c-85%20-20%20-170%20-81%20-219%20-158%20l-28%20-45%200%2097%200%2097%20-140%200%20-140%200%200%20-575%200%20-575%20145%200%20145%200%200%20317%20c0%20377%205%20409%2080%20484%2061%2061%20121%2081%20232%2078%20l83%20-2%203%20138%20c2%20104%20-1%20140%20-10%20147%20-17%2010%20-102%209%20-151%20-3z'/%3e%3cpath%20fill='%23001450'%20d='M1430%201350%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%23001450'%20d='M1298%201289%20c-43%20-21%20-78%20-42%20-78%20-44%200%20-3%2024%206%2053%2020%2042%2021%2047%2022%2027%206%20-23%20-19%20-23%20-21%20-5%20-20%2024%200%2061%2026%2052%2036%20-4%203%205%2015%2020%2025%2047%2030%2012%2019%20-69%20-23z'/%3e%3cpath%20fill='%23001450'%20d='M1144%201201%20c-55%20-37%20-136%20-111%20-122%20-111%204%200%2030%2023%2059%2050%2050%2048%2087%2069%2058%2033%20-8%20-9%20-9%20-15%20-4%20-12%2053%2026%2065%2034%2065%2041%200%205%20-9%204%20-21%20-2%20-11%20-7%20-23%20-9%20-26%20-7%20-3%203%209%2013%2026%2022%2017%208%2031%2018%2031%2020%200%209%20-8%205%20-66%20-34z'/%3e%3cpath%20fill='%23001450'%20d='M1085%201120%20c-23%20-24%20-25%20-30%20-12%20-30%209%200%2017%207%2017%2015%200%207%208%2018%2017%2024%2010%205%2015%2012%2012%2015%20-3%203%20-18%20-8%20-34%20-24z'/%3e%3cpath%20fill='%23001450'%20d='M1246%201031%20c5%20-55%203%20-60%20-13%20-54%20-33%2013%20-51%2035%20-45%2056%205%2020%206%2020%2013%201%206%20-16%208%20-15%208%209%201%2022%20-3%2027%20-23%2027%20-31%200%20-43%20-18%20-20%20-27%2016%20-6%2016%20-7%20-2%20-14%20-10%20-4%20-31%20-4%20-46%20-2%20-24%205%20-28%202%20-28%20-16%200%20-26%20-18%20-59%20-44%20-81%20-19%20-16%20-19%20-17%204%20-33%2020%20-14%2021%20-17%207%20-23%20-9%20-3%20-17%20-12%20-17%20-18%200%20-7%20-11%20-19%20-25%20-26%20-14%20-7%20-25%20-20%20-25%20-27%200%20-7%20-7%20-16%20-15%20-19%20-8%20-4%20-15%20-12%20-15%20-20%200%20-7%20-6%20-17%20-12%20-21%20-7%20-4%20-18%20-17%20-24%20-28%20-6%20-11%20-23%20-26%20-37%20-33%20-28%20-14%20-34%20-27%20-17%20-37%206%20-3%2010%20-14%2010%20-25%200%20-15%20-5%20-17%20-35%20-10%20-19%204%20-35%204%20-35%200%200%20-5%20-3%20-16%20-7%20-26%20-5%20-13%20-3%20-15%207%20-9%2010%206%2011%202%205%20-21%20-4%20-16%20-7%20-44%20-7%20-62%201%20-28%20-5%20-35%20-38%20-52%20-22%20-11%20-46%20-20%20-55%20-20%20-8%200%20-36%20-16%20-62%20-36%20-59%20-45%20-64%20-50%20-35%20-35%2029%2016%2034%2012%2017%20-13%20-10%20-14%20-22%20-17%20-47%20-13%20-18%202%20-44%200%20-58%20-5%20-14%20-6%20-50%20-13%20-80%20-17%20l-55%20-7%2070%20-9%20c51%20-6%2095%20-3%20165%208%2084%2015%20116%2027%20278%20108%20100%2050%20180%2094%20178%2098%20-3%204%203%207%2012%208%209%200%20103%2041%20207%2091%20105%2050%20234%20106%20288%20124%20l97%2034%20-54%201%20c-66%202%20-91%2014%20-91%2045%20-1%2013%20-6%2022%20-13%2021%20-6%20-2%20-9%204%20-6%2012%205%2012%20-5%2014%20-63%2010%20-50%20-4%20-63%20-2%20-50%205%209%206%2017%2018%2017%2026%200%2011%208%2014%2028%2011%2015%20-2%2021%20-2%2015%200%20-7%203%20-13%209%20-13%2013%200%205%20-18%207%20-40%204%20-34%20-5%20-43%20-2%20-66%2023%20-17%2017%20-25%2021%20-21%2011%204%20-12%201%20-18%20-8%20-18%20-9%200%20-15%2010%20-15%2024%200%2020%20-4%2023%20-21%2019%20-21%20-6%20-22%20-3%20-17%2040%204%2037%201%2052%20-13%2068%20-19%2021%20-19%2021%20-13%20-40z%20m-118%20-40%20c3%20-8%20-1%20-12%20-9%20-9%20-7%202%20-15%2010%20-17%2017%20-3%208%201%2012%209%209%207%20-2%2015%20-10%2017%20-17z%20m348%20-285%20c12%20-12%209%20-16%20-17%20-25%20-21%20-7%20-28%20-7%20-23%200%204%207%20-1%209%20-15%204%20-35%20-11%20-47%206%20-15%2021%2039%2017%2053%2017%2070%200z%20m-556%20-102%20c0%20-2%20-7%20-4%20-15%20-4%20-8%200%20-15%204%20-15%2010%200%205%207%207%2015%204%208%20-4%2015%20-8%2015%20-10z%20m333%2010%20c-7%20-3%20-9%20-13%20-6%20-22%204%20-15%203%20-15%20-6%20-2%20-15%2022%20-14%2030%207%2029%209%200%2012%20-3%205%20-5z%20m-216%20-110%20c-3%20-3%20-12%20-4%20-19%20-1%20-8%203%20-5%206%206%206%2011%201%2017%20-2%2013%20-5z'/%3e%3cpath%20fill='%23001450'%20d='M1221%201014%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%23001450'%20d='M1440%20870%20c0%20-5%205%20-10%2011%20-10%205%200%207%205%204%2010%20-3%206%20-8%2010%20-11%2010%20-2%200%20-4%20-4%20-4%20-10z'/%3e%3cpath%20fill='%23001450'%20d='M1734%20805%20c-9%20-18%20-9%20-25%200%20-29%206%20-2%200%20-5%20-13%20-5%20-13%20-1%20-22%20-3%20-20%20-6%203%20-2%2048%202%20100%209%2052%208%2079%2014%2061%2015%20-18%201%20-43%207%20-55%2015%20-43%2027%20-61%2027%20-73%201z'/%3e%3cpath%20fill='%231078E0'%20d='M1886%203808%20c-11%20-6%20-39%20-8%20-68%20-5%20-27%204%20-46%203%20-44%20-2%203%20-4%20-18%20-16%20-45%20-25%20-67%20-24%20-158%20-93%20-210%20-158%20-25%20-32%20-48%20-52%20-58%20-50%20-13%202%20-13%201%20-2%20-6%2010%20-7%2011%20-14%203%20-28%20-6%20-11%20-14%20-19%20-19%20-19%20-4%200%20-8%20-7%20-8%20-16%200%20-8%20-11%20-39%20-24%20-67%20-18%20-38%20-27%20-49%20-34%20-40%20-6%209%20-7%207%20-3%20-5%204%20-12%20-65%20-158%20-203%20-430%20-114%20-227%20-248%20-490%20-295%20-585%20-54%20-107%20-91%20-170%20-98%20-166%20-7%204%20-8%202%20-4%20-4%2010%20-17%20-76%20-185%20-87%20-169%20-6%208%20-7%206%20-3%20-6%207%20-22%20-221%20-480%20-234%20-472%20-6%203%20-8%200%20-5%20-7%203%20-7%20-40%20-101%20-94%20-208%20-80%20-156%20-103%20-194%20-118%20-192%20-14%203%20-15%201%20-6%20-8%2014%20-15%20-4%20-63%20-20%20-53%20-6%203%20-7%201%20-3%20-5%2011%20-18%20-14%20-61%20-33%20-55%20-12%204%20-13%203%20-3%20-4%2010%20-8%2011%20-15%201%20-36%20-7%20-15%20-16%20-24%20-22%20-20%20-6%203%20-7%201%20-3%20-5%209%20-14%20-14%20-63%20-27%20-55%20-6%203%20-7%201%20-3%20-5%203%20-6%201%20-22%20-6%20-37%20-8%20-18%20-14%20-22%20-19%20-13%20-4%207%20-12%209%20-16%204%20-4%20-5%20-2%20-11%205%20-13%206%20-3%2012%20-11%2012%20-18%200%20-7%2064%20111%20141%20263%2078%20153%20172%20336%20209%20407%2093%20180%20865%201701%20886%201748%2013%2027%2020%2034%2027%2025%206%20-9%207%20-7%203%205%20-9%2029%20149%20321%20206%20379%2031%2032%2052%2046%2062%2042%2013%20-5%2010%20-14%20-19%20-54%20-37%20-50%20-65%20-139%20-65%20-205%200%20-76%2029%20-141%20141%20-316%20159%20-247%20244%20-406%20229%20-424%20-10%20-12%20-9%20-15%208%20-15%2011%200%2023%20-7%2026%20-16%203%20-8%2010%20-12%2016%20-9%206%204%207%20-1%203%20-11%20-4%20-10%20-2%20-15%204%20-11%205%203%209%20-2%209%20-11%20-1%20-26%20173%20-364%20184%20-357%206%204%207%20-1%203%20-11%20-5%20-13%20-3%20-15%207%20-9%208%205%2011%204%206%20-3%20-3%20-6%2074%20-173%20173%20-371%20150%20-299%20177%20-360%20163%20-364%20-14%20-4%20-13%20-5%203%20-6%2015%20-1%2029%20-17%2048%20-56%2015%20-30%2022%20-55%2017%20-55%20-18%200%20-10%20-19%2010%20-25%2023%20-7%2027%20-25%206%20-25%20-8%200%20-16%20-5%20-18%20-11%20-3%20-9%20-10%20-9%20-23%20-1%20-11%205%20-65%2025%20-120%2043%20-55%2018%20-103%2037%20-107%2043%20-4%206%20-23%209%20-42%208%20-20%20-2%20-36%201%20-36%205%200%204%20-26%209%20-58%2010%20-54%201%20-51%200%2048%20-23%20115%20-26%20266%20-74%20349%20-110%2029%20-13%2056%20-24%2060%20-24%204%200%20-71%20154%20-166%20343%20-112%20223%20-170%20349%20-167%20362%204%2014%203%2016%20-4%207%20-14%20-21%20-24%2015%20-11%2040%2012%2023%209%2028%20-19%2031%20-14%201%20-30%2022%20-56%2074%20-20%2040%20-34%2073%20-31%2073%203%200%2018%20-27%2035%20-60%2017%20-33%2034%20-60%2040%20-60%2018%200%2021%2021%207%2048%20-7%2016%20-13%2040%20-13%2054%201%2014%20-3%2024%20-9%2022%20-6%20-3%20-11%205%20-12%2016%20-1%2012%204%2020%2013%2020%208%200%2013%20-4%2010%20-9%20-3%20-4%206%20-6%2021%20-3%20l26%205%20-24%2011%20c-27%2012%20-33%2045%20-13%2064%2012%2011%2014%208%2014%20-13%200%20-14%204%20-25%209%20-25%204%200%206%2011%204%2024%20-4%2019%201%2025%2025%2034%2025%209%2033%207%2058%20-15%2023%20-19%2030%20-22%2032%20-10%202%2012%2010%2013%2033%207%2027%20-8%2029%20-7%2029%2018%200%2023%204%2027%2030%2028%2016%201%2027%20-3%2024%20-7%20-8%20-14%205%20-11%2037%208%2015%209%2030%2024%2032%2032%204%2013%205%2013%206%20-1%201%20-14%2010%20-17%2059%20-14%2031%201%2063%20-2%2071%20-8%2012%20-9%2013%20-8%208%206%20-7%2019%2017%2043%2032%2033%206%20-3%2020%20-1%2031%205%2016%209%2018%2015%2010%2030%20-5%2010%20-10%2022%20-10%2027%201%204%2010%20-9%2021%20-30%2015%20-28%2017%20-42%2010%20-51%20-6%20-7%20-8%20-16%20-4%20-20%204%20-3%20-3%20-13%20-15%20-22%20-22%20-15%20-21%20-39%201%20-31%207%202%2017%20-2%2022%20-9%206%20-6%2020%20-15%2032%20-19%2019%20-5%2022%20-3%2017%2012%20-5%2017%20-5%2017%206%200%209%20-14%209%20-22%20-2%20-35%20-12%20-15%20-11%20-16%204%20-4%2015%2012%2027%20-6%20124%20-200%2058%20-117%20175%20-346%20259%20-508%20382%20-740%20375%20-726%20390%20-831%207%20-54%20-15%20-159%20-45%20-220%20-68%20-132%20-216%20-219%20-373%20-219%20-71%200%20-192%2033%20-243%2066%20-13%209%20-27%2014%20-31%2011%20-3%20-4%206%20-12%2020%20-18%2015%20-7%2024%20-16%2020%20-22%20-3%20-6%20-2%20-7%204%20-4%205%203%2044%20-5%2087%20-19%2042%20-13%2087%20-24%2099%20-25%2021%200%2021%20-1%202%20-9%20-14%20-6%20-4%20-9%2038%20-9%2033%20-1%2056%203%2053%208%20-4%205%2013%2012%2036%2016%2091%2016%20205%2086%20258%20160%2014%2019%2031%2035%2038%2035%207%200%2010%205%207%2010%20-4%206%204%2036%2016%2068%2028%2073%2030%20184%205%20262%20-17%2051%20-101%20220%20-342%20685%20-51%2099%20-194%20380%20-318%20625%20-124%20245%20-230%20445%20-237%20445%20-7%200%20-14%207%20-16%2015%20-4%2013%20-3%2013%207%200%2033%20-45%20-16%2059%20-244%20506%20-189%20370%20-261%20503%20-298%20547%20-27%2031%20-46%2057%20-42%2057%2024%200%20-151%2080%20-198%2091%20-32%208%20-58%2017%20-58%2021%200%2011%20-11%2010%20-34%20-4z%20m-49%20-24%20c-3%20-3%20-12%20-4%20-19%20-1%20-8%203%20-5%206%206%206%2011%201%2017%20-2%2013%20-5z%20m227%20-1310%20c3%20-8%202%20-12%20-4%20-9%20-6%203%20-10%2010%20-10%2016%200%2014%207%2011%2014%20-7z%20m800%20-90%20c3%20-8%202%20-12%20-4%20-9%20-6%203%20-10%2010%20-10%2016%200%2014%207%2011%2014%20-7z%20m-601%20-66%20c-6%20-7%20-13%20-20%20-16%20-28%20-3%20-9%20-6%20-3%20-6%2013%20-1%2019%204%2027%2015%2027%2012%200%2014%20-4%207%20-12z%20m27%20-293%20c0%20-5%20-5%20-3%20-10%205%20-5%208%20-10%2020%20-10%2025%200%206%205%203%2010%20-5%205%20-8%2010%20-19%2010%20-25z%20m337%20-722%20c-11%20-10%20-26%208%20-20%2023%205%2015%207%2014%2015%20-1%206%20-9%207%20-19%205%20-22z'/%3e%3cpath%20fill='%231078E0'%20d='M1533%203606%20c-22%20-27%20-23%20-46%20-2%20-46%205%200%209%206%209%2014%200%208%205%2016%2011%2018%206%202%2010%2012%208%2023%20-4%2017%20-6%2016%20-26%20-9z'/%3e%3cpath%20fill='%231078E0'%20d='M3677%203218%20c-9%20-7%20-26%20-45%20-37%20-85%20-30%20-110%20-49%20-153%20-66%20-146%20-8%203%20-14%200%20-14%20-7%200%20-6%205%20-8%2010%20-5%2016%2010%2012%20-7%20-10%20-43%20-11%20-18%20-18%20-37%20-15%20-41%202%20-5%20-4%20-20%20-15%20-34%20-23%20-29%20-109%20-99%20-96%20-78%206%209%205%2012%20-5%209%20-8%20-3%20-13%20-11%20-11%20-17%201%20-7%20-2%20-10%20-7%20-6%20-6%203%20-33%20-6%20-62%20-20%20-32%20-17%20-60%20-24%20-74%20-21%20-16%204%20-25%201%20-29%20-10%20-5%20-12%20-14%20-14%20-34%20-10%20-20%205%20-23%204%20-12%20-4%2013%20-8%2013%20-10%20-2%20-10%20-24%200%20-51%20-44%20-43%20-69%204%20-15%2026%20-26%2078%20-42%2040%20-12%2093%20-32%20119%20-45%2026%20-13%2051%20-24%2055%20-24%204%201%20-21%2016%20-57%2035%20-67%2035%20-75%2046%20-15%2021%2038%20-16%2041%202%202%2019%20-16%208%20-21%2017%20-19%2037%202%2024%20-2%2028%20-33%2034%20-19%203%20-35%2010%20-35%2015%200%205%20-8%209%20-17%2010%20-10%200%200%207%2022%2015%2029%2011%2046%2012%2065%205%2030%20-12%2088%20-12%20112%200%2010%206%2019%205%2023%20-1%203%20-5%2018%20-10%2033%20-10%2015%200%2034%20-4%2042%20-10%2011%20-7%209%20-11%20-13%20-19%20-15%20-6%20-27%20-16%20-27%20-22%200%20-8%20-4%20-8%20-15%201%20-15%2013%20-70%205%20-81%20-11%20-3%20-5%208%20-21%2025%20-35%2017%20-14%2031%20-32%2031%20-39%200%20-12%20-6%20-13%20-45%20-5%20-23%205%20-27%20-1%20-9%20-14%2021%20-16%2025%20-37%209%20-49%20-6%20-5%20-1%20-7%2010%20-4%2011%202%2019%209%2017%2016%20-2%209%203%208%2019%20-3%2016%20-11%2024%20-12%2034%20-3%209%208%2010%2016%203%2024%20-13%2016%2036%2010%2059%20-8%2010%20-7%2015%20-10%2011%20-5%20-9%2011%2011%2031%2039%2038%2018%205%2028%20-1%2045%20-24%20l21%20-31%20-26%2018%20c-24%2016%20-27%2016%20-33%201%20-3%20-9%20-15%20-16%20-25%20-16%20-11%200%20-19%20-7%20-19%20-16%200%20-13%20-6%20-15%20-32%20-10%20-70%2015%20-77%2016%20-81%209%20-3%20-5%2012%20-16%2032%20-27%20l36%20-18%20-20%2023%20c-20%2024%20-20%2024%208%200%2027%20-24%2036%20-38%2017%20-26%20-16%2010%20-12%20-4%2012%20-35%2011%20-16%2024%20-27%2027%20-25%204%202%2017%20-5%2030%20-14%2016%20-13%2024%20-30%2026%20-56%20l2%20-39%20-26%2050%20c-14%2027%20-32%2050%20-39%2052%20-8%201%20-12%20-3%20-9%20-10%202%20-7%2010%20-12%2016%20-10%209%202%209%20-3%201%20-17%20-11%20-21%201%20-37%2019%20-26%2011%206%2043%20-77%2062%20-158%2023%20-106%2090%20-113%20117%20-13%207%2026%2017%2045%2024%2044%207%20-2%2014%207%2016%2020%202%2012%20-1%2022%20-7%2022%20-10%200%200%2031%2034%20114%205%2012%205%2017%20-1%2013%20-5%20-3%20-10%203%20-10%2013%200%2010%203%2018%206%2018%203%200%208%201%2013%202%204%201%2010%203%2015%204%2010%202%2090%2090%2088%2098%200%203%203%2010%208%2015%205%205%206%203%202%20-4%20-11%20-20%20-3%20-16%2054%2022%2028%2019%2093%2048%20143%2064%2051%2016%2096%2036%20101%2044%205%207%206%2025%202%2040%20-5%2022%20-19%2030%20-101%2057%20-52%2017%20-95%2036%20-95%2042%200%2011%20-30%2037%20-43%2038%20-5%200%20-5%20-5%20-1%20-11%2013%20-21%20-56%2025%20-89%2059%20-25%2025%20-27%2032%20-12%2027%2020%20-6%2020%20-6%200%206%20-47%2030%20-108%20120%20-87%20127%2017%205%2015%2022%20-2%2022%20-15%200%20-35%2046%20-56%20125%20-11%2044%20-39%2085%20-59%2085%20-4%200%20-15%20-6%20-24%20-12z%20m58%20-433%20c14%20-25%2030%20-43%2034%20-41%2010%206%2053%20-38%2046%20-46%20-4%20-3%2010%20-16%2029%20-28%2041%20-25%2043%20-52%205%20-76%20l-24%20-16%2024%2021%20c13%2012%2019%2021%2014%2021%20-13%200%20-48%20-27%20-48%20-37%200%20-5%20-17%20-29%20-39%20-53%20-24%20-28%20-34%20-36%20-27%20-20%20l12%2025%20-20%20-25%20c-11%20-14%20-23%20-33%20-27%20-42%20-9%20-29%20-19%20-21%20-49%2035%20-28%2050%20-51%2076%20-69%2077%20-5%200%20-3%20-7%204%20-15%2020%20-24%205%20-18%20-16%207%20-12%2013%20-13%2018%20-4%2013%2013%20-8%2013%20-7%201%209%20-8%209%20-20%2015%20-27%2012%20-8%20-3%20-13%20-1%20-11%204%201%205%20-7%2016%20-18%2024%20-18%2014%20-18%2016%20-2%2017%209%201%2021%202%2026%203%2015%202%2051%2053%2043%2061%20-4%205%20-2%205%204%202%2011%20-7%2047%2029%2087%2087%2010%2014%2020%2026%2022%2026%201%200%2015%20-20%2030%20-45z%20m290%20-43%20c-3%20-3%20-11%200%20-18%207%20-9%2010%20-8%2011%206%205%2010%20-3%2015%20-9%2012%20-12z%20m-850%20-94%20c-7%20-19%206%20-33%2045%20-46%20l35%20-11%20-35%205%20c-42%207%20-65%2027%20-57%2048%204%209%209%2016%2011%2016%203%200%203%20-6%201%20-12z%20m527%20-228%20c4%200%208%204%208%208%200%205%207%209%2015%209%2019%200%2019%20-21%200%20-37%20-11%20-9%20-13%20-16%20-5%20-24%2016%20-16%2012%20-44%20-7%20-42%20-11%200%20-17%20-6%20-17%20-16%202%20-21%20-5%20-22%20-28%20-4%20-22%2016%20-23%2046%20-2%2046%208%200%2013%204%2010%209%20-4%205%200%2012%206%2014%207%203%20-4%203%20-24%200%20-44%20-7%20-48%201%20-13%2029%2014%2011%2025%2027%2026%2036%200%2013%203%2011%2011%20-5%206%20-13%2015%20-23%2020%20-23z%20m-76%20-77%20c-10%20-10%20-19%205%20-10%2018%206%2011%208%2011%2012%200%202%20-7%201%20-15%20-2%20-18z%20m117%20-88%20c19%20-18%2027%20-22%2027%20-11%200%208%204%2017%209%2020%205%203%20-2%20-28%20-14%20-69%20-31%20-100%20-33%20-105%20-29%20-74%201%2014%20-2%2031%20-9%2038%20-6%206%20-7%2011%20-2%2011%2016%200%20-30%2029%20-47%2030%20-25%200%20-28%20-11%20-16%20-57%207%20-31%2018%20-46%2042%20-57%20l31%20-16%20-34%202%20c-33%203%20-34%205%20-52%2073%20-21%2081%20-23%2097%20-8%2071%209%20-15%2013%20-16%2020%20-5%205%208%206%2022%203%2031%20-13%2044%2036%2052%2079%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M3692%202775%20c-7%20-8%20-9%20-15%20-4%20-15%205%200%2015%207%2022%2015%2016%2019%20-1%2019%20-18%200z'/%3e%3cpath%20fill='%231078E0'%20d='M3764%202726%20c-8%20-22%20-1%20-28%2026%20-24%20l22%203%20-21%2019%20c-19%2017%20-21%2017%20-27%202z'/%3e%3cpath%20fill='%231078E0'%20d='M3775%202560%20c-27%20-30%20-12%20-34%2015%20-5%2013%2014%2019%2025%2013%2025%20-5%200%20-18%20-9%20-28%20-20z'/%3e%3cpath%20fill='%231078E0'%20d='M3698%202363%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M3610%203150%20c0%20-5%205%20-10%2010%20-10%206%200%2010%205%2010%2010%200%206%20-4%2010%20-10%2010%20-5%200%20-10%20-4%20-10%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M3515%202870%20c-10%20-11%20-28%20-20%20-39%20-21%20-12%200%20-15%20-3%20-8%20-6%2010%20-4%208%20-12%20-10%20-31%20-19%20-21%20-19%20-24%20-3%20-12%2036%2025%2067%2055%2076%2073%2013%2023%206%2022%20-16%20-3z'/%3e%3cpath%20fill='%231078E0'%20d='M1845%202789%20c-6%20-17%20-9%20-19%20-17%20-8%20-8%2011%20-8%2010%20-4%20-5%207%20-22%20-43%20-118%20-57%20-109%20-6%203%20-7%201%20-4%20-5%209%20-14%20-3%20-43%20-14%20-36%20-5%203%20-6%20-3%20-2%20-12%205%20-13%203%20-15%20-7%20-9%20-8%205%20-11%204%20-6%20-3%209%20-14%20-14%20-63%20-27%20-55%20-6%203%20-7%201%20-3%20-5%204%20-6%200%20-24%20-9%20-39%20-15%20-27%20-16%20-27%20-10%20-3%205%2019%204%2022%20-4%2010%20-6%20-8%20-8%20-22%20-6%20-30%205%20-16%20-9%20-45%20-22%20-45%20-4%200%20-19%20-12%20-32%20-27%20-18%20-22%20-21%20-32%20-12%20-42%2014%20-17%20-6%20-69%20-22%20-59%20-6%203%20-7%201%20-3%20-5%209%20-14%20-14%20-63%20-27%20-55%20-6%203%20-7%201%20-3%20-5%209%20-14%20-14%20-63%20-27%20-55%20-6%203%20-7%201%20-3%20-5%209%20-14%20-12%20-65%20-24%20-57%20-5%203%20-7%200%20-4%20-8%203%20-8%20-43%20-111%20-102%20-228%20-132%20-264%20-359%20-737%20-369%20-769%20-6%20-20%204%20-14%2050%2029%2033%2029%2083%2066%20112%2083%2061%2035%2071%2048%2014%2019%20-21%20-11%20-42%20-17%20-46%20-13%20-5%204%20-4%201%200%20-7%206%20-11%204%20-13%20-8%20-8%20-10%204%20-28%202%20-42%20-3%20-29%20-11%20-29%20-10%20-13%2025%208%2018%2014%2022%2019%2013%204%20-7%2011%20-9%2016%20-5%204%205%202%2012%20-5%2016%20-16%2010%20-8%2027%20399%20850%20187%20376%20337%20686%20335%20688%20-2%203%20-7%20-5%20-11%20-18z%20m-204%20-396%20c-11%20-21%20-20%20-35%20-21%20-31%200%2012%2033%2078%2038%2074%202%20-2%20-6%20-21%20-17%20-43z%20m-501%20-1177%20c0%20-2%20-7%20-9%20-15%20-16%20-13%20-11%20-14%20-10%20-9%204%205%2014%2024%2023%2024%2012z%20m-66%20-58%20c-15%20-15%20-29%20-28%20-30%20-28%20-1%200%205%2018%2013%2040%2013%2032%2019%2038%2030%2028%2011%20-9%209%20-16%20-13%20-40z'/%3e%3cpath%20fill='%231078E0'%20d='M1870%202739%20c0%20-5%205%20-7%2010%20-4%206%203%2010%208%2010%2011%200%202%20-4%204%20-10%204%20-5%200%20-10%20-5%20-10%20-11z'/%3e%3cpath%20fill='%231078E0'%20d='M3255%202680%20c4%20-6%2011%20-8%2016%20-5%2014%209%2011%2015%20-7%2015%20-8%200%20-12%20-5%20-9%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6165%202643%20c96%20-7%20203%20-7%20198%200%20-2%204%20-57%206%20-121%205%20-64%20-1%20-99%20-3%20-77%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M6075%202628%20c-3%20-7%20-4%20-328%20-3%20-713%20l3%20-700%205%20713%20c3%20391%204%20712%202%20712%20-1%200%20-5%20-6%20-7%20-12z'/%3e%3cpath%20fill='%231078E0'%20d='M3837%202363%20c-11%20-11%20-8%20-20%207%20-20%208%200%2012%206%209%2014%20-6%2015%20-7%2015%20-16%206z'/%3e%3cpath%20fill='%231078E0'%20d='M13345%202361%20l70%20-6%2048%20-125%20c68%20-179%20135%20-352%20172%20-450%2086%20-223%20125%20-324%20125%20-327%200%20-2%20-41%20-2%20-92%20-1%20l-91%203%20-27%2081%20c-47%20138%20-22%20125%20-237%20122%20l-186%20-3%20-38%20-100%20-38%20-100%20-85%20-3%20c-47%20-1%20-86%200%20-86%204%200%2027%20333%20879%20348%20892%2014%2011%2014%2012%200%2012%20-9%200%20-19%20-9%20-23%20-19%20-4%20-14%20-11%20-18%20-23%20-14%20-14%206%20-15%204%20-4%20-9%2017%20-21%20-24%20-139%20-51%20-146%20-13%20-3%20-15%20-7%20-7%20-12%207%20-5%209%20-16%205%20-29%20-3%20-12%20-10%20-19%20-15%20-16%20-4%203%20-14%20-2%20-21%20-11%20-10%20-13%20-10%20-17%200%20-24%2021%20-12%20-35%20-151%20-58%20-142%20-13%205%20-14%203%20-3%20-10%2011%20-13%208%20-27%20-14%20-82%20-14%20-36%20-30%20-63%20-35%20-60%20-6%203%20-7%20-5%20-3%20-22%205%20-19%204%20-25%20-4%20-20%20-8%205%20-10%201%20-5%20-10%204%20-11%202%20-15%20-4%20-11%20-17%2011%20-38%20-20%20-24%20-36%208%20-10%204%20-32%20-17%20-86%20-15%20-39%20-31%20-68%20-35%20-64%20-5%204%20-5%20-1%20-1%20-11%205%20-14%204%20-17%20-5%20-11%20-10%206%20-11%202%20-6%20-15%204%20-14%203%20-20%20-3%20-16%20-5%203%20-15%20-1%20-22%20-9%20-11%20-14%20-7%20-19%2013%20-16%204%200%207%20-4%207%20-9%200%20-6%207%20-10%2016%20-10%208%200%2012%20-4%209%20-10%20-4%20-6%2022%20-9%2072%20-9%2065%202%2071%203%2038%209%20l-40%207%2046%202%2047%201%2022%2063%20c13%2034%2034%2070%2046%2080%2023%2018%2035%2055%2014%2042%20-5%20-3%20-10%201%20-10%209%200%2014%2024%2016%20184%2016%20l185%200%2021%20-57%20c14%20-37%2020%20-70%2016%20-91%20-4%20-26%20-2%20-33%209%20-28%208%203%2017%20-3%2020%20-15%206%20-17%2016%20-19%20106%20-19%2057%200%2099%204%2099%2010%200%205%20-9%2033%20-21%2062%20-17%2043%20-18%2057%20-9%2072%2011%2017%209%2023%20-13%2040%20-14%2012%20-40%2054%20-57%2095%20-32%2078%20-36%20101%20-20%20101%206%200%2010%205%2010%2010%200%206%20-8%2010%20-17%208%20-14%20-2%20-28%2025%20-70%20136%20-29%2076%20-51%20148%20-50%20160%201%2011%20-3%2020%20-10%2019%20-6%20-1%20-24%2032%20-39%2075%20-15%2042%20-33%2092%20-40%20110%20l-13%2032%20-73%20-2%20-73%20-2%2070%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M13897%202363%20c-4%20-3%20-7%20-202%20-7%20-442%200%20-285%20-4%20-431%20-10%20-421%20-6%209%20-10%2010%20-10%203%200%20-6%20-3%20-18%20-6%20-27%20-4%20-10%203%20-19%2020%20-27%2014%20-7%2023%20-16%2020%20-20%20-3%20-5%2034%20-8%2083%20-7%2073%201%2080%202%2043%208%20l-45%207%2053%201%2052%202%200%20459%20c0%20293%20-4%20462%20-10%20466%20-5%203%20-18%201%20-27%20-5%20-16%20-9%20-15%20-10%205%20-5%20l22%206%200%20-455%200%20-456%20-90%200%20-90%200%202%20453%203%20452%2055%206%2055%206%20-56%201%20c-31%201%20-59%20-1%20-62%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M13872%202255%20c0%20-16%202%20-22%205%20-12%202%209%202%2023%200%2030%20-3%206%20-5%20-1%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M5228%202183%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5310%202180%20c-52%20-6%20-51%20-7%2030%20-8%2047%20-1%20103%20-4%20125%20-7%20l40%20-5%20-35%209%20c-60%2015%20-103%2018%20-160%2011z'/%3e%3cpath%20fill='%231078E0'%20d='M8468%202183%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M7265%202171%20c115%20-8%20164%20-18%20243%20-52%2026%20-11%2042%20-15%2036%20-9%20-6%206%20-44%2023%20-85%2037%20-61%2021%20-95%2027%20-189%2029%20l-115%202%20110%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M8505%202175%20c6%20-2%2060%20-5%20120%20-7%2061%20-3%2099%20-1%2085%203%20-24%207%20-225%2011%20-205%204z'/%3e%3cpath%20fill='%231078E0'%20d='M9635%202171%20c-16%20-3%2040%20-6%20124%20-6%2083%200%20142%203%20129%207%20-29%208%20-214%208%20-253%20-1z'/%3e%3cpath%20fill='%231078E0'%20d='M11890%202170%20c63%20-4%20130%20-13%20149%20-19%2019%20-6%2037%20-9%2039%20-7%2012%2012%20-87%2028%20-188%2031%20l-115%203%20115%20-8z'/%3e%3cpath%20fill='%231078E0'%20d='M5157%202158%20c2%20-5%20-1%20-8%20-8%20-8%20-7%200%20-10%20-2%20-8%20-5%203%20-2%2027%202%2054%209%20l50%2014%20-46%20-2%20c-26%200%20-45%20-4%20-42%20-8z'/%3e%3cpath%20fill='%231078E0'%20d='M7108%202163%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M8458%202163%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8760%202160%20c-21%20-7%20-22%20-8%20-5%20-9%2011%20-1%2054%20-17%2094%20-36%2089%20-43%20183%20-134%20226%20-218%2029%20-57%2030%20-58%2011%20-73%20-21%20-15%20-10%20-20%2013%20-5%209%206%2011%2018%207%2034%20-4%2016%20-1%2028%207%2031%207%204%207%205%20-3%203%20-8%20-2%20-29%2019%20-50%2052%20-49%2075%20-131%20147%20-212%20186%20-37%2018%20-64%2035%20-61%2039%207%207%207%207%20-27%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M11060%202160%20c-15%20-5%20-1%20-6%2037%20-3%2033%203%2073%203%2087%20-1%20l26%20-6%202%20-148%20c1%20-81%203%20-122%205%20-92%203%2038%207%2050%2013%2040%207%20-11%2010%20-7%2010%2015%200%2023%20-3%2027%20-10%2015%20-7%20-10%20-10%2015%20-10%2081%200%2092%20-1%2097%20-22%20103%20-31%208%20-107%206%20-138%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M11738%202163%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M13305%202153%20c-4%20-10%20-29%20-79%20-55%20-153%20-27%20-74%20-53%20-147%20-59%20-162%20-10%20-25%20-8%20-28%2012%20-28%2031%200%2051%2015%2042%2030%20-6%2010%20-11%209%20-21%20-5%20-8%20-10%20-16%20-16%20-19%20-13%20-8%208%2026%2098%2035%2093%205%20-3%2014%204%2020%2015%207%2013%207%2020%200%2020%20-15%200%20-12%2017%2024%20114%20l32%2088%2021%20-55%20c21%20-57%2020%20-107%20-1%20-107%20-6%200%20-4%20-4%204%20-10%209%20-5%2019%20-5%2026%201%209%207%2019%20-10%2037%20-66%2025%20-72%2025%20-75%206%20-75%20-10%200%20-19%20-4%20-19%20-9%200%20-5%20-8%20-12%20-17%20-14%20-10%20-3%204%20-5%2031%20-6%2035%20-1%2047%202%2043%2012%20-2%206%20-30%2084%20-62%20172%20-32%2088%20-61%20164%20-65%20168%20-4%205%20-11%200%20-15%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M730%202150%20c0%20-5%205%20-10%2011%20-10%205%200%207%205%204%2010%20-3%206%20-8%2010%20-11%2010%20-2%200%20-4%20-4%20-4%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M5518%202153%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M7035%202145%20c-39%20-17%20-21%20-18%2025%200%2019%207%2028%2014%2020%2014%20-8%200%20-28%20-6%20-45%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M8390%202150%20c-11%20-8%20-7%20-9%2015%20-4%2037%208%2045%2014%2019%2014%20-10%200%20-26%20-5%20-34%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M9513%202130%20c-35%20-16%20-63%20-32%20-63%20-35%200%20-3%2019%204%2042%2016%2023%2012%2058%2027%2077%2034%2020%208%2029%2014%2021%2014%20-8%201%20-43%20-12%20-77%20-29z'/%3e%3cpath%20fill='%231078E0'%20d='M9921%202156%20c2%20-2%2018%20-6%2034%20-10%2022%20-5%2026%20-4%2015%204%20-14%209%20-59%2015%20-49%206z'/%3e%3cpath%20fill='%231078E0'%20d='M11698%202153%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M10510%201565%20l0%20-585%20153%202%20152%202%20-148%203%20-147%204%202%20579%20c2%20319%200%20580%20-4%20580%20-5%200%20-8%20-263%20-8%20-585z'/%3e%3cpath%20fill='%231078E0'%20d='M10623%202143%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M10768%202143%20l32%20-4%200%20-90%20c0%20-50%203%20-88%208%20-86%204%203%205%2045%202%2094%20l-5%2088%20-35%201%20-35%202%2033%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11650%202140%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M5090%202125%20c-14%20-8%20-20%20-14%20-15%20-14%206%200%2021%206%2035%2014%2014%208%2021%2014%2015%2014%20-5%200%20-21%20-6%20-35%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M5630%202109%20c30%20-16%2075%20-49%20100%20-72%20l45%20-42%20-40%2043%20c-37%2041%20-128%20102%20-150%20102%20-5%200%2015%20-14%2045%20-31z'/%3e%3cpath%20fill='%231078E0'%20d='M8323%202125%20c-18%20-8%20-33%20-16%20-33%20-19%200%20-5%2071%2022%2079%2030%209%208%20-15%203%20-46%20-11z'/%3e%3cpath%20fill='%231078E0'%20d='M10035%202113%20c28%20-14%2068%20-39%2090%20-55%20l40%20-30%20-35%2032%20c-33%2030%20-120%2081%20-137%2080%20-4%20-1%2015%20-13%2042%20-27z'/%3e%3cpath%20fill='%231078E0'%20d='M10958%202124%20c-39%20-21%20-35%20-28%205%20-8%2037%2019%2044%2024%2031%2024%20-5%20-1%20-21%20-8%20-36%20-16z'/%3e%3cpath%20fill='%231078E0'%20d='M12140%202110%20c31%20-15%2080%20-50%20110%20-76%2030%20-27%2045%20-37%2032%20-23%20-12%2014%20-20%2029%20-17%2032%203%204%202%205%20-1%202%20-4%20-2%20-23%208%20-43%2024%20-37%2029%20-114%2071%20-128%2071%20-4%20-1%2017%20-14%2047%20-30z'/%3e%3cpath%20fill='%231078E0'%20d='M3610%202120%20c0%20-5%205%20-10%2010%20-10%206%200%2010%205%2010%2010%200%206%20-4%2010%20-10%2010%20-5%200%20-10%20-4%20-10%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6958%202114%20c-39%20-21%20-35%20-28%205%20-8%2037%2019%2044%2024%2031%2024%20-5%20-1%20-21%20-8%20-36%20-16z'/%3e%3cpath%20fill='%231078E0'%20d='M10820%202120%20c0%20-5%205%20-10%2010%20-10%206%200%2010%205%2010%2010%200%206%20-4%2010%20-10%2010%20-5%200%20-10%20-4%20-10%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M11586%202121%20c2%20-2%20-4%20-10%20-14%20-18%20-11%20-9%20-5%20-8%2018%203%2045%2021%2046%2022%2016%2020%20-13%200%20-23%20-3%20-20%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M5023%202084%20l-28%20-25%2033%2022%20c17%2013%2032%2024%2032%2026%200%208%20-11%201%20-37%20-23z'/%3e%3cpath%20fill='%231078E0'%20d='M7560%202098%20c3%20-3%2028%20-23%2055%20-43%2029%20-22%2041%20-28%2028%20-14%20-12%2013%20-37%2033%20-55%2043%20-18%2011%20-31%2017%20-28%2014z'/%3e%3cpath%20fill='%231078E0'%20d='M8249%202079%20l-24%20-20%2028%2017%20c15%209%2027%2018%2027%2020%200%208%20-8%204%20-31%20-17z'/%3e%3cpath%20fill='%231078E0'%20d='M10875%202058%20l-40%20-43%2043%2040%20c39%2036%2047%2045%2039%2045%20-2%200%20-21%20-19%20-42%20-42z'/%3e%3cpath%20fill='%231078E0'%20d='M9409%202063%20l-24%20-28%2028%2024%20c15%2014%2027%2026%2027%2028%200%208%20-8%201%20-31%20-24z'/%3e%3cpath%20fill='%231078E0'%20d='M10827%202077%20c-11%20-29%20-9%20-53%204%20-40%206%206%209%2021%207%2034%20-3%2021%20-4%2022%20-11%206z'/%3e%3cpath%20fill='%231078E0'%20d='M13315%202080%20c-4%20-7%201%20-21%2014%20-33%2024%20-24%2027%20-14%207%2022%20-9%2017%20-15%2020%20-21%2011z'/%3e%3cpath%20fill='%231078E0'%20d='M13550%202070%20c0%20-5%205%20-10%2011%20-10%205%200%207%205%204%2010%20-3%206%20-8%2010%20-11%2010%20-2%200%20-4%20-4%20-4%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M4973%202063%20c4%20-3%20-1%20-16%20-10%20-27%20-18%20-21%20-18%20-21%204%20-2%2020%2016%2023%2036%206%2036%20-4%200%20-3%20-3%200%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M6839%202029%20l-44%20-41%2048%2038%20c26%2021%2047%2040%2047%2041%200%208%20-11%200%20-51%20-38z'/%3e%3cpath%20fill='%231078E0'%20d='M11453%202008%20c-33%20-35%20-65%20-74%20-72%20-88%20l-12%20-25%2018%2025%20c10%2014%2044%2053%2077%2088%2033%2034%2057%2062%2054%2062%20-3%200%20-32%20-28%20-65%20-62z'/%3e%3cpath%20fill='%231078E0'%20d='M8169%202013%20c-39%20-42%20-90%20-105%20-63%20-78%2030%2029%20116%20125%20113%20125%20-3%200%20-25%20-21%20-50%20-47z'/%3e%3cpath%20fill='%231078E0'%20d='M7685%202000%20c5%20-8%2017%20-24%2026%20-35%2010%20-11%2034%20-47%2053%20-79%2020%20-33%2036%20-55%2036%20-50%200%206%20-14%2032%20-31%2059%20-17%2027%20-32%2056%20-34%2065%20-1%208%20-7%2015%20-12%2015%20-6%200%20-19%209%20-29%2020%20-11%2012%20-15%2014%20-9%205z'/%3e%3cpath%20fill='%231078E0'%20d='M9337%201988%20c-33%20-44%20-50%20-78%20-43%20-86%203%20-3%206%20-1%206%205%200%206%2015%2034%2034%2062%2039%2057%2040%2069%203%2019z'/%3e%3cpath%20fill='%231078E0'%20d='M10160%202016%20c0%20-2%208%20-10%2018%20-17%2015%20-13%2016%20-12%203%204%20-13%2016%20-21%2021%20-21%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M4917%202002%20c16%20-10%20-37%20-100%20-57%20-95%20-10%203%20-11%202%20-4%20-4%207%20-4%2013%20-17%2015%20-27%202%20-11%209%20-20%2014%20-21%206%20-1%207%200%203%203%20-16%208%20-7%2040%2025%2093%2031%2052%2032%2055%2013%2057%20-12%200%20-16%20-2%20-9%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5792%201945%20c12%20-24%2023%20-43%2026%20-41%204%205%20-36%2086%20-43%2086%20-3%200%205%20-20%2017%20-45z'/%3e%3cpath%20fill='%231078E0'%20d='M6766%201949%20c-15%20-17%20-33%20-45%20-42%20-63%20-8%20-17%20-9%20-22%20-2%20-12%207%2010%2028%2038%2045%2062%2038%2051%2037%2058%20-1%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M10207%201945%20c9%20-19%2018%20-33%2021%20-31%204%205%20-26%2066%20-33%2066%20-3%200%203%20-16%2012%20-35z'/%3e%3cpath%20fill='%231078E0'%20d='M12317%201955%20c34%20-50%2062%20-110%2083%20-182%2011%20-38%2018%20-51%2014%20-30%20-3%2021%20-8%2046%20-11%2054%20-5%2012%20-3%2014%207%208%208%20-5%2011%20-3%209%204%20-2%206%20-7%2010%20-11%209%20-4%20-2%20-23%2029%20-43%2068%20-19%2040%20-43%2078%20-52%2085%20-13%2010%20-12%206%204%20-16z'/%3e%3cpath%20fill='%231078E0'%20d='M9743%201933%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11853%201933%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M5251%201921%20c-11%20-7%20-9%20-10%208%20-16%2013%20-4%2025%20-4%2028%20-1%204%203%20-2%206%20-13%207%20-15%201%20-13%203%206%209%2021%207%2021%208%205%209%20-11%200%20-26%20-3%20-34%20-8z'/%3e%3cpath%20fill='%231078E0'%20d='M5405%201920%20c12%20-5%2014%20-9%206%20-9%20-8%20-1%20-12%20-3%20-10%20-6%203%20-2%2016%20-1%2029%202%2022%206%2023%207%204%2014%20-27%2011%20-54%2010%20-29%20-1z'/%3e%3cpath%20fill='%231078E0'%20d='M9660%201920%20c-11%20-8%20-7%20-9%2015%20-4%2037%208%2045%2014%2019%2014%20-10%200%20-26%20-5%20-34%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M9808%201923%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11798%201923%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M11928%201923%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8080%201900%20c-6%20-11%20-8%20-20%20-6%20-20%203%200%2010%209%2016%2020%206%2011%208%2020%206%2020%20-3%200%20-10%20-9%20-16%20-20z'/%3e%3cpath%20fill='%231078E0'%20d='M9835%201909%20c-16%20-8%20-15%20-8%208%20-4%2016%203%2026%202%2024%20-2%20-3%20-5%203%20-9%2014%20-9%2019%200%2019%201%203%2013%20-20%2015%20-22%2015%20-49%202z'/%3e%3cpath%20fill='%231078E0'%20d='M5179%201873%20l-34%20-38%2040%2035%20c22%2019%2042%2036%2044%2038%202%201%200%202%20-5%202%20-6%200%20-26%20-17%20-45%20-37z'/%3e%3cpath%20fill='%231078E0'%20d='M7228%201903%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M8531%201901%20c-13%20-3%2014%20-6%2059%20-6%2045%200%2072%203%2059%206%20-13%204%20-40%207%20-59%207%20-19%200%20-46%20-3%20-59%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M9597%201880%20c-19%20-16%20-40%20-43%20-47%20-59%20-6%20-17%20-19%20-32%20-28%20-34%20-15%20-4%20-15%20-5%200%20-6%2011%20-1%2025%2014%2038%2038%2010%2022%2034%2051%2052%2065%2018%2014%2030%2026%2026%2026%20-4%200%20-23%20-13%20-41%20-30z'/%3e%3cpath%20fill='%231078E0'%20d='M11928%201903%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M11993%201895%20c0%20-14%2024%20-28%2039%20-22%204%201%2022%20-11%2040%20-28%20l33%20-30%20-30%2033%20c-38%2043%20-82%2067%20-82%2047z'/%3e%3cpath%20fill='%231078E0'%20d='M5506%201869%20c16%20-20%2031%20-34%2033%20-32%203%202%20-10%2018%20-29%2036%20l-34%2032%2030%20-36z'/%3e%3cpath%20fill='%231078E0'%20d='M7112%201874%20c-28%20-14%20-65%20-42%20-83%20-62%20-36%20-41%20-79%20-127%20-78%20-157%200%20-11%207%201%2015%2026%2010%2033%2020%2048%2036%2053%2018%205%2020%208%209%2015%20-11%207%20-10%2014%208%2040%2030%2041%20108%2096%2085%2059%20-4%20-7%20-3%20-8%205%20-4%206%204%209%2011%206%2016%20-3%205%2016%2016%2042%2024%2026%208%2039%2015%2027%2015%20-11%201%20-43%20-11%20-72%20-25z'/%3e%3cpath%20fill='%231078E0'%20d='M7308%201893%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M10236%201875%20c8%20-37%2014%20-45%2014%20-19%200%2010%20-5%2026%20-10%2034%20-8%2011%20-9%207%20-4%20-15z'/%3e%3cpath%20fill='%231078E0'%20d='M11679%201863%20c-39%20-35%20-79%20-99%20-79%20-125%200%20-7%2011%2011%2025%2040%2016%2035%2029%2051%2036%2046%207%20-4%209%20-3%205%204%20-3%206%2011%2024%2031%2041%2021%2017%2034%2031%2030%2031%20-4%200%20-25%20-17%20-48%20-37z'/%3e%3cpath%20fill='%231078E0'%20d='M5821%201874%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M7238%201883%20c12%20-2%2030%20-2%2040%200%209%203%20-1%205%20-23%204%20-22%200%20-30%20-2%20-17%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M7369%201874%20c19%20-8%2041%20-19%2048%20-26%207%20-6%2013%20-8%2013%20-4%200%2010%20-63%2046%20-80%2046%20-8%20-1%200%20-7%2019%20-16z'/%3e%3cpath%20fill='%231078E0'%20d='M8588%201883%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M9280%201876%20c0%20-8%204%20-17%209%20-20%205%20-4%207%203%204%2014%20-6%2023%20-13%2026%20-13%206z'/%3e%3cpath%20fill='%231078E0'%20d='M9928%201866%20c26%20-33%2028%20-48%207%20-40%20-8%204%20-15%202%20-15%20-4%200%20-15%2030%20-24%2031%20-9%201%207%205%201%209%20-13%206%20-18%208%20-20%209%20-7%201%2023%20-23%2070%20-46%2088%20-12%2010%20-11%205%205%20-15z'/%3e%3cpath%20fill='%231078E0'%20d='M11350%201869%20c-7%20-11%20-10%20-23%20-7%20-25%202%20-2%209%207%2015%2021%2014%2030%207%2033%20-8%204z'/%3e%3cpath%20fill='%231078E0'%20d='M8406%201839%20c-25%20-23%20-51%20-51%20-57%20-63%20-6%20-11%202%20-6%2017%2013%2015%2018%2045%2046%2067%2062%2022%2016%2035%2029%2030%2029%20-6%200%20-31%20-18%20-57%20-41z'/%3e%3cpath%20fill='%231078E0'%20d='M8734%201862%20c3%20-6%203%20-12%20-1%20-15%20-5%20-2%20-2%20-2%205%200%2022%205%2036%20-8%2021%20-19%20-11%20-8%20-10%20-9%203%20-5%2024%208%2047%20-21%2027%20-35%20-11%20-8%20-11%20-9%203%20-5%2012%204%2023%20-5%2037%20-28%2019%20-32%2022%20-34%2051%20-24%2017%206%2029%2013%2027%2015%20-2%203%20-16%200%20-31%20-5%20-23%20-9%20-27%20-7%20-41%2018%20-20%2039%20-63%2089%20-87%20102%20-13%207%20-18%207%20-14%201z'/%3e%3cpath%20fill='%231078E0'%20d='M11005%201861%20c-11%20-4%2018%20-6%2065%20-4%20116%206%20131%2011%2035%2011%20-44%200%20-89%20-3%20-100%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M5832%201825%20c0%20-16%202%20-22%205%20-12%202%209%202%2023%200%2030%20-3%206%20-5%20-1%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M6689%201816%20c-8%20-23%20-16%20-31%20-20%20-24%20-5%207%20-11%209%20-16%205%20-4%20-5%20-2%20-12%205%20-16%208%20-5%2011%20-18%207%20-37%20-3%20-16%205%200%2019%2036%2014%2035%2023%2066%2021%2068%20-2%202%20-9%20-13%20-16%20-32z'/%3e%3cpath%20fill='%231078E0'%20d='M8031%201795%20c-12%20-31%20-21%20-63%20-21%20-73%200%20-9%2011%2015%2024%2053%2029%2084%2027%2099%20-3%2020z'/%3e%3cpath%20fill='%231078E0'%20d='M10919%201818%20c-23%20-18%20-49%20-44%20-58%20-58%20-9%20-14%203%20-5%2026%2018%2026%2028%2046%2041%2054%2036%208%20-4%2010%20-3%205%205%20-5%208%20-1%2011%2016%208%2012%20-2%2017%20-2%209%200%20-12%204%20-12%206%200%2014%209%205%2010%209%202%209%20-6%200%20-30%20-15%20-54%20-32z'/%3e%3cpath%20fill='%231078E0'%20d='M11038%201843%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M11148%201843%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M4953%201828%20c15%20-5%2025%20-13%2023%20-17%20-2%20-3%2014%20-7%2037%20-7%20l42%20-1%20-55%2018%20c-57%2019%20-96%2025%20-47%207z'/%3e%3cpath%20fill='%231078E0'%20d='M7460%201810%20c11%20-16%2026%20-33%2032%20-36%207%20-4%20-1%209%20-16%2029%20-34%2044%20-46%2050%20-16%207z'/%3e%3cpath%20fill='%231078E0'%20d='M10252%201800%20c0%20-19%202%20-27%205%20-17%202%209%202%2025%200%2035%20-3%209%20-5%201%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M11326%201815%20c-3%20-9%20-6%20-22%20-5%20-28%200%20-7%205%20-1%2010%2012%205%2013%208%2026%205%2028%20-2%202%20-6%20-3%20-10%20-12z'/%3e%3cpath%20fill='%231078E0'%20d='M5547%201770%20c3%20-30%207%20-57%209%20-59%208%20-9%202%2075%20-6%2094%20-5%2012%20-6%20-1%20-3%20-35z'/%3e%3cpath%20fill='%231078E0'%20d='M7800%201815%20c0%20-5%205%20-17%2010%20-25%205%20-8%2010%20-10%2010%20-5%200%206%20-5%2017%20-10%2025%20-5%208%20-10%2011%20-10%205z'/%3e%3cpath%20fill='%231078E0'%20d='M9408%201813%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5130%201802%20c0%20-7%20-10%20-13%20-22%20-13%20-19%20-1%20-20%20-2%20-4%20-6%2020%20-5%2044%2012%2033%2024%20-4%203%20-7%201%20-7%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M12106%201797%20c3%20-10%209%20-15%2012%20-12%203%203%200%2011%20-7%2018%20-10%209%20-11%208%20-5%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M13273%201803%20c15%20-2%2037%20-2%2050%200%2012%202%200%204%20-28%204%20-27%200%20-38%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M9478%201793%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8982%201781%20c-11%20-7%20-10%20-9%203%20-14%209%20-4%2014%20-3%2010%202%20-3%205%201%2012%207%2014%207%203%209%206%203%206%20-5%200%20-16%20-3%20-23%20-8z'/%3e%3cpath%20fill='%231078E0'%20d='M5867%201773%20c-4%20-3%20-7%20-148%20-7%20-321%201%20-173%204%20-312%207%20-309%204%205%2013%20637%208%20637%20-1%200%20-5%20-3%20-8%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M5842%201384%20l-2%20-392%20-117%20-4%20c-155%20-5%20-153%20-6%20-155%2051%20-1%2046%20-1%2046%20-5%207%20-3%20-22%20-2%20-50%201%20-63%206%20-23%208%20-23%20134%20-21%20l127%202%20-95%206%20-95%206%20103%202%20c71%201%20104%206%20107%2015%203%206%204%20185%202%20397%20l-2%20385%20-3%20-391z'/%3e%3cpath%20fill='%231078E0'%20d='M7821%201760%20c0%20-8%204%20-24%208%20-34%207%20-19%208%20-18%2014%204%203%2013%204%2026%202%2029%20-3%202%20-5%20-2%20-6%20-10%200%20-8%20-4%20-6%20-9%206%20-5%2013%20-9%2014%20-9%205z'/%3e%3cpath%20fill='%231078E0'%20d='M8930%201760%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M10280%201437%20c0%20-252%20-3%20-343%20-12%20-358%20-10%20-17%20-10%20-23%200%20-26%206%20-3%2012%20-16%2012%20-29%200%20-13%204%20-24%209%20-24%2011%200%2011%20744%200%20762%20-5%207%20-9%20-139%20-9%20-325z'/%3e%3cpath%20fill='%231078E0'%20d='M11300%201716%20c-6%20-31%20-9%20-68%20-7%20-83%203%20-25%204%20-24%206%207%201%2019%206%2055%2012%2079%205%2024%208%2046%205%2048%20-2%203%20-9%20-20%20-16%20-51z'/%3e%3cpath%20fill='%231078E0'%20d='M12126%201738%20l6%20-38%20-265%200%20c-203%200%20-267%203%20-270%2013%20-3%207%20-6%205%20-6%20-5%20-1%20-17%2018%20-18%20274%20-18%20l275%200%20-1%2023%20c0%2012%20-4%2031%20-9%2042%20-7%2014%20-8%209%20-4%20-17z'/%3e%3cpath%20fill='%231078E0'%20d='M7511%201740%20c14%20-31%2019%20-36%2019%20-24%200%206%20-7%2019%20-16%2030%20-14%2018%20-14%2018%20-3%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M9961%201724%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M5504%201715%20c4%20-11%20-2%20-15%20-21%20-15%20-14%200%20-24%20-3%20-20%20-6%203%20-4%2022%20-3%2042%200%2031%206%2034%209%2021%2021%20-19%2019%20-30%2019%20-22%200z'/%3e%3cpath%20fill='%231078E0'%20d='M8311%201699%20c-6%20-18%20-11%20-39%20-10%20-48%200%20-9%207%204%2014%2029%2016%2051%2013%2067%20-4%2019z'/%3e%3cpath%20fill='%231078E0'%20d='M9928%201723%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5408%201703%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M9895%201700%20c-27%20-7%20-28%20-8%20-5%20-8%2014%200%2034%203%2045%208%2025%2011%202%2011%20-40%200z'/%3e%3cpath%20fill='%231078E0'%20d='M6651%201684%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M7843%201665%20c0%20-22%202%20-30%204%20-17%202%2012%202%2030%200%2040%20-3%209%20-5%20-1%20-4%20-23z'/%3e%3cpath%20fill='%231078E0'%20d='M8002%201675%20c0%20-16%202%20-22%205%20-12%202%209%202%2023%200%2030%20-3%206%20-5%20-1%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M12451%201684%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M5199%201682%20c9%20-7%200%20-11%20-34%20-16%20-26%20-4%20-45%20-9%20-43%20-12%203%20-2%2026%20-1%2052%202%2044%206%2057%2023%2025%2032%20-11%203%20-12%202%200%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5383%201683%20c15%20-2%2037%20-2%2050%200%2012%202%200%204%20-28%204%20-27%200%20-38%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M8327%201684%20c-4%20-4%20-7%20-14%20-7%20-23%200%20-11%203%20-12%2011%20-4%206%206%2010%2016%207%2023%20-2%206%20-7%208%20-11%204z'/%3e%3cpath%20fill='%231078E0'%20d='M9793%201683%20c15%20-2%2037%20-2%2050%200%2012%202%200%204%20-28%204%20-27%200%20-38%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M12420%201590%20l0%20-100%20-415%200%20-415%200%201%20-32%20c2%20-31%202%20-31%206%20-5%20l4%2027%20415%200%20414%200%200%20105%20c0%2058%20-2%20105%20-5%20105%20-3%200%20-5%20-45%20-5%20-100z'/%3e%3cpath%20fill='%231078E0'%20d='M5258%201673%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M9678%201673%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M10821%201664%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M13700%201670%20c0%20-5%205%20-10%2010%20-10%206%200%2010%205%2010%2010%200%206%20-4%2010%20-10%2010%20-5%200%20-10%20-4%20-10%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6621%201654%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M7542%201645%20c0%20-16%202%20-22%205%20-12%202%209%202%2023%200%2030%20-3%206%20-5%20-1%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M9603%201663%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M13871%201654%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M9538%201653%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M12441%201644%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M5065%201640%20c-13%20-5%20-14%20-9%20-5%20-9%208%200%2024%204%2035%209%2013%205%2014%209%205%209%20-8%200%20-24%20-4%20-35%20-9z'/%3e%3cpath%20fill='%231078E0'%20d='M6644%201560%20c0%20-52%201%20-74%203%20-47%202%2026%202%2068%200%2095%20-2%2026%20-3%204%20-3%20-48z'/%3e%3cpath%20fill='%231078E0'%20d='M10812%201610%20c0%20-19%202%20-27%205%20-17%202%209%202%2025%200%2035%20-3%209%20-5%201%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M13450%201630%20c0%20-5%207%20-10%2015%20-10%208%200%2015%205%2015%2010%200%206%20-7%2010%20-15%2010%20-8%200%20-15%20-4%20-15%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M4998%201614%20c-39%20-21%20-35%20-28%205%20-8%2037%2019%2044%2024%2031%2024%20-5%20-1%20-21%20-8%20-36%20-16z'/%3e%3cpath%20fill='%231078E0'%20d='M9430%201620%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6941%201569%20c1%20-30%205%20-67%209%20-84%204%20-17%205%205%202%2050%20-6%2093%20-13%20114%20-11%2034z'/%3e%3cpath%20fill='%231078E0'%20d='M7853%201565%20c0%20-33%202%20-45%204%20-27%202%2018%202%2045%200%2060%20-2%2015%20-4%200%20-4%20-33z'/%3e%3cpath%20fill='%231078E0'%20d='M7993%201550%20c0%20-41%202%20-58%204%20-37%202%2020%202%2054%200%2075%20-2%2020%20-4%203%20-4%20-38z'/%3e%3cpath%20fill='%231078E0'%20d='M8293%201565%20c0%20-33%202%20-45%204%20-27%202%2018%202%2045%200%2060%20-2%2015%20-4%200%20-4%20-33z'/%3e%3cpath%20fill='%231078E0'%20d='M7533%201570%20c0%20-25%202%20-35%204%20-22%202%2012%202%2032%200%2045%20-2%2012%20-4%202%20-4%20-23z'/%3e%3cpath%20fill='%231078E0'%20d='M7552%201580%20c-1%20-19%20-4%20-53%20-7%20-75%20l-5%20-40%2011%2040%20c5%2022%208%2056%206%2075%20l-4%2035%20-1%20-35z'/%3e%3cpath%20fill='%231078E0'%20d='M9363%201581%20c-37%20-27%20-70%20-65%20-87%20-101%20-4%20-8%201%20-4%2011%2010%2023%2033%2072%2081%20103%20102%2014%209%2022%2017%2019%2017%20-3%201%20-24%20-12%20-46%20-28z'/%3e%3cpath%20fill='%231078E0'%20d='M4901%201534%20c-28%20-30%20-51%20-60%20-51%20-65%200%20-6%20-3%20-8%20-7%20-6%20-5%203%20-9%20-11%20-9%20-32%20l-2%20-36%2015%2043%20c8%2023%2037%2067%2065%2097%2027%2030%2048%2055%2045%2055%20-3%200%20-28%20-25%20-56%20-56z'/%3e%3cpath%20fill='%231078E0'%20d='M12442%201515%20c0%20-16%202%20-22%205%20-12%202%209%202%2023%200%2030%20-3%206%20-5%20-1%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M11292%201480%20c0%20-19%202%20-27%205%20-17%202%209%202%2025%200%2035%20-3%209%20-5%201%20-5%20-18z'/%3e%3cpath%20fill='%231078E0'%20d='M5527%201493%20c18%20-4%2023%20-12%2026%20-51%20l3%20-47%202%2053%20c2%2051%201%2052%20-25%2051%20-23%20-1%20-24%20-2%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M7840%201471%20c0%20-16%20-9%20-58%20-20%20-92%20-10%20-35%20-17%20-65%20-15%20-68%203%20-2%205%201%205%208%200%207%205%209%2012%205%207%20-4%208%20-3%204%204%20-4%206%20-4%2023%200%2037%204%2018%209%2023%2014%2015%205%20-9%209%20-9%2014%20-1%204%206%202%2011%20-3%2011%20-8%200%20-9%2019%20-5%2055%204%2030%204%2055%200%2055%20-3%200%20-6%20-13%20-6%20-29z'/%3e%3cpath%20fill='%231078E0'%20d='M9885%201490%20c-47%20-7%20-46%20-7%2015%20-5%2063%203%2064%203%2035%20-11%20-29%20-14%20-29%20-14%20-3%20-9%2016%203%2028%200%2031%20-8%203%20-6%206%200%206%2016%201%2029%203%2029%20-84%2017z'/%3e%3cpath%20fill='%231078E0'%20d='M5428%201483%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M6970%201476%20c0%20-9%205%20-16%2010%20-16%206%200%2010%204%2010%209%200%206%20-4%2013%20-10%2016%20-5%203%20-10%20-1%20-10%20-9z'/%3e%3cpath%20fill='%231078E0'%20d='M7861%201474%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M8301%201480%20c0%20-19%2017%20-59%2018%20-42%201%207%206%2010%2011%207%206%20-3%2010%201%2010%209%200%2018%20-20%2032%20-21%2014%200%20-7%20-4%20-4%20-9%207%20-5%2013%20-9%2014%20-9%205z'/%3e%3cpath%20fill='%231078E0'%20d='M1868%201475%20c-4%20-4%20-31%20-10%20-60%20-15%20-43%20-6%20-33%20-7%2052%20-6%2058%200%20143%20-3%20190%20-7%2047%20-5%2083%20-7%2080%20-4%20-3%203%20-52%2010%20-110%2016%20-58%206%20-114%2013%20-125%2016%20-11%204%20-23%203%20-27%200z'/%3e%3cpath%20fill='%231078E0'%20d='M5328%201471%20c12%20-7%2062%20-4%2062%205%200%202%20-17%204%20-37%204%20-24%200%20-33%20-3%20-25%20-9z'/%3e%3cpath%20fill='%231078E0'%20d='M9758%201473%20c12%20-2%2030%20-2%2040%200%209%203%20-1%205%20-23%204%20-22%200%20-30%20-2%20-17%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M5235%201460%20c-14%20-7%20-8%20-8%2020%20-3%2022%203%2042%207%2044%209%209%208%20-45%202%20-64%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5428%201463%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M5495%201460%20c4%20-6%2011%20-8%2016%20-5%2014%209%2011%2015%20-7%2015%20-8%200%20-12%20-5%20-9%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M7976%201453%20c-6%20-14%20-5%20-15%205%20-6%207%207%2010%2015%207%2018%20-3%203%20-9%20-2%20-12%20-12z'/%3e%3cpath%20fill='%231078E0'%20d='M8002%201450%20c0%20-14%202%20-19%205%20-12%202%206%202%2018%200%2025%20-3%206%20-5%201%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M9688%201463%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11823%201463%20c108%20-2%20286%20-2%20395%200%20108%201%2019%202%20-198%202%20-217%200%20-306%20-1%20-197%20-2z'/%3e%3cpath%20fill='%231078E0'%20d='M6652%201440%20c0%20-14%202%20-19%205%20-12%202%206%202%2018%200%2025%20-3%206%20-5%201%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M7513%201409%20c-12%20-27%20-20%20-49%20-18%20-49%208%200%2046%2081%2043%2090%20-2%204%20-13%20-14%20-25%20-41z'/%3e%3cpath%20fill='%231078E0'%20d='M9256%201445%20c-9%20-26%20-7%20-32%205%20-12%206%2010%209%2021%206%2023%20-2%203%20-7%20-2%20-11%20-11z'/%3e%3cpath%20fill='%231078E0'%20d='M9646%201449%20c4%20-7%200%20-9%20-14%20-5%20-15%205%20-31%20-2%20-56%20-25%20-20%20-17%20-36%20-35%20-36%20-39%200%20-4%2015%207%2034%2026%2031%2031%2065%2047%2051%2024%20-3%20-5%20-2%20-10%204%20-10%205%200%2013%205%2016%2010%203%206%2018%2010%2033%2011%2024%200%2025%201%207%209%20-29%2012%20-47%2012%20-39%20-1z'/%3e%3cpath%20fill='%231078E0'%20d='M1708%201443%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M5185%201440%20c-3%20-6%201%20-7%209%20-4%2018%207%2021%2014%207%2014%20-6%200%20-13%20-4%20-16%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M1567%201414%20c-44%20-14%20-77%20-27%20-74%20-30%202%20-3%2017%200%2033%207%2016%206%2061%2019%2099%2029%2039%2011%2059%2019%2045%2019%20-14%200%20-60%20-11%20-103%20-25z'/%3e%3cpath%20fill='%231078E0'%20d='M11300%201426%20c0%20-9%20-4%20-14%20-10%20-11%20-5%203%20-10%20-1%20-10%20-9%200%20-8%204%20-18%2010%20-21%2011%20-6%2026%2042%2016%2052%20-3%204%20-6%20-1%20-6%20-11z'/%3e%3cpath%20fill='%231078E0'%20d='M5149%201413%20c-13%20-16%20-12%20-17%204%20-4%2016%2013%2021%2021%2013%2021%20-2%200%20-10%20-8%20-17%20-17z'/%3e%3cpath%20fill='%231078E0'%20d='M13628%201423%20c23%20-2%2061%20-2%2085%200%2023%202%204%204%20-43%204%20-47%200%20-66%20-2%20-42%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M6970%201414%20c0%20-11%2038%20-74%2045%20-74%202%200%20-5%2017%20-17%2038%20-27%2046%20-28%2048%20-28%2036z'/%3e%3cpath%20fill='%231078E0'%20d='M8011%201404%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M8320%201414%20c0%20-15%2054%20-96%2076%20-115%2010%20-8%2032%20-16%2049%20-17%2029%20-2%2029%20-2%208%2013%20-12%208%20-28%2013%20-35%2010%20-17%20-7%20-38%2015%20-72%2075%20-14%2025%20-26%2040%20-26%2034z'/%3e%3cpath%20fill='%231078E0'%20d='M6661%201394%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M8836%201393%20c-10%20-24%20-7%20-28%207%20-9%2012%2016%2021%2014%20135%20-31%2072%20-28%20122%20-54%20122%20-62%200%20-28%20-63%20-130%20-108%20-174%20-26%20-25%20-73%20-61%20-105%20-80%20-43%20-26%20-51%20-35%20-33%20-33%2013%200%2022%203%2020%205%20-2%202%2017%2019%2044%2036%2064%2044%20135%20122%20166%20183%2033%2066%2033%2081%20-4%2093%20-17%206%20-27%2016%20-23%2022%203%206%201%207%20-6%203%20-12%20-8%20-153%2043%20-147%2053%202%203%20-11%207%20-29%208%20-22%201%20-35%20-4%20-39%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M9241%201394%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M9962%201390%20c0%20-14%202%20-19%205%20-12%202%206%202%2018%200%2025%20-3%206%20-5%201%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M11635%201390%20c-3%20-5%20-1%20-10%204%20-10%206%200%2011%205%2011%2010%200%206%20-2%2010%20-4%2010%20-3%200%20-8%20-4%20-11%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M5123%201375%20c-3%20-9%20-3%20-18%20-1%20-21%203%20-3%208%204%2011%2016%206%2023%20-1%2027%20-10%205z'/%3e%3cpath%20fill='%231078E0'%20d='M5541%201374%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M11311%201380%20c0%20-8%206%20-28%2014%20-45%2017%20-39%2018%20-21%200%2025%20-7%2019%20-14%2028%20-14%2020z'/%3e%3cpath%20fill='%231078E0'%20d='M11610%201387%20c0%20-18%2031%20-64%2067%20-99%2043%20-42%20115%20-78%20153%20-77%2018%201%2015%203%20-13%2010%20-70%2016%20-164%2079%20-151%20101%203%204%20-2%2011%20-11%2014%20-8%204%20-22%2018%20-30%2033%20-8%2014%20-14%2022%20-15%2018z'/%3e%3cpath%20fill='%231078E0'%20d='M1450%201370%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M4821%201310%20c0%20-41%204%20-84%208%20-95%204%20-11%206%2018%204%2065%20-6%20110%20-11%20125%20-12%2030z'/%3e%3cpath%20fill='%231078E0'%20d='M5520%201380%20c-1%20-3%20-3%20-23%20-4%20-44%20-1%20-32%20-9%20-46%20-46%20-79%20-25%20-22%20-36%20-35%20-25%20-29%2054%2028%2099%2099%2086%20134%20-6%2013%20-10%2021%20-11%2018z'/%3e%3cpath%20fill='%231078E0'%20d='M8014%201355%20c-9%20-19%20-9%20-27%202%20-36%208%20-6%2014%20-8%2014%20-3%201%205%2012%20-12%2026%20-38%2013%20-27%2027%20-48%2029%20-48%203%200%20-4%2019%20-16%2042%20-12%2023%20-26%2057%20-33%2074%20l-11%2033%20-11%20-24z%20m13%20-27%20c-3%20-8%20-6%20-5%20-6%206%20-1%2011%202%2017%205%2013%203%20-3%204%20-12%201%20-19z'/%3e%3cpath%20fill='%231078E0'%20d='M1398%201361%20c10%20-6%205%20-12%20-18%20-21%20-17%20-7%20-29%20-15%20-27%20-17%203%20-2%2021%204%2041%2013%2025%2012%2032%2020%2024%2026%20-7%204%20-17%208%20-23%208%20-5%200%20-4%20-4%203%20-9z'/%3e%3cpath%20fill='%231078E0'%20d='M5140%201360%20c0%20-5%205%20-10%2010%20-10%206%200%2010%205%2010%2010%200%206%20-4%2010%20-10%2010%20-5%200%20-10%20-4%20-10%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6662%201350%20c-6%20-10%20-8%20-21%20-3%20-24%205%20-3%2011%204%2014%2016%208%2029%204%2032%20-11%208z'/%3e%3cpath%20fill='%231078E0'%20d='M9211%201333%20c2%20-36%202%20-36%208%20-8%204%2027%206%2024%2012%20-20%20l6%20-50%20-1%2054%20c-1%2034%20-6%2056%20-13%2059%20-9%202%20-13%20-8%20-12%20-35z'/%3e%3cpath%20fill='%231078E0'%20d='M9560%201359%20c0%20-5%205%20-7%2010%20-4%206%203%2010%208%2010%2011%200%202%20-4%204%20-10%204%20-5%200%20-10%20-5%20-10%20-11z'/%3e%3cpath%20fill='%231078E0'%20d='M9931%201354%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M8801%201330%20c-12%20-17%20-26%20-28%20-30%20-26%20-4%203%20-8%20-2%20-8%20-10%200%20-16%2042%2018%2058%2049%2015%2026%205%2020%20-20%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M9531%201325%20c-1%20-36%2028%20-105%2044%20-105%203%200%20-2%2012%20-12%2027%20-10%2014%20-20%2047%20-24%2072%20l-6%2046%20-2%20-40z'/%3e%3cpath%20fill='%231078E0'%20d='M12126%201331%20c-9%20-16%20-29%20-40%20-46%20-55%20-32%20-27%20-57%20-35%20-44%20-14%204%207%203%208%20-5%204%20-6%20-4%20-8%20-12%20-5%20-18%204%20-6%20-1%20-8%20-15%20-3%20-14%204%20-23%201%20-27%20-9%20-3%20-9%20-18%20-17%20-33%20-17%20-22%20-2%20-23%20-2%20-4%20-6%2034%20-7%20119%2036%20158%2078%2019%2022%2035%2043%2035%2048%200%205%208%2012%2018%2014%2016%204%2016%205%200%206%20-10%200%20-24%20-12%20-32%20-28z'/%3e%3cpath%20fill='%231078E0'%20d='M4803%201305%20c0%20-27%202%20-38%204%20-22%202%2015%202%2037%200%2050%20-2%2012%20-4%200%20-4%20-28z'/%3e%3cpath%20fill='%231078E0'%20d='M7471%201336%20c-7%20-8%20-21%20-12%20-31%20-9%20-21%206%20-28%20-13%20-8%20-19%207%20-3%20-8%20-16%20-32%20-31%20-25%20-15%20-40%20-27%20-34%20-27%2014%200%2083%2050%20108%2079%2011%2011%2017%2021%2014%2021%20-3%200%20-11%20-6%20-17%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M12223%201324%20c27%20-14%2051%20-23%2054%20-21%205%205%20-83%2047%20-96%2047%20-3%20-1%2016%20-12%2042%20-26z'/%3e%3cpath%20fill='%231078E0'%20d='M5115%201310%20c11%20-73%2075%20-121%20155%20-118%20l45%202%20-48%203%20c-26%202%20-45%208%20-42%2013%203%204%20-2%2011%20-11%2014%20-8%203%20-12%202%20-9%20-4%2011%20-17%20-11%20-11%20-39%2011%20-14%2011%20-33%2041%20-41%2067%20-13%2039%20-14%2041%20-10%2012z'/%3e%3cpath%20fill='%231078E0'%20d='M7020%201326%20c0%20-2%208%20-10%2018%20-17%2015%20-13%2016%20-12%203%204%20-13%2016%20-21%2021%20-21%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M1295%201308%20c-5%20-5%20-19%20-16%20-30%20-24%20-15%20-11%20-11%20-11%2015%202%2043%2020%2043%2021%2033%2027%20-4%202%20-12%200%20-18%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M6685%201290%20c-4%20-12%20-4%20-24%20-1%20-27%203%20-4%206%202%206%2012%200%2018%201%2018%2016%20-1%2014%20-18%2014%20-18%203%206%20-16%2034%20-16%2034%20-24%2010z'/%3e%3cpath%20fill='%231078E0'%20d='M9896%201268%20c-37%20-39%20-33%20-44%207%20-9%2016%2014%2043%2053%2035%2050%20-2%200%20-21%20-19%20-42%20-41z'/%3e%3cpath%20fill='%231078E0'%20d='M5145%201290%20c-3%20-5%20-1%20-10%204%20-10%206%200%2011%205%2011%2010%200%206%20-2%2010%20-4%2010%20-3%200%20-8%20-4%20-11%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M7064%201291%20c13%20-21%20108%20-61%20141%20-60%2026%202%2027%202%205%206%20-49%207%20-110%2035%20-104%2045%204%207%202%208%20-5%204%20-6%20-4%20-19%20-2%20-28%206%20-14%2011%20-16%2011%20-9%20-1z'/%3e%3cpath%20fill='%231078E0'%20d='M7781%201273%20c-10%20-26%20-10%20-27%204%20-9%208%2011%2015%2023%2015%2028%200%2015%20-7%208%20-19%20-19z'/%3e%3cpath%20fill='%231078E0'%20d='M9552%201289%20c3%20-8%208%20-13%2011%20-11%209%203%207%2011%20-5%2018%20-6%204%20-8%200%20-6%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M11340%201297%20c0%20-5%205%20-17%2010%20-28%208%20-14%207%20-19%20-1%20-19%20-8%200%20-8%20-4%201%20-15%207%20-9%2015%20-13%2018%20-11%202%203%2012%20-3%2021%20-12%209%20-10%2013%20-13%209%20-7%20-3%205%20-18%2030%20-32%2055%20-14%2025%20-26%2041%20-26%2037z'/%3e%3cpath%20fill='%231078E0'%20d='M6370%201279%20c0%20-19%2041%20-59%2061%20-59%208%200%203%206%20-11%2013%20-13%207%20-30%2024%20-37%2037%20-8%2015%20-13%2019%20-13%209z'/%3e%3cpath%20fill='%231078E0'%20d='M8728%201283%20c6%20-2%209%20-10%206%20-15%20-4%20-7%20-2%20-8%205%20-4%2013%209%205%2026%20-12%2025%20-9%200%20-8%20-2%201%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8444%201266%20c11%20-9%2024%20-16%2030%20-16%2012%200%207%205%20-24%2019%20-24%2011%20-24%2011%20-6%20-3z'/%3e%3cpath%20fill='%231078E0'%20d='M9201%201264%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M12353%201264%20c21%20-11%2027%20-21%2024%20-35%20-3%20-10%20-1%20-17%204%20-13%2018%2011%208%2041%20-16%2052%20-37%2017%20-45%2014%20-12%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M8690%201250%20c-8%20-5%20-10%20-10%20-5%20-10%206%200%2017%205%2025%2010%208%205%2011%2010%205%2010%20-5%200%20-17%20-5%20-25%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M7280%201240%20l-45%20-7%2040%20-1%20c22%200%2049%203%2060%208%2023%2010%209%2010%20-55%200z'/%3e%3cpath%20fill='%231078E0'%20d='M8558%201233%20c23%20-2%2059%20-2%2080%200%2020%202%201%204%20-43%204%20-44%200%20-61%20-2%20-37%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M9241%201224%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M5390%201220%20c12%20-8%2012%20-10%201%20-10%20-8%200%20-12%20-2%20-9%20-5%203%20-3%2013%20-2%2022%201%2014%205%2015%209%204%2015%20-7%205%20-17%209%20-23%209%20-5%200%20-3%20-5%205%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M6051%201220%20c0%20-8%204%20-22%209%20-30%2012%20-18%2012%20-2%200%2025%20-6%2013%20-9%2015%20-9%205z'/%3e%3cpath%20fill='%231078E0'%20d='M6508%201223%20c21%20-4%2022%20-8%2022%20-123%200%20-86%20-3%20-120%20-12%20-123%20-8%20-2%20-7%20-3%202%20-3%2012%201%2015%2024%2018%20129%20l3%20127%20-28%20-1%20c-24%20-2%20-25%20-2%20-5%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M9830%201220%20c-9%20-6%20-10%20-10%20-3%20-10%206%200%2015%205%2018%2010%208%2012%204%2012%20-15%200z'/%3e%3cpath%20fill='%231078E0'%20d='M9597%201209%20c7%20-7%2015%20-10%2018%20-7%203%203%20-2%209%20-12%2012%20-14%206%20-15%205%20-6%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M6550%201140%20c0%20-40%202%20-71%204%20-69%207%207%2010%20129%203%20136%20-4%203%20-7%20-27%20-7%20-67z'/%3e%3cpath%20fill='%231078E0'%20d='M7680%201141%20c-36%20-37%20-76%20-75%20-90%20-85%20-24%20-17%20-24%20-17%205%200%2017%209%2043%2028%2058%2043%2016%2014%2030%2025%2033%2024%202%20-2%204%200%205%205%200%204%208%2016%2018%2027%2065%2076%2050%2068%20-29%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M9688%201203%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5333%201193%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M6081%201184%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M9638%201193%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M9748%201193%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M12340%201168%20c-15%20-21%20-17%20-28%20-6%20-19%2016%2013%2041%2051%2033%2051%20-2%200%20-14%20-15%20-27%20-32z'/%3e%3cpath%20fill='%231078E0'%20d='M6810%201136%20c30%20-31%2070%20-66%2088%20-77%2017%20-12%2030%20-25%2027%20-30%20-4%20-5%202%20-6%2011%20-2%2012%204%2015%203%2010%20-5%20-5%20-8%20-1%20-10%2010%20-5%2010%203%2015%202%2012%20-3%20-4%20-5%206%20-10%2020%20-11%2019%20-1%2011%207%20-33%2030%20-33%2018%20-91%2061%20-130%2097%20l-70%2064%2055%20-58z'/%3e%3cpath%20fill='%231078E0'%20d='M8125%201170%20c10%20-11%2020%20-20%2023%20-20%203%200%20-3%209%20-13%2020%20-10%2011%20-20%2020%20-23%2020%20-3%200%203%20-9%2013%20-20z'/%3e%3cpath%20fill='%231078E0'%20d='M11429%201156%20c17%20-18%2019%20-25%209%20-30%20-9%20-4%20-8%20-5%202%20-2%208%202%2031%20-10%2050%20-28%2019%20-17%2010%20-5%20-20%2027%20-30%2031%20-56%2057%20-59%2057%20-2%200%206%20-11%2018%20-24z'/%3e%3cpath%20fill='%231078E0'%20d='M6095%201138%20c3%20-17%201%20-28%20-5%20-28%20-6%200%20-8%20-5%20-4%20-11%2012%20-21%2025%2017%2014%2043%20-10%2022%20-10%2022%20-5%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M8150%201136%20c0%20-2%208%20-10%2018%20-17%2015%20-13%2016%20-12%203%204%20-13%2016%20-21%2021%20-21%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M9284%201122%20c4%20-7%202%20-12%20-5%20-12%20-8%200%20-8%20-4%201%20-15%207%20-8%2016%20-13%2020%20-10%208%205%2028%20-14%2029%20-27%201%20-5%202%20-7%204%20-5%202%201%2016%20-6%2032%20-16%2019%20-12%2013%20-4%20-15%2021%20-25%2022%20-49%2037%20-54%2034%20-5%20-3%20-7%202%20-3%2011%203%209%201%2019%20-5%2023%20-7%204%20-8%203%20-4%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M12265%201089%20c-52%20-43%20-103%20-72%20-164%20-94%20-20%20-8%20-29%20-14%20-20%20-14%2027%20-1%20151%2067%20199%20109%2059%2051%2049%2051%20-15%20-1z'/%3e%3cpath%20fill='%231078E0'%20d='M4870%201116%20c0%20-2%208%20-10%2018%20-17%2015%20-13%2016%20-12%203%204%20-13%2016%20-21%2021%20-21%2013z'/%3e%3cpath%20fill='%231078E0'%20d='M5515%201076%20c-22%20-23%20-36%20-38%20-31%20-34%205%203%2015%204%2023%201%207%20-3%2013%20-1%2011%203%20-5%2014%2038%2064%2047%2056%205%20-4%205%20-1%201%206%20-9%2015%20-3%2018%20-51%20-32z'/%3e%3cpath%20fill='%231078E0'%20d='M9935%201078%20l-40%20-43%2038%2034%2037%2035%200%20-58%20c0%20-50%203%20-59%2021%20-63%2016%20-4%2017%20-8%207%20-14%20-7%20-5%2043%20-8%20117%20-7%20l130%202%20-110%206%20-110%206%20118%202%20c64%201%20117%205%20117%2010%200%204%20-63%206%20-140%204%20l-139%20-3%20-3%2066%20-3%2066%20-40%20-43z'/%3e%3cpath%20fill='%231078E0'%20d='M8209%201088%20c24%20-27%20149%20-98%20172%20-98%207%200%20-18%2015%20-56%2033%20-39%2019%20-86%2047%20-105%2062%20-34%2028%20-34%2028%20-11%203z'/%3e%3cpath%20fill='%231078E0'%20d='M5860%201052%20c0%20-29%204%20-52%209%20-52%208%200%203%2090%20-5%2099%20-2%202%20-4%20-19%20-4%20-47z'/%3e%3cpath%20fill='%231078E0'%20d='M6118%201085%20c6%20-11%2025%20-33%2044%20-50%20l33%20-30%20-35%2040%20c-19%2022%20-39%2045%20-44%2050%20-5%206%20-4%201%202%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M4907%201069%20c7%20-9%209%20-20%205%20-24%20-4%20-5%20-1%20-5%206%20-1%207%205%2021%202%2030%20-6%2020%20-18%2042%20-31%2042%20-25%200%202%20-21%2019%20-47%2037%20-27%2019%20-42%2027%20-36%2019z'/%3e%3cpath%20fill='%231078E0'%20d='M11563%201042%20c4%20-4%2024%20-17%2046%20-27%2022%20-10%2039%20-21%2037%20-24%20-2%20-3%2012%20-7%2033%20-8%20l36%20-1%20-36%2013%20c-19%207%20-54%2022%20-78%2035%20-24%2012%20-41%2017%20-38%2012z'/%3e%3cpath%20fill='%231078E0'%20d='M9873%201029%20c-5%20-5%20-37%20-21%20-69%20-35%20-32%20-14%20-45%20-22%20-29%20-18%2017%204%2038%207%2047%208%209%200%2015%203%2012%207%20-2%204%204%2010%2015%2014%2011%203%2025%2012%2031%2020%2014%2017%209%2020%20-7%204z'/%3e%3cpath%20fill='%231078E0'%20d='M5410%201005%20c-25%20-13%20-41%20-24%20-37%20-25%2011%200%2087%2039%2087%2045%200%207%200%207%20-50%20-20z'/%3e%3cpath%20fill='%231078E0'%20d='M7520%201020%20c-9%20-6%20-10%20-10%20-3%20-10%206%200%2015%205%2018%2010%208%2012%204%2012%20-15%200z'/%3e%3cpath%20fill='%231078E0'%20d='M9412%201007%20c10%20-8%2015%20-17%2011%20-21%20-4%20-4%201%20-4%2010%200%2020%207%2020%207%20-13%2023%20-22%2011%20-23%2010%20-8%20-2z'/%3e%3cpath%20fill='%231078E0'%20d='M6214%20996%20c11%20-9%2024%20-16%2030%20-16%2012%200%207%205%20-24%2019%20-24%2011%20-24%2011%20-6%20-3z'/%3e%3cpath%20fill='%231078E0'%20d='M7450%20995%20c-19%20-7%20-28%20-14%20-20%20-14%208%200%2029%206%2045%2014%2039%2017%2021%2018%20-25%200z'/%3e%3cpath%20fill='%231078E0'%20d='M5030%20990%20c8%20-5%2020%20-10%2025%20-10%206%200%203%205%20-5%2010%20-8%205%20-19%2010%20-25%2010%20-5%200%20-3%20-5%205%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M9470%20980%20c8%20-5%2022%20-9%2030%20-9%2010%200%208%203%20-5%209%20-27%2012%20-43%2012%20-25%200z'/%3e%3cpath%20fill='%231078E0'%20d='M5085%20970%20c19%20-8%2073%20-14%2064%20-6%20-2%202%20-22%206%20-44%209%20-28%205%20-34%204%20-20%20-3z'/%3e%3cpath%20fill='%231078E0'%20d='M5300%20970%20c-34%20-7%20-34%20-7%20-5%20-8%2017%200%2039%203%2050%208%2024%2010%204%2010%20-45%200z'/%3e%3cpath%20fill='%231078E0'%20d='M6271%20969%20c13%20-8%2088%20-14%2078%20-5%20-2%202%20-24%206%20-48%209%20-29%204%20-40%202%20-30%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M7088%20973%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M7388%20973%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8438%20973%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8738%20973%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M11728%20973%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M11995%20970%20c-27%20-7%20-27%20-8%20-5%20-8%2014%200%2036%204%2050%208%2020%206%2021%208%205%208%20-11%200%20-33%20-4%20-50%20-8z'/%3e%3cpath%20fill='%231078E0'%20d='M6433%20963%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M7143%20963%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M7323%20963%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M8493%20963%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M8673%20963%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M9533%20963%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M9693%20963%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M10582%20963%20c37%20-2%20100%20-2%20140%200%2040%201%2010%203%20-67%203%20-77%200%20-110%20-1%20-73%20-3z'/%3e%3cpath%20fill='%231078E0'%20d='M11773%20963%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M5198%20953%20c12%20-2%2030%20-2%2040%200%209%203%20-1%205%20-23%204%20-22%200%20-30%20-2%20-17%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M7223%20953%20c15%20-2%2037%20-2%2050%200%2012%202%200%204%20-28%204%20-27%200%20-38%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M8568%20953%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M9593%20953%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11805%20950%20c-17%20-4%205%20-5%2050%20-2%2044%202%2082%206%2084%208%208%207%20-104%202%20-134%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5138%20943%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M5278%20943%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M6318%20943%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M6428%20943%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M7313%20943%20c9%20-2%2023%20-2%2030%200%206%203%20-1%205%20-18%205%20-16%200%20-22%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M8508%20943%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M8658%20943%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M9548%20943%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M9688%20943%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M11968%20943%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M82%20780%20c0%20-14%202%20-19%205%20-12%202%206%202%2018%200%2025%20-3%206%20-5%201%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M1800%20770%20c-44%20-7%20-44%20-7%20-9%20-8%2020%20-1%2052%20-4%2070%20-7%2026%20-4%2029%20-3%2014%204%20-15%207%20-6%2010%2040%2013%20l60%204%20-65%201%20c-36%200%20-85%20-3%20-110%20-7z'/%3e%3cpath%20fill='%231078E0'%20d='M1993%20763%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M54%20746%20c-3%20-8%20-4%20-23%20-1%20-33%203%20-12%206%20-8%208%2012%201%2019%205%207%209%20-30%20l7%20-60%201%2057%20c2%2055%20-12%2086%20-24%2054z'/%3e%3cpath%20fill='%231078E0'%20d='M1718%20753%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M2135%20737%20c136%20-38%20239%20-78%20223%20-89%20-9%20-7%20-7%20-8%208%20-3%2026%207%2052%20-4%20307%20-128%20117%20-57%20202%20-104%20196%20-108%20-11%20-7%2016%20-20%2051%20-24%208%20-2%2024%20-6%2035%20-10%20119%20-43%20-438%20233%20-595%20295%20-124%2048%20-261%2091%20-290%2089%20-8%200%2021%20-10%2065%20-22z%20m770%20-337%20c3%20-6%20-1%20-7%20-9%20-4%20-18%207%20-21%2014%20-7%2014%206%200%2013%20-4%2016%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M1678%20743%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M1768%20743%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M2008%20743%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M3708%20730%20c-14%20-54%20-17%20-90%20-7%20-90%2015%200%2021%2023%2017%2071%20-3%2036%20-5%2039%20-10%2019z'/%3e%3cpath%20fill='%231078E0'%20d='M1590%20710%20c8%20-5%2020%20-10%2025%20-10%206%200%203%205%20-5%2010%20-8%205%20-19%2010%20-25%2010%20-5%200%20-3%20-5%205%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M1525%20695%20c-25%20-12%20-26%20-14%20-5%20-9%2028%207%2060%2023%2045%2023%20-5%200%20-23%20-6%20-40%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M1385%20635%20c-102%20-50%20-108%20-60%20-9%20-15%2037%2016%2071%2027%2078%2023%206%20-3%207%20-2%203%202%20-4%205%203%2015%2015%2022%2052%2029%20-3%208%20-87%20-32z'/%3e%3cpath%20fill='%231078E0'%20d='M41%20644%20c0%20-11%203%20-14%206%20-6%203%207%202%2016%20-1%2019%20-3%204%20-6%20-2%20-5%20-13z'/%3e%3cpath%20fill='%231078E0'%20d='M85%20588%20c3%20-21%201%20-39%20-5%20-43%20-8%20-5%20-8%20-11%201%20-21%206%20-7%2015%20-12%2019%20-9%205%203%2012%20-4%2015%20-15%204%20-12%2034%20-50%2067%20-86%2033%20-35%2056%20-64%2052%20-64%20-5%200%20-1%20-7%209%20-15%2011%20-7%2026%20-11%2035%20-8%208%204%2013%202%209%20-3%20-3%20-5%202%20-10%2011%20-10%209%20-1%2026%20-4%2037%20-8%2011%20-4%20-5%206%20-35%2024%20-102%2057%20-167%20135%20-202%20238%20-14%2043%20-17%2048%20-13%2020z%20m180%20-248%20c3%20-6%20-1%20-7%20-9%20-4%20-18%207%20-21%2014%20-7%2014%206%200%2013%20-4%2016%20-10z'/%3e%3cpath%20fill='%231078E0'%20d='M1251%20571%20c-27%20-14%20-30%20-19%20-17%20-24%2010%20-4%2015%20-3%2011%203%20-3%206%20-2%2010%202%2010%205%200%2018%207%2029%2015%2026%2019%2016%2018%20-25%20-4z'/%3e%3cpath%20fill='%231078E0'%20d='M1170%20530%20c-19%20-11%20-31%20-19%20-27%20-20%2011%200%2067%2029%2067%2035%200%207%20-1%207%20-40%20-15z'/%3e%3cpath%20fill='%231078E0'%20d='M958%20424%20c-71%20-35%20-128%20-66%20-128%20-69%200%20-3%2032%2011%2070%2030%2039%2020%2076%2033%2082%2029%207%20-5%208%20-2%203%206%20-6%2010%20-4%2012%209%207%209%20-4%2015%20-3%2012%202%20-3%204%2013%2016%2035%2026%2022%2010%2042%2022%2045%2027%207%2011%2012%2013%20-128%20-58z'/%3e%3cpath%20fill='%231078E0'%20d='M786%20335%20c-18%20-13%20-18%20-14%202%20-12%2011%200%2019%204%2016%208%20-2%204%202%2010%208%2012%207%203%209%206%203%206%20-5%200%20-18%20-6%20-29%20-14z'/%3e%3cpath%20fill='%231078E0'%20d='M368%20293%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%231078E0'%20d='M661%20296%20c2%20-2%2018%20-6%2034%20-10%2022%20-5%2026%20-4%2015%204%20-14%209%20-59%2015%20-49%206z'/%3e%3cpath%20fill='%231078E0'%20d='M408%20283%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M603%20283%20c9%20-2%2025%20-2%2035%200%209%203%201%205%20-18%205%20-19%200%20-27%20-2%20-17%20-5z'/%3e%3cpath%20fill='%231078E0'%20d='M450%20271%20c-19%20-4%2014%20-6%2074%20-6%2061%200%2097%203%2080%206%20-37%208%20-109%208%20-154%200z'/%3e%3cpath%20fill='%23003CDC'%20d='M1818%203783%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%23003CDC'%20d='M1562%203652%20c-57%20-58%20-215%20-350%20-206%20-379%204%20-13%203%20-15%20-4%20-5%20-7%2011%20-11%2010%20-16%20-5%20-8%20-21%20-801%20-1584%20-966%20-1903%20-61%20-118%20-150%20-293%20-198%20-389%20l-87%20-174%200%20-101%20c1%20-129%2024%20-192%20100%20-275%2051%20-54%20165%20-128%20178%20-115%203%203%2011%202%2018%20-2%2018%20-11%2094%20-5%20138%2010%2020%208%2051%2011%2069%208%2025%20-3%2037%200%2047%2014%2017%2025%2012%2029%20-17%2013%20-29%20-15%20-24%20-10%2035%2035%2026%2020%2054%2036%2062%2036%209%200%2033%209%2055%2020%2033%2017%2039%2024%2038%2052%200%2018%203%2046%207%2062%206%2023%205%2027%20-5%2021%20-10%20-6%20-12%20-4%20-7%209%204%2010%207%2021%207%2026%200%204%2016%204%2035%200%2030%20-7%2035%20-5%2035%2010%200%2011%20-4%2022%20-10%2025%20-17%2010%20-11%2023%2017%2037%2014%207%2031%2022%2037%2033%206%2011%2017%2024%2024%2028%206%204%2012%2014%2012%2021%200%208%207%2016%2015%2020%208%203%2015%2012%2015%2019%200%207%2011%2020%2025%2027%2014%207%2025%2019%2025%2026%200%206%207%2015%2016%2018%2014%205%2013%209%20-7%2024%20-22%2018%20-22%2019%20-3%2033%2025%2019%2044%2053%2044%2080%200%2018%204%2021%2028%2016%2015%20-2%2036%20-2%2046%202%2018%207%2018%208%202%2014%20-23%209%20-11%2027%2020%2027%2020%200%2024%20-5%2023%20-27%200%20-24%20-2%20-25%20-8%20-9%20-7%2019%20-8%2019%20-13%20-1%20-6%20-21%2012%20-43%2045%20-56%2016%20-6%2018%20-1%2013%2054%20-6%2061%20-6%2061%2013%2040%2014%20-16%2017%20-31%2013%20-68%20-5%20-43%20-4%20-46%2017%20-40%2017%204%2021%201%2021%20-19%200%20-14%206%20-24%2015%20-24%209%200%2012%206%208%2018%20-4%2010%204%206%2021%20-11%2023%20-25%2032%20-28%2066%20-23%2022%203%2040%201%2040%20-4%200%20-4%206%20-10%2013%20-13%206%20-2%200%20-2%20-15%200%20-20%203%20-28%200%20-28%20-11%200%20-8%20-8%20-20%20-17%20-26%20-13%20-7%200%20-9%2050%20-5%2058%204%2068%202%2063%20-10%20-3%20-8%200%20-14%207%20-12%207%201%2011%20-8%2011%20-21%20-2%20-25%2011%20-33%2083%20-49%2028%20-7%2040%20-7%2036%200%20-4%206%204%207%2021%203%2020%20-5%2026%20-4%2020%205%20-5%209%202%2011%2027%206%2029%20-5%2031%20-4%2012%205%20-19%209%20-20%2013%20-10%2032%207%2011%2013%2023%2014%2025%201%202%2021%20-6%2045%20-17%2026%20-12%2095%20-27%20172%20-37%20235%20-31%20388%20-87%20825%20-305%20163%20-82%20320%20-155%20350%20-164%20153%20-45%20327%204%20433%20122%2098%20108%20126%20250%2081%20397%20-15%2049%20-58%20135%20-368%20735%20-84%20162%20-198%20386%20-253%20497%20-94%20187%20-152%20293%20-138%20250%205%20-15%202%20-17%20-17%20-12%20-12%204%20-26%2013%20-32%2019%20-5%207%20-15%2011%20-22%209%20-21%20-7%20-23%2016%20-3%2030%2012%208%2020%2018%2019%2023%20-4%2023%202%2026%2016%208%209%20-10%203%207%20-12%2038%20-15%2032%20-29%2056%20-31%2054%20-2%20-3%201%20-13%207%20-25%209%20-17%208%20-22%20-9%20-31%20-11%20-6%20-25%20-8%20-31%20-5%20-15%2010%20-39%20-14%20-32%20-33%205%20-14%204%20-15%20-8%20-6%20-8%206%20-40%209%20-71%208%20-46%20-3%20-58%200%20-61%2014%20-4%2013%20-5%2014%20-6%202%200%20-9%20-14%20-23%20-30%20-33%20-32%20-19%20-45%20-22%20-37%20-8%203%204%20-8%208%20-24%207%20-26%20-1%20-30%20-5%20-30%20-28%200%20-25%20-2%20-26%20-29%20-18%20-23%206%20-31%205%20-33%20-7%20-2%20-12%20-9%20-9%20-32%2010%20-25%2022%20-33%2024%20-58%2015%20-24%20-9%20-29%20-15%20-25%20-34%202%20-13%200%20-24%20-4%20-24%20-5%200%20-9%2011%20-9%2025%200%2021%20-2%2024%20-14%2013%20-20%20-19%20-14%20-52%2013%20-64%20l24%20-11%20-26%20-5%20c-15%20-3%20-24%20-1%20-21%203%203%205%20-2%209%20-10%209%20-9%200%20-14%20-8%20-13%20-20%201%20-11%206%20-19%2012%20-16%206%202%2010%20-8%209%20-22%200%20-14%206%20-38%2013%20-54%2014%20-27%2011%20-48%20-7%20-48%20-6%200%20-23%2027%20-40%2060%20-17%2033%20-32%2060%20-35%2060%20-3%200%2021%20-52%2052%20-115%2038%20-76%2060%20-110%2066%20-102%205%208%206%205%203%20-8%20-3%20-13%2055%20-139%20167%20-362%2095%20-189%20169%20-343%20164%20-343%20-4%200%20-21%206%20-36%2014%20-55%2029%20-262%2095%20-373%20120%20-136%2030%20-321%2049%20-397%2041%20-101%20-10%20-202%20-28%20-207%20-36%20-2%20-4%20-11%20-6%20-19%20-2%20-8%203%20-15%200%20-15%20-7%200%20-7%20-7%20-10%20-15%20-6%20-8%203%20-15%202%20-15%20-3%200%20-5%20-12%20-8%20-27%20-8%20-15%200%20-29%20-5%20-31%20-11%20-2%20-6%20-10%20-8%20-18%20-5%20-8%203%20-14%200%20-14%20-7%200%20-6%20-4%20-8%20-10%20-5%20-5%203%20-10%201%20-10%20-5%200%20-7%20-7%20-9%20-16%20-6%20-10%204%20-13%202%20-8%20-6%205%20-8%202%20-9%20-9%20-5%20-10%203%20-17%202%20-17%20-4%200%20-6%20-4%20-7%20-10%20-4%20-5%203%20-10%202%20-10%20-3%200%20-5%20-11%20-15%20-25%20-22%20-13%20-7%20-22%20-17%20-19%20-22%208%20-13%20-26%20-37%20-51%20-37%20-19%20-1%20-18%201%204%2018%2018%2014%2021%2020%2011%2026%20-9%206%20-11%204%20-5%20-5%206%20-10%204%20-12%20-9%20-7%20-11%205%20-15%203%20-10%20-5%205%20-8%202%20-9%20-10%20-5%20-11%205%20-15%203%20-10%20-5%205%20-8%202%20-9%20-10%20-5%20-10%204%20-15%203%20-11%20-3%203%20-6%201%20-10%20-4%20-10%20-20%200%20-26%20-3%20-37%20-18%20-7%20-9%20-16%20-12%20-24%20-7%20-9%205%20-11%204%20-6%20-3%207%20-11%20-6%20-17%20-27%20-13%20-5%201%20-6%20-3%20-3%20-8%206%20-9%20-22%20-26%20-37%20-23%20-4%201%20-6%20-1%20-5%20-5%202%20-9%20-67%20-83%20-77%20-83%20-4%200%20-4%2011%20-1%2024%207%2029%20222%20478%20370%20775%2059%20117%20105%20220%20102%20228%20-3%208%20-1%2011%204%208%2012%20-8%2033%2043%2024%2057%20-4%206%20-3%208%203%205%2013%20-8%2036%2041%2027%2055%20-4%206%20-3%208%203%205%2013%20-8%2036%2041%2027%2055%20-4%206%20-3%208%202%205%2013%20-7%20127%20221%20118%20235%20-4%206%20-3%208%203%205%2013%20-8%2036%2041%2027%2055%20-5%207%20-2%208%206%203%2010%20-6%2012%20-4%207%209%20-4%209%20-3%2015%202%2012%2011%20-7%2023%2022%2014%2036%20-3%206%20-2%208%204%205%2014%20-9%2064%2087%2057%20109%20-4%2013%20-3%2015%203%206%207%20-9%2012%20-6%2021%2013%2015%2033%205%2053%20-154%20304%20-125%20195%20-154%20259%20-154%20336%200%2066%2028%20155%2065%20205%2029%2040%2032%2049%2019%2054%20-10%204%20-31%20-10%20-62%20-42z%20m-11%20-60%20c-6%20-2%20-11%20-10%20-11%20-18%200%20-8%20-4%20-14%20-9%20-14%20-21%200%20-20%2019%202%2046%2020%2025%2022%2026%2026%209%202%20-11%20-2%20-21%20-8%20-23z%20m130%20-1099%20c-12%20-20%20-14%20-14%20-5%2012%204%209%209%2014%2011%2011%203%20-2%200%20-13%20-6%20-23z%20m-43%20-88%20c-13%20-27%20-26%20-41%20-31%20-36%20-6%206%202%2023%2019%2045%2016%2020%2030%2036%2031%2036%202%200%20-7%20-20%20-19%20-45z%20m672%20-354%20c0%20-3%20-4%20-12%20-8%20-19%20-6%20-9%20-12%20-6%20-20%2012%20-9%2021%20-8%2023%209%2019%2010%20-3%2019%20-8%2019%20-12z%20m-1126%20-865%20c-19%20-15%20-54%20-27%20-54%20-20%200%202%2014%2013%2032%2024%2035%2021%2053%2018%2022%20-4z%20m-77%20-57%20c-9%20-6%20-17%20-17%20-17%20-24%200%20-8%20-8%20-15%20-17%20-15%20-13%200%20-11%206%2012%2030%2016%2016%2031%2027%2034%2024%203%20-3%20-2%20-10%20-12%20-15z%20m120%20-121%20c-3%20-8%20-6%20-5%20-6%206%20-1%2011%202%2017%205%2013%203%20-3%204%20-12%201%20-19z%20m228%20-138%20c3%20-5%201%20-10%20-4%20-10%20-6%200%20-11%205%20-11%2010%200%206%202%2010%204%2010%203%200%208%20-4%2011%20-10z'/%3e%3cpath%20fill='%23003CDC'%20d='M3485%202826%20c-56%20-57%20-48%20-55%2018%204%2023%2020%2056%2064%2045%2059%20-2%20-1%20-30%20-29%20-63%20-63z'/%3e%3cpath%20fill='%23003CDC'%20d='M4007%202749%20c7%20-7%2015%20-10%2018%20-7%203%203%20-2%209%20-12%2012%20-14%206%20-15%205%20-6%20-5z'/%3e%3cpath%20fill='%23003CDC'%20d='M3790%202725%20c13%20-14%2026%20-25%2028%20-25%203%200%20-5%2011%20-18%2025%20-13%2014%20-26%2025%20-28%2025%20-3%200%205%20-11%2018%20-25z'/%3e%3cpath%20fill='%23003CDC'%20d='M3265%202700%20c-27%20-10%20-42%20-19%20-32%20-19%209%20-1%2017%20-5%2017%20-10%200%20-5%2016%20-12%2035%20-15%2031%20-6%2035%20-10%2033%20-34%20-2%20-20%203%20-29%2019%20-37%2040%20-17%2036%20-35%20-4%20-19%20-62%2026%20-45%209%2025%20-24%2048%20-23%2060%20-27%2043%20-12%20-22%2019%20-20%2025%204%2020%2039%20-8%2045%20-7%2045%205%200%207%20-14%2025%20-31%2039%20-17%2014%20-28%2030%20-25%2035%2011%2016%2066%2024%2081%2011%2011%20-9%2015%20-9%2015%20-1%200%206%2012%2016%2027%2022%2022%208%2024%2012%2013%2019%20-8%206%20-27%2010%20-42%2010%20-15%200%20-30%205%20-33%2010%20-4%206%20-13%207%20-23%201%20-20%20-10%20-79%20-13%20-106%20-5%20-15%205%20-16%208%20-5%2015%2022%2014%20-1%209%20-56%20-11z%20m15%20-14%20c0%20-11%20-19%20-15%20-25%20-6%20-3%205%201%2010%209%2010%209%200%2016%20-2%2016%20-4z'/%3e%3cpath%20fill='%23003CDC'%20d='M3163%202644%20c-8%20-21%2015%20-41%2057%20-48%20l35%20-5%20-35%2011%20c-39%2013%20-52%2027%20-45%2046%202%206%202%2012%20-1%2012%20-2%200%20-7%20-7%20-11%20-16z'/%3e%3cpath%20fill='%23003CDC'%20d='M3849%202599%20l-24%20-20%2028%2017%20c15%209%2027%2018%2027%2020%200%208%20-8%204%20-31%20-17z'/%3e%3cpath%20fill='%23003CDC'%20d='M2750%202591%20c0%20-6%204%20-13%2010%20-16%206%20-3%207%201%204%209%20-7%2018%20-14%2021%20-14%207z'/%3e%3cpath%20fill='%23003CDC'%20d='M3589%202568%20c21%20-24%2022%20-28%207%20-28%20-22%200%20-48%20-25%20-38%20-36%204%20-5%20-1%20-2%20-11%205%20-23%2018%20-72%2024%20-59%208%207%20-8%206%20-16%20-3%20-24%20-10%20-9%20-18%20-8%20-36%204%20-29%2020%20-18%208%2041%20-43%2029%20-25%2036%20-29%2020%20-10%20l-25%2028%2038%20-7%20c30%20-6%2037%20-4%2037%209%200%209%208%2016%2019%2016%2010%200%2022%207%2025%2016%206%2015%209%2015%2033%20-1%20l26%20-18%20-20%2029%20c-12%2016%20-34%2040%20-50%2054%20l-28%2025%2024%20-27z'/%3e%3cpath%20fill='%23003CDC'%20d='M3776%202540%20c-20%20-22%20-36%20-43%20-36%20-47%200%20-4%203%20-3%208%203%204%205%2023%2026%2041%2047%2019%2020%2032%2037%2029%2037%20-3%200%20-22%20-18%20-42%20-40z'/%3e%3cpath%20fill='%23003CDC'%20d='M2050%202481%20c0%20-6%204%20-13%2010%20-16%206%20-3%207%201%204%209%20-7%2018%20-14%2021%20-14%207z'/%3e%3cpath%20fill='%23003CDC'%20d='M3671%202448%20c-1%20-9%20-12%20-25%20-26%20-36%20-35%20-28%20-31%20-36%2013%20-29%2020%203%2031%203%2024%200%20-6%20-2%20-10%20-9%20-6%20-14%203%20-5%20-2%20-9%20-10%20-9%20-21%200%20-20%20-30%202%20-46%2023%20-18%2030%20-17%2028%204%200%2010%206%2016%2017%2016%2019%20-2%2023%2026%207%2042%20-8%208%20-6%2015%205%2024%2019%2016%2019%2037%200%2037%20-8%200%20-15%20-4%20-15%20-9%200%20-16%20-17%20-7%20-28%2015%20-8%2016%20-11%2018%20-11%205z%20m46%20-84%20c-3%20-3%20-12%20-4%20-19%20-1%20-8%203%20-5%206%206%206%2011%201%2017%20-2%2013%20-5z'/%3e%3cpath%20fill='%23003CDC'%20d='M3835%202370%20c-4%20-6%20-10%20-8%20-14%20-6%20-3%203%20-7%20-4%20-7%20-15%200%20-24%200%20-24%2020%206%209%2014%2014%2025%2012%2025%20-3%200%20-8%20-5%20-11%20-10z'/%3e%3cpath%20fill='%23003CDC'%20d='M3585%202319%20c15%20-30%2028%20-55%2030%20-57%201%20-1%201%2014%200%2035%20-2%2027%20-10%2042%20-30%2056%20l-27%2020%2027%20-54z'/%3e%3cpath%20fill='%23003CDC'%20d='M3616%202361%20c-4%20-7%20-5%20-15%20-2%20-18%209%20-9%2019%204%2014%2018%20-4%2011%20-6%2011%20-12%200z'/%3e%3cpath%20fill='%23003CDC'%20d='M13227%202346%20c-14%20-11%20-347%20-865%20-347%20-890%200%20-4%2039%20-5%2086%20-4%20l85%203%2038%20100%2038%20100%20186%203%20c215%203%20190%2016%20237%20-122%20l27%20-81%2091%20-3%20c51%20-1%2092%20-1%2092%201%200%203%20-39%20104%20-125%20327%20-31%2082%20-73%20191%20-172%20450%20l-48%20125%20-87%201%20c-53%201%20-93%20-3%20-101%20-10z%20m158%20-351%20c32%20-88%2060%20-165%2062%20-171%205%20-14%20-164%20-26%20-223%20-16%20l-41%207%2049%20135%20c73%20205%2080%20222%2088%20213%204%20-4%2033%20-80%2065%20-168z'/%3e%3cpath%20fill='%23003CDC'%20d='M13907%202354%20c-4%20-4%20-7%20-209%20-7%20-456%20l0%20-448%2090%200%2090%200%200%20453%200%20453%20-83%203%20c-45%201%20-86%20-1%20-90%20-5z'/%3e%3cpath%20fill='%23003CDC'%20d='M2241%202303%20c0%20-16%203%20-22%206%20-13%203%208%2010%2021%2016%2028%207%208%205%2012%20-7%2012%20-11%200%20-16%20-8%20-15%20-27z'/%3e%3cpath%20fill='%23003CDC'%20d='M3665%202270%20c-3%20-6%20-4%20-18%20-1%20-28%203%20-9%202%20-23%20-3%20-31%20-7%20-11%20-11%20-10%20-20%205%20-15%2026%20-13%2010%208%20-71%2018%20-68%2019%20-70%2052%20-73%20l34%20-2%20-31%2016%20c-24%2011%20-35%2026%20-42%2057%20-12%2046%20-9%2057%2016%2057%2017%20-1%2063%20-30%2047%20-30%20-5%200%20-4%20-5%202%20-11%207%20-7%2010%20-24%209%20-38%20-4%20-31%20-2%20-26%2029%2074%2012%2041%2019%2072%2014%2069%20-5%20-3%20-9%20-12%20-9%20-20%200%20-11%20-8%20-7%20-27%2011%20-28%2025%20-67%2033%20-78%2015z'/%3e%3cpath%20fill='%23003CDC'%20d='M10548%202143%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%23003CDC'%20d='M10678%202143%20c12%20-2%2032%20-2%2045%200%2012%202%202%204%20-23%204%20-25%200%20-35%20-2%20-22%20-4z'/%3e%3cpath%20fill='%23003CDC'%20d='M9698%201183%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%23003CDC'%20d='M1102%20999%20c2%20-7%2010%20-15%2017%20-17%208%20-3%2012%201%209%209%20-2%207%20-10%2015%20-17%2017%20-8%203%20-12%20-1%20-9%20-9z'/%3e%3cpath%20fill='%23003CDC'%20d='M5608%20983%20c6%20-2%2018%20-2%2025%200%206%203%201%205%20-13%205%20-14%200%20-19%20-2%20-12%20-5z'/%3e%3cpath%20fill='%23003CDC'%20d='M1818%20773%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3cpath%20fill='%23003CDC'%20d='M1405%20705%20c-34%20-16%20-30%20-18%2042%20-19%2050%20-2%2051%20-1%2033%2016%20-22%2021%20-34%2021%20-75%203z'/%3e%3cpath%20fill='%23003CDC'%20d='M890%20610%20c0%20-6%207%20-10%2015%20-10%208%200%2015%202%2015%204%200%202%20-7%206%20-15%2010%20-8%203%20-15%201%20-15%20-4z'/%3e%3cpath%20fill='%23003CDC'%20d='M1230%20612%20c0%20-5%207%20-17%2016%20-28%2015%20-18%2015%20-18%205%203%20-8%2016%20-8%2023%202%2026%207%203%205%206%20-5%206%20-10%201%20-18%20-3%20-18%20-7z'/%3e%3cpath%20fill='%23003CDC'%20d='M1018%20503%20c7%20-3%2016%20-2%2019%201%204%203%20-2%206%20-13%205%20-11%200%20-14%20-3%20-6%20-6z'/%3e%3c/g%3e%3c/svg%3e";
-function I2({
+function T2({
   lang: e = "en",
   logoSrc: a,
   layout: l = "horizontal",
@@ -5554,29 +5555,29 @@ function I2({
   className: c,
   imageClassName: o
 }) {
-  const m = a ?? Ke, h = i ?? I.logoPx[n], p = Math.round(h * K0), f = {
+  const m = a ?? Ke, h = i ?? I.logoPx[n], f = Math.round(h * K0), p = {
     md: "text-xs",
     lg: "text-sm"
-  }[n], w = /* @__PURE__ */ t(
+  }[n], y = /* @__PURE__ */ t(
     "img",
     {
       src: m,
       alt: "Alocare AI",
-      width: p,
+      width: f,
       height: h,
       className: u("shrink-0 object-contain object-left", o),
-      style: { width: p, height: h }
+      style: { width: f, height: h }
     }
-  ), y = s ? /* @__PURE__ */ t("span", { className: u("font-medium text-slate-600", f), children: b(O.brandTagline, e) }) : null;
-  return l === "mark" ? /* @__PURE__ */ t("div", { className: u("inline-flex", c), children: w }) : l === "stacked" ? /* @__PURE__ */ r("div", { className: u("flex flex-col items-center gap-2 text-center", c), children: [
-    w,
-    y
+  ), w = s ? /* @__PURE__ */ t("span", { className: u("font-medium text-slate-600", p), children: b(O.brandTagline, e) }) : null;
+  return l === "mark" ? /* @__PURE__ */ t("div", { className: u("inline-flex", c), children: y }) : l === "stacked" ? /* @__PURE__ */ r("div", { className: u("flex flex-col items-center gap-2 text-center", c), children: [
+    y,
+    w
   ] }) : /* @__PURE__ */ r("div", { className: u("flex flex-col gap-1", c), children: [
-    w,
-    y
+    y,
+    w
   ] });
 }
-function Ks({
+function Zs({
   lang: e = "en",
   onLocaleChange: a,
   logoSrc: l,
@@ -5591,7 +5592,7 @@ function Ks({
         i
       ),
       children: /* @__PURE__ */ r("div", { className: "mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4", children: [
-        s ? /* @__PURE__ */ t(I2, { lang: e, logoSrc: l, layout: "horizontal", loginSize: "md" }) : /* @__PURE__ */ t("span", { className: "flex-1", "aria-hidden": !0 }),
+        s ? /* @__PURE__ */ t(T2, { lang: e, logoSrc: l, layout: "horizontal", loginSize: "md" }) : /* @__PURE__ */ t("span", { className: "flex-1", "aria-hidden": !0 }),
         a ? /* @__PURE__ */ t(
           u2,
           {
@@ -5644,10 +5645,10 @@ function p0({
   logoSrc: c,
   className: o
 }) {
-  const m = Cl[e], h = i ?? b(m.title, l), p = n ?? b(m.subtitle, l);
+  const m = Cl[e], h = i ?? b(m.title, l), f = n ?? b(m.subtitle, l);
   return e === "alocare" && a === "portal" ? /* @__PURE__ */ r("div", { className: u(I.brandBlock[s], o), children: [
     /* @__PURE__ */ t(
-      I2,
+      T2,
       {
         lang: l,
         logoSrc: c,
@@ -5667,12 +5668,12 @@ function p0({
             I.subtitleMax[s],
             "mx-auto text-balance"
           ),
-          children: p
+          children: f
         }
       )
     ] })
   ] }) : /* @__PURE__ */ r("div", { className: u("mb-6", o), children: [
-    e === "alocare" ? /* @__PURE__ */ t("div", { className: "mb-6 flex justify-center", children: /* @__PURE__ */ t(I2, { lang: l, logoSrc: c, layout: "horizontal", loginSize: s }) }) : /* @__PURE__ */ t(
+    e === "alocare" ? /* @__PURE__ */ t("div", { className: "mb-6 flex justify-center", children: /* @__PURE__ */ t(T2, { lang: l, logoSrc: c, layout: "horizontal", loginSize: s }) }) : /* @__PURE__ */ t(
       "div",
       {
         className: u(
@@ -5687,7 +5688,7 @@ function p0({
     ),
     /* @__PURE__ */ r("div", { className: "text-center", children: [
       /* @__PURE__ */ t("h1", { className: I.title[s], children: h }),
-      /* @__PURE__ */ t("p", { className: I.subtitle[s], children: p })
+      /* @__PURE__ */ t("p", { className: I.subtitle[s], children: f })
     ] })
   ] });
 }
@@ -5748,7 +5749,7 @@ function Sl({ className: e }) {
     )
   ] });
 }
-function Js({
+function Pl({
   lang: e = "en",
   loginSize: a = "lg",
   onClick: l,
@@ -5772,13 +5773,13 @@ function Js({
     }
   );
 }
-function Zs({ lang: e = "en", className: a }) {
+function _l({ lang: e = "en", className: a }) {
   return /* @__PURE__ */ r("div", { className: u("relative my-6", a), children: [
     /* @__PURE__ */ t("div", { className: "absolute inset-0 flex items-center", "aria-hidden": !0, children: /* @__PURE__ */ t("div", { className: "w-full border-t border-slate-200" }) }),
     /* @__PURE__ */ t("div", { className: "relative flex justify-center text-xs font-medium uppercase tracking-wide", children: /* @__PURE__ */ t("span", { className: "bg-white px-3 text-slate-500", children: b(O.orDivider, e) }) })
   ] });
 }
-function Pl({ message: e, className: a }) {
+function Ll({ message: e, className: a }) {
   return e ? /* @__PURE__ */ r(
     "div",
     {
@@ -5794,7 +5795,7 @@ function Pl({ message: e, className: a }) {
     }
   ) : null;
 }
-function _l({
+function Il({
   lang: e = "en",
   loginSize: a = "lg",
   label: l = d("Password", "Kata sandi"),
@@ -5888,15 +5889,15 @@ function b0({
   showRememberMe: o = !1,
   submitLabel: m,
   showPasswordToggle: h = !1,
-  className: p
+  className: f
 }) {
-  const [f, w] = _(""), [y, z] = _(""), [M, S] = _(!1), A = c ? P : l2, L = m ?? b(l === "email" ? O.signIn : O.login, e), G = l === "email" ? O.email : O.username, U = c ? void 0 : I.input[a], q = c ? void 0 : I.label[a], Q = c ? "space-y-4" : I.form[a], H = c ? "xl" : I.button[a];
+  const [p, y] = _(""), [w, M] = _(""), [z, S] = _(!1), A = c ? P : l2, L = m ?? b(l === "email" ? O.signIn : O.login, e), G = l === "email" ? O.email : O.username, U = c ? void 0 : I.input[a], q = c ? void 0 : I.label[a], Q = c ? "space-y-4" : I.form[a], H = c ? "xl" : I.button[a];
   return /* @__PURE__ */ r(
     "form",
     {
-      className: u(Q, p),
+      className: u(Q, f),
       onSubmit: (g) => {
-        g.preventDefault(), s == null || s({ identifier: f, password: y });
+        g.preventDefault(), s == null || s({ identifier: p, password: w });
       },
       children: [
         /* @__PURE__ */ t(
@@ -5906,20 +5907,20 @@ function b0({
             type: l === "email" ? "email" : "text",
             label: G,
             labelClassName: q,
-            value: f,
-            onChange: (g) => w(g.target.value),
+            value: p,
+            onChange: (g) => y(g.target.value),
             autoComplete: l === "email" ? "email" : "username",
             className: U,
             required: !0
           }
         ),
         h ? /* @__PURE__ */ t(
-          _l,
+          Il,
           {
             lang: e,
             loginSize: a,
-            value: y,
-            onChange: (g) => z(g.target.value),
+            value: w,
+            onChange: (g) => M(g.target.value),
             labelClassName: q,
             className: U,
             required: !0
@@ -5931,8 +5932,8 @@ function b0({
             type: "password",
             label: O.password,
             labelClassName: q,
-            value: y,
-            onChange: (g) => z(g.target.value),
+            value: w,
+            onChange: (g) => M(g.target.value),
             autoComplete: "current-password",
             className: U,
             required: !0
@@ -5950,7 +5951,7 @@ function b0({
                 "input",
                 {
                   type: "checkbox",
-                  checked: M,
+                  checked: z,
                   onChange: (g) => S(g.target.checked),
                   className: "h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-600"
                 }
@@ -5959,7 +5960,7 @@ function b0({
             ]
           }
         ) : null,
-        i ? /* @__PURE__ */ t(Pl, { message: i }) : null,
+        i ? /* @__PURE__ */ t(Ll, { message: i }) : null,
         /* @__PURE__ */ t(
           A,
           {
@@ -5976,35 +5977,36 @@ function b0({
     }
   );
 }
-function Ll({
+function Tl({
   lang: e = "en",
   onLocaleChange: a,
   onLogin: l,
   onForgotPassword: s,
-  error: i,
-  loading: n = !1,
-  logoSrc: c,
-  className: o
+  googleAuthUrl: i,
+  error: n,
+  loading: c = !1,
+  logoSrc: o,
+  className: m
 }) {
-  const [m, h] = _(""), [p, f] = _(""), w = (y) => {
-    y.preventDefault(), l == null || l({ identifier: m, password: p });
+  const [h, f] = _(""), [p, y] = _(""), w = (M) => {
+    M.preventDefault(), l == null || l({ identifier: h, password: p });
   };
   return /* @__PURE__ */ t(
     "div",
     {
       className: u(
         "flex min-h-screen items-center justify-center bg-slate-50 px-4",
-        o
+        m
       ),
       children: /* @__PURE__ */ r(D, { className: "w-full max-w-md shadow-lg", children: [
         /* @__PURE__ */ r(h2, { className: "flex flex-col items-stretch gap-0 border-b border-slate-100 px-5 py-4", children: [
           a ? /* @__PURE__ */ t("div", { className: "mb-4 flex justify-end", children: /* @__PURE__ */ t(u2, { locale: e, onChange: a }) }) : null,
           /* @__PURE__ */ r("div", { className: "flex flex-col items-center text-center", children: [
             /* @__PURE__ */ t(
-              I2,
+              T2,
               {
                 lang: e,
-                logoSrc: c,
+                logoSrc: o,
                 layout: "mark",
                 logoSize: 48,
                 className: "mx-auto"
@@ -6015,6 +6017,20 @@ function Ll({
           ] })
         ] }),
         /* @__PURE__ */ r($, { children: [
+          i ? /* @__PURE__ */ r(S2, { children: [
+            /* @__PURE__ */ t(
+              Pl,
+              {
+                lang: e,
+                loginSize: "lg",
+                className: "w-full",
+                onClick: () => {
+                  window.location.href = i;
+                }
+              }
+            ),
+            /* @__PURE__ */ t(_l, { lang: e })
+          ] }) : null,
           /* @__PURE__ */ r("form", { onSubmit: w, className: "space-y-4", children: [
             /* @__PURE__ */ t(
               e2,
@@ -6022,8 +6038,8 @@ function Ll({
                 type: "email",
                 label: O.email,
                 lang: e,
-                value: m,
-                onChange: (y) => h(y.target.value),
+                value: h,
+                onChange: (M) => f(M.target.value),
                 required: !0,
                 autoComplete: "email"
               }
@@ -6035,13 +6051,13 @@ function Ll({
                 label: O.password,
                 lang: e,
                 value: p,
-                onChange: (y) => f(y.target.value),
+                onChange: (M) => y(M.target.value),
                 required: !0,
                 autoComplete: "current-password"
               }
             ),
-            i ? /* @__PURE__ */ t("p", { className: "text-sm text-red-600", role: "alert", children: i }) : null,
-            /* @__PURE__ */ t(l2, { type: "submit", fullWidth: !0, loading: n, size: "lg", children: b(O.signIn, e) })
+            n ? /* @__PURE__ */ t("p", { className: "text-sm text-red-600", role: "alert", children: n }) : null,
+            /* @__PURE__ */ t(l2, { type: "submit", fullWidth: !0, loading: c, size: "lg", children: b(O.signIn, e) })
           ] }),
           /* @__PURE__ */ t("div", { className: "mt-4 text-center", children: /* @__PURE__ */ t(
             "button",
@@ -6057,7 +6073,7 @@ function Ll({
     }
   );
 }
-function Il({
+function Rl({
   lang: e = "en",
   onLocaleChange: a,
   onLogin: l,
@@ -6099,7 +6115,7 @@ function Il({
     }
   );
 }
-function Tl({
+function jl({
   lang: e = "en",
   onLocaleChange: a,
   onLogin: l,
@@ -6159,13 +6175,13 @@ function Ys({
   const [l, s] = _(a);
   switch (e) {
     case "admin":
-      return /* @__PURE__ */ t(Il, { lang: l, onLocaleChange: s });
+      return /* @__PURE__ */ t(Rl, { lang: l, onLocaleChange: s });
     case "hr":
-      return /* @__PURE__ */ t(Tl, { lang: l, onLocaleChange: s });
+      return /* @__PURE__ */ t(jl, { lang: l, onLocaleChange: s });
     case "emr":
       return /* @__PURE__ */ t(Je, { lang: l });
     default:
-      return /* @__PURE__ */ t(Ll, { lang: l, onLocaleChange: s });
+      return /* @__PURE__ */ t(Tl, { lang: l, onLocaleChange: s });
   }
 }
 const n2 = {
@@ -6211,7 +6227,7 @@ const n2 = {
     session: "POST /telemedicine/sessions",
     end: "POST /telemedicine/{session_id}/end"
   }
-}, Rl = [
+}, Dl = [
   { id: "dashboard", icon: "layout-dashboard", label: d("Dashboard", "Dasbor") },
   { id: "upload", icon: "upload", label: d("Upload Report", "Unggah Laporan") },
   { id: "queue", icon: "users", label: d("Patient Queue", "Antrian Pasien") },
@@ -6220,7 +6236,7 @@ const n2 = {
   { id: "chat", icon: "message-circle", label: d("Chat Assistant", "Asisten Chat") },
   { id: "history", icon: "history", label: d("History", "Riwayat") },
   { id: "settings", icon: "settings", label: d("Settings", "Pengaturan") }
-], jl = {
+], Ol = {
   uploaded: d("Uploaded", "Berhasil diunggah"),
   ocr: d("Processing OCR", "Memproses OCR"),
   analyzing: d("AI analyzing", "AI menganalisis"),
@@ -6306,14 +6322,14 @@ function Ye({
     }
   );
 }
-const Dl = [
+const $l = [
   { id: "worklist", label: d("Worklist", "Antrian") },
   { id: "consultation", label: d("Consultation", "Konsultasi") },
   { id: "medications", label: d("Medications", "Obat") },
   { id: "labrad", label: d("Lab / Rad", "Lab / Rad") },
   { id: "ai-voice", label: d("AI Voice", "Suara AI") },
   { id: "reports", label: d("Reports", "Laporan") }
-], Ol = {
+], Bl = {
   pending: d("Waiting", "Menunggu"),
   in_progress: d("In Consultation", "Sedang Konsultasi"),
   completed: d("Finished", "Selesai"),
@@ -6323,12 +6339,12 @@ const Dl = [
   o: d("Objective", "Objektif"),
   a: d("Assessment", "Asesmen"),
   p: d("Planning", "Perencanaan")
-}, $l = {
+}, Vl = {
   worklist: xe,
   consultation: s0,
   medications: Me,
   labrad: ge,
-  "ai-voice": T2,
+  "ai-voice": R2,
   reports: m2
 };
 function g2({
@@ -6342,24 +6358,24 @@ function g2({
   dateLabel: o,
   onLocaleChange: m,
   onLogout: h,
-  offlineStatus: p = "online",
-  orientation: f = "landscape",
-  appTitle: w,
-  className: y
+  offlineStatus: f = "online",
+  orientation: p = "landscape",
+  appTitle: y,
+  className: w
 }) {
-  const z = w ?? "EMR MediConsult AI", M = n ?? (a === "id" ? "Penyakit Dalam" : "Internal Medicine"), S = o ?? (/* @__PURE__ */ new Date()).toLocaleDateString(a === "id" ? "id-ID" : "en-GB", {
+  const M = y ?? "EMR MediConsult AI", z = n ?? (a === "id" ? "Penyakit Dalam" : "Internal Medicine"), S = o ?? (/* @__PURE__ */ new Date()).toLocaleDateString(a === "id" ? "id-ID" : "en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric"
   });
-  return /* @__PURE__ */ r("div", { className: u("flex min-h-screen flex-col bg-slate-100", y), children: [
+  return /* @__PURE__ */ r("div", { className: u("flex min-h-screen flex-col bg-slate-100", w), children: [
     /* @__PURE__ */ t("header", { className: "sticky top-0 z-20 border-b border-slate-200 bg-white px-4 py-3 md:px-6", children: /* @__PURE__ */ r("div", { className: "flex items-center justify-between gap-4", children: [
       /* @__PURE__ */ r("div", { children: [
-        /* @__PURE__ */ t("p", { className: "text-lg font-bold text-slate-900", children: z }),
+        /* @__PURE__ */ t("p", { className: "text-lg font-bold text-slate-900", children: M }),
         /* @__PURE__ */ r("p", { className: "text-sm text-slate-600", children: [
           i,
           " | ",
-          M,
+          z,
           " | ",
           S
         ] }),
@@ -6378,12 +6394,12 @@ function g2({
         {
           className: u(
             "shrink-0 overflow-y-auto border-r border-slate-200 bg-white p-2",
-            f === "landscape" ? "w-52" : "w-20"
+            p === "landscape" ? "w-52" : "w-20"
           ),
           "aria-label": "EMR navigation",
           children: [
-            /* @__PURE__ */ t("ul", { className: "space-y-1", children: Dl.map((A) => {
-              const L = $l[A.id], G = l === A.id;
+            /* @__PURE__ */ t("ul", { className: "space-y-1", children: $l.map((A) => {
+              const L = Vl[A.id], G = l === A.id;
               return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
                 "button",
                 {
@@ -6396,8 +6412,8 @@ function g2({
                   "aria-current": G ? "page" : void 0,
                   children: [
                     /* @__PURE__ */ t(L, { className: "h-5 w-5 shrink-0", "aria-hidden": !0 }),
-                    f === "landscape" ? b(A.label, a) : null,
-                    f === "portrait" ? /* @__PURE__ */ t("span", { className: "sr-only", children: b(A.label, a) }) : null
+                    p === "landscape" ? b(A.label, a) : null,
+                    p === "portrait" ? /* @__PURE__ */ t("span", { className: "sr-only", children: b(A.label, a) }) : null
                   ]
                 }
               ) }, A.id);
@@ -6415,13 +6431,13 @@ function g2({
             className: "mb-4"
           }
         ),
-        p !== "online" ? /* @__PURE__ */ t(Ze, { status: p, lang: a, className: "mb-4" }) : null,
+        f !== "online" ? /* @__PURE__ */ t(Ze, { status: f, lang: a, className: "mb-4" }) : null,
         e
       ] })
     ] })
   ] });
 }
-const Bl = [
+const Gl = [
   {
     id: "1",
     patientId: "p1",
@@ -6449,15 +6465,15 @@ const Bl = [
     insurance: "BPJS",
     status: "completed"
   }
-], Vl = {
+], Fl = {
   pending: "info",
   in_progress: "ai",
   completed: "normal",
   cancelled: "critical"
 };
-function Gl({
+function Hl({
   lang: e = "en",
-  patients: a = Bl,
+  patients: a = Gl,
   onCallPatient: l,
   ...s
 }) {
@@ -6502,7 +6518,7 @@ function Gl({
                 i.insurance
               ] })
             ] }),
-            /* @__PURE__ */ t(Y, { variant: Vl[i.status], children: b(Ol[i.status], e) })
+            /* @__PURE__ */ t(Y, { variant: Fl[i.status], children: b(Bl[i.status], e) })
           ] }),
           /* @__PURE__ */ t(
             P,
@@ -6521,7 +6537,7 @@ function Gl({
     /* @__PURE__ */ t("p", { className: "mt-4 text-xs text-slate-400", children: n2.worklist.list })
   ] });
 }
-function R2({
+function j2({
   lang: e = "en",
   name: a,
   admissionNo: l,
@@ -6581,7 +6597,7 @@ const W0 = {
     hint: { en: "Treatment, referrals, follow-up", id: "Terapi, rujukan, kontrol" }
   }
 };
-function Fl({
+function Wl({
   lang: e = "en",
   soap: a,
   onSaveSoap: l,
@@ -6597,7 +6613,7 @@ function Fl({
   });
   return /* @__PURE__ */ r(g2, { lang: e, activeNav: "consultation", ...i, children: [
     /* @__PURE__ */ t(
-      R2,
+      j2,
       {
         lang: e,
         name: "Budi Santoso",
@@ -6608,29 +6624,29 @@ function Fl({
         className: "mb-4"
       }
     ),
-    /* @__PURE__ */ t("div", { className: "mb-4 grid grid-cols-4 gap-2", children: ["subjective", "objective", "assessment", "plan"].map((p) => /* @__PURE__ */ r(
+    /* @__PURE__ */ t("div", { className: "mb-4 grid grid-cols-4 gap-2", children: ["subjective", "objective", "assessment", "plan"].map((f) => /* @__PURE__ */ r(
       "button",
       {
         type: "button",
-        onClick: () => c(p),
+        onClick: () => c(f),
         className: u(
           "min-h-14 touch-manipulation rounded-xl border-2 px-2 py-3 text-center transition-colors",
-          n === p ? "border-teal-600 bg-teal-50" : "border-slate-200 bg-white hover:bg-slate-50"
+          n === f ? "border-teal-600 bg-teal-50" : "border-slate-200 bg-white hover:bg-slate-50"
         ),
         children: [
-          /* @__PURE__ */ t("span", { className: "text-xl font-bold text-teal-700", children: W0[p].letter }),
+          /* @__PURE__ */ t("span", { className: "text-xl font-bold text-teal-700", children: W0[f].letter }),
           /* @__PURE__ */ t("p", { className: "mt-1 text-xs font-semibold text-slate-800", children: b(
             {
               subjective: C2.s,
               objective: C2.o,
               assessment: C2.a,
               plan: C2.p
-            }[p],
+            }[f],
             e
           ) })
         ]
       },
-      p
+      f
     )) }),
     /* @__PURE__ */ r("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
       /* @__PURE__ */ t("p", { className: "mb-2 text-xs text-slate-500", children: b(W0[n].hint, e) }),
@@ -6640,9 +6656,9 @@ function Fl({
           lang: e,
           rows: 10,
           value: o[n] ?? "",
-          onChange: (p) => {
-            const f = { ...o, [n]: p.target.value };
-            m(f), l == null || l(f);
+          onChange: (f) => {
+            const p = { ...o, [n]: f.target.value };
+            m(p), l == null || l(p);
           },
           className: "text-base"
         }
@@ -6654,7 +6670,7 @@ function Fl({
           {
             className: "mt-1 h-12 w-full rounded-lg border border-slate-200 px-3 text-sm",
             value: o.icd10Code ?? "",
-            onChange: (p) => m({ ...o, icd10Code: p.target.value }),
+            onChange: (f) => m({ ...o, icd10Code: f.target.value }),
             placeholder: n2.icd10.search
           }
         )
@@ -6667,23 +6683,23 @@ function Fl({
     /* @__PURE__ */ t("p", { className: "mt-2 text-xs text-slate-400", children: n2.consultations.updateSoap })
   ] });
 }
-const Hl = [
+const Ul = [
   { id: "1", name: "Amoxicillin 500mg", dose: "3×1 / day oral", availability: "available" },
   { id: "2", name: "Metformin 500mg", dose: "2×1 / day oral", availability: "available" },
   { id: "3", name: "Lansoprazole 30mg", dose: "1×1 / day oral", availability: "limited" }
-], Wl = {
+], ql = {
   available: "normal",
   limited: "low",
   unavailable: "critical"
 };
-function Ul({
+function Kl({
   lang: e = "en",
-  medications: a = Hl,
+  medications: a = Ul,
   ...l
 }) {
   return /* @__PURE__ */ r(g2, { lang: e, activeNav: "medications", ...l, children: [
     /* @__PURE__ */ t(
-      R2,
+      j2,
       {
         lang: e,
         name: "Budi Santoso",
@@ -6707,7 +6723,7 @@ function Ul({
             /* @__PURE__ */ t("p", { className: "font-semibold text-slate-900", children: s.name }),
             /* @__PURE__ */ t("p", { className: "text-sm text-slate-600", children: s.dose })
           ] }),
-          /* @__PURE__ */ t(Y, { variant: Wl[s.availability], children: s.availability === "available" ? e === "id" ? "Tersedia" : "Available" : s.availability === "limited" ? e === "id" ? "Terbatas" : "Limited" : e === "id" ? "Habis" : "Unavailable" })
+          /* @__PURE__ */ t(Y, { variant: ql[s.availability], children: s.availability === "available" ? e === "id" ? "Tersedia" : "Available" : s.availability === "limited" ? e === "id" ? "Terbatas" : "Limited" : e === "id" ? "Habis" : "Unavailable" })
         ]
       },
       s.id
@@ -6733,19 +6749,19 @@ function Ul({
     /* @__PURE__ */ t("p", { className: "mt-2 text-xs text-slate-400", children: n2.pharmacy.search })
   ] });
 }
-const ql = [
+const Jl = [
   { id: "1", name: "Complete Blood Count", category: "LAB", note: "Fasting sample required" },
   { id: "2", name: "HbA1c", category: "LAB", note: "3-month glucose average" },
   { id: "3", name: "Chest X-Ray PA", category: "RAD", note: "PA projection" }
 ];
-function Kl({
+function Zl({
   lang: e = "en",
-  orders: a = ql,
+  orders: a = Jl,
   ...l
 }) {
   return /* @__PURE__ */ r(g2, { lang: e, activeNav: "labrad", ...l, children: [
     /* @__PURE__ */ t(
-      R2,
+      j2,
       {
         lang: e,
         name: "Budi Santoso",
@@ -6780,14 +6796,14 @@ function Kl({
     /* @__PURE__ */ t("p", { className: "mt-4 text-xs text-slate-400", children: n2.lab.search })
   ] });
 }
-const Jl = [
+const Yl = [
   { key: "start", en: "Start consultation", id: "Mulai konsultasi" },
   { key: "stt", en: "Live STT transcript", id: "Transkrip langsung" },
   { key: "stop", en: "Stop / keyword", id: "Berhenti / kata kunci" },
   { key: "ai", en: "AI → SOAP + ICD-10 + Rx", id: "AI → SOAP + ICD-10 + Rx" },
   { key: "review", en: "Doctor review & submit", id: "Tinjau & simpan" }
 ];
-function Zl({
+function Ql({
   lang: e = "en",
   orientation: a = "landscape",
   ...l
@@ -6795,7 +6811,7 @@ function Zl({
   const [s, i] = _("review"), n = e === "id" ? "Pasien mengeluh batuk kering dua hari. Tidak sesak. Demam subfebril." : "Patient reports dry cough for two days. No shortness of breath. Low-grade fever.";
   return /* @__PURE__ */ r(g2, { lang: e, activeNav: "ai-voice", orientation: a, ...l, children: [
     /* @__PURE__ */ t(
-      R2,
+      j2,
       {
         lang: e,
         name: "Budi Santoso",
@@ -6824,7 +6840,7 @@ function Zl({
                   onClick: () => i("listening"),
                   disabled: s === "listening",
                   children: [
-                    /* @__PURE__ */ t(T2, { className: "h-5 w-5", "aria-hidden": !0 }),
+                    /* @__PURE__ */ t(R2, { className: "h-5 w-5", "aria-hidden": !0 }),
                     b(d("Start AI", "Mulai AI"), e)
                   ]
                 }
@@ -6859,7 +6875,7 @@ function Zl({
                 readOnly: !0
               }
             ),
-            /* @__PURE__ */ t("ol", { className: "space-y-2 text-sm text-slate-600", children: Jl.map((c, o) => /* @__PURE__ */ r("li", { className: "flex gap-2", children: [
+            /* @__PURE__ */ t("ol", { className: "space-y-2 text-sm text-slate-600", children: Yl.map((c, o) => /* @__PURE__ */ r("li", { className: "flex gap-2", children: [
               /* @__PURE__ */ r("span", { className: "font-bold text-teal-600", children: [
                 o + 1,
                 "."
@@ -6899,10 +6915,10 @@ P: Symptomatic care, review 3 days`,
     ] })
   ] });
 }
-const Yl = {
+const Xl = {
   "layout-dashboard": jt,
   upload: i0,
-  users: P2,
+  users: _2,
   brain: it,
   stethoscope: s0,
   "message-circle": ke,
@@ -6920,20 +6936,20 @@ function s2({
   onLocaleChange: o,
   onLogout: m,
   notificationCount: h = 2,
-  offlineStatus: p = "online",
-  pendingUploads: f = 0,
-  orientation: w = "landscape",
-  showSecurityBar: y = !0,
-  className: z
+  offlineStatus: f = "online",
+  pendingUploads: p = 0,
+  orientation: y = "landscape",
+  showSecurityBar: w = !0,
+  className: M
 }) {
-  const M = c ?? a, S = n ?? (a === "id" ? "Dokter Klinis" : "Clinical Doctor");
+  const z = c ?? a, S = n ?? (a === "id" ? "Dokter Klinis" : "Clinical Doctor");
   return /* @__PURE__ */ r(
     "div",
     {
       className: u(
         "flex min-h-screen flex-col bg-slate-100",
-        w === "portrait" && "min-h-[1280px]",
-        z
+        y === "portrait" && "min-h-[1280px]",
+        M
       ),
       children: [
         /* @__PURE__ */ r("header", { className: "sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-2 md:px-6", children: [
@@ -6955,7 +6971,7 @@ function s2({
                 /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: S })
               ] })
             ] }),
-            o ? /* @__PURE__ */ t(u2, { locale: M, onChange: o }) : null,
+            o ? /* @__PURE__ */ t(u2, { locale: z, onChange: o }) : null,
             /* @__PURE__ */ r(
               P,
               {
@@ -6987,11 +7003,11 @@ function s2({
             {
               className: u(
                 "sticky top-14 shrink-0 overflow-y-auto border-r border-slate-200 bg-white p-2",
-                w === "landscape" ? "w-56" : "w-20"
+                y === "landscape" ? "w-56" : "w-20"
               ),
               "aria-label": a === "id" ? "Menu utama" : "Main menu",
-              children: /* @__PURE__ */ t("ul", { className: "space-y-1", children: Rl.map((A) => {
-                const L = Yl[A.icon], G = l === A.id;
+              children: /* @__PURE__ */ t("ul", { className: "space-y-1", children: Dl.map((A) => {
+                const L = Xl[A.icon], G = l === A.id;
                 return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
                   "button",
                   {
@@ -7004,7 +7020,7 @@ function s2({
                     "aria-current": G ? "page" : void 0,
                     children: [
                       /* @__PURE__ */ t(L, { className: "h-5 w-5 shrink-0", "aria-hidden": !0 }),
-                      w === "landscape" ? /* @__PURE__ */ t("span", { className: "text-sm font-semibold", children: b(A.label, a) }) : /* @__PURE__ */ t("span", { className: "sr-only", children: b(A.label, a) })
+                      y === "landscape" ? /* @__PURE__ */ t("span", { className: "text-sm font-semibold", children: b(A.label, a) }) : /* @__PURE__ */ t("span", { className: "sr-only", children: b(A.label, a) })
                     ]
                   }
                 ) }, A.id);
@@ -7012,13 +7028,13 @@ function s2({
             }
           ),
           /* @__PURE__ */ r("main", { className: "flex min-w-0 flex-1 flex-col overflow-auto p-4 md:p-6", children: [
-            y ? /* @__PURE__ */ t(Ye, { lang: a, role: S, className: "mb-4" }) : null,
-            p !== "online" ? /* @__PURE__ */ t(
+            w ? /* @__PURE__ */ t(Ye, { lang: a, role: S, className: "mb-4" }) : null,
+            f !== "online" ? /* @__PURE__ */ t(
               Ze,
               {
-                status: p,
+                status: f,
                 lang: a,
-                pendingCount: f,
+                pendingCount: p,
                 className: "mb-4"
               }
             ) : null,
@@ -7029,14 +7045,14 @@ function s2({
     }
   );
 }
-const Qs = s2, Ql = d(
+const Qs = s2, es = d(
   "Overall stable. Platelet count slightly below reference. LDL mildly elevated.",
   "Secara umum stabil. Trombosit sedikit di bawah referensi. LDL sedikit meningkat."
-), Xl = [
+), ts = [
   { label: "Platelet", value: "142,000 /µL", status: "low" },
   { label: "Hemoglobin", value: "13.2 g/dL", status: "normal" },
   { label: "Glucose", value: "118 mg/dL", status: "high" }
-], es = [
+], as = [
   {
     id: "1",
     title: d("Repeat CBC", "Ulang CBC"),
@@ -7094,8 +7110,8 @@ function Qe({
               "aria-label": e === "id" ? "Analisis AI" : "AI analysis",
               children: [
                 /* @__PURE__ */ t("h2", { className: "text-sm font-semibold uppercase tracking-wide text-slate-500", children: e === "id" ? "Hasil AI" : "AI Results" }),
-                /* @__PURE__ */ t(x2, { summary: Ql, lang: e, dualLanguageTitle: !0 }),
-                /* @__PURE__ */ t(m0, { findings: Xl, lang: e, dualLanguageTitle: !0 }),
+                /* @__PURE__ */ t(x2, { summary: es, lang: e, dualLanguageTitle: !0 }),
+                /* @__PURE__ */ t(m0, { findings: ts, lang: e, dualLanguageTitle: !0 }),
                 /* @__PURE__ */ r("div", { className: "flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4", children: [
                   /* @__PURE__ */ t(xl, { level: "medium", lang: e }),
                   /* @__PURE__ */ t("p", { className: "text-lg font-bold text-blue-600", children: "96%" })
@@ -7111,7 +7127,7 @@ function Qe({
               "aria-label": e === "id" ? "Tindakan dokter" : "Doctor actions",
               children: [
                 /* @__PURE__ */ t("h2", { className: "text-sm font-semibold uppercase tracking-wide text-slate-500", children: e === "id" ? "Tindakan" : "Actions" }),
-                /* @__PURE__ */ t(He, { items: es, lang: e, dualLanguageTitle: !0 }),
+                /* @__PURE__ */ t(He, { items: as, lang: e, dualLanguageTitle: !0 }),
                 /* @__PURE__ */ t(
                   t2,
                   {
@@ -7134,7 +7150,7 @@ function Qe({
     )
   ] });
 }
-function ts({ lang: e = "en", orientation: a = "landscape" }) {
+function ls({ lang: e = "en", orientation: a = "landscape" }) {
   return /* @__PURE__ */ t(Qe, { lang: e, orientation: a });
 }
 function Xs({
@@ -7154,18 +7170,18 @@ function Xs({
   const o = { lang: e, orientation: a, onNavChange: c, activeNav: n };
   switch (n) {
     case "consultation":
-      return /* @__PURE__ */ t(Fl, { ...o, activeNav: "consultation" });
+      return /* @__PURE__ */ t(Wl, { ...o, activeNav: "consultation" });
     case "medications":
-      return /* @__PURE__ */ t(Ul, { ...o, activeNav: "medications" });
+      return /* @__PURE__ */ t(Kl, { ...o, activeNav: "medications" });
     case "labrad":
-      return /* @__PURE__ */ t(Kl, { ...o, activeNav: "labrad" });
+      return /* @__PURE__ */ t(Zl, { ...o, activeNav: "labrad" });
     case "ai-voice":
-      return /* @__PURE__ */ t(Zl, { ...o, activeNav: "ai-voice" });
+      return /* @__PURE__ */ t(Ql, { ...o, activeNav: "ai-voice" });
     case "reports":
-      return /* @__PURE__ */ t(ts, { lang: e, orientation: a });
+      return /* @__PURE__ */ t(ls, { lang: e, orientation: a });
     default:
       return /* @__PURE__ */ t(
-        Gl,
+        Hl,
         {
           ...o,
           activeNav: "worklist",
@@ -7179,23 +7195,23 @@ const A2 = {
   uploads: d("Recent Uploads", "Unggahan Terbaru"),
   alerts: d("AI Alerts", "Peringatan AI"),
   quick: d("Quick Actions", "Aksi Cepat")
-}, as = [
+}, ss = [
   { id: "upload", icon: i0, label: d("Upload Report", "Unggah Laporan") },
   { id: "consult", icon: Ce, label: d("Start Consultation", "Mulai Konsultasi") },
   { id: "ai", icon: ke, label: d("Ask AI", "Tanya AI") },
   { id: "history", icon: gt, label: d("View History", "Lihat Riwayat") }
-], ls = [
+], is = [
   { id: "1", message: d("Low platelet", "Trombosit rendah"), severity: "warning" },
   { id: "2", message: d("High glucose", "Glukosa tinggi"), severity: "warning" },
   { id: "3", message: d("Follow-up needed", "Perlu tindak lanjut"), severity: "info" }
 ];
-function ss({
+function rs({
   lang: e = "en",
   todayPatients: a = 8,
   pendingReview: l = 2,
   urgent: s = 1,
   recentUploads: i = 5,
-  aiAlerts: n = ls,
+  aiAlerts: n = is,
   ...c
 }) {
   return /* @__PURE__ */ r(s2, { lang: e, activeNav: "dashboard", ...c, children: [
@@ -7220,7 +7236,7 @@ function ss({
           /* @__PURE__ */ t("p", { className: "mt-2 text-sm text-slate-600", children: e === "id" ? "pasien hari ini" : "patients today" }),
           /* @__PURE__ */ r("ul", { className: "mt-4 space-y-2 text-sm", children: [
             /* @__PURE__ */ r("li", { className: "flex items-center gap-2", children: [
-              /* @__PURE__ */ t(P2, { className: "h-4 w-4 text-blue-600", "aria-hidden": !0 }),
+              /* @__PURE__ */ t(_2, { className: "h-4 w-4 text-blue-600", "aria-hidden": !0 }),
               l,
               " ",
               e === "id" ? "menunggu tinjauan" : "pending review"
@@ -7233,7 +7249,7 @@ function ss({
             ] })
           ] })
         ] }),
-        /* @__PURE__ */ t("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50", children: /* @__PURE__ */ t(P2, { className: "h-6 w-6 text-blue-600", "aria-hidden": !0 }) })
+        /* @__PURE__ */ t("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50", children: /* @__PURE__ */ t(_2, { className: "h-6 w-6 text-blue-600", "aria-hidden": !0 }) })
       ] }) }) }),
       /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { className: "py-5", children: [
         /* @__PURE__ */ t(j, { label: A2.uploads, lang: e, as: "h2" }),
@@ -7268,7 +7284,7 @@ function ss({
       ] }) }),
       /* @__PURE__ */ t(D, { className: "md:col-span-2", children: /* @__PURE__ */ r($, { className: "py-5", children: [
         /* @__PURE__ */ t(j, { label: A2.quick, lang: e, as: "h2" }),
-        /* @__PURE__ */ t("div", { className: "mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4", children: as.map((o) => {
+        /* @__PURE__ */ t("div", { className: "mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4", children: ss.map((o) => {
           const m = o.icon;
           return /* @__PURE__ */ r(
             P,
@@ -7288,13 +7304,13 @@ function ss({
     ] })
   ] });
 }
-const is = [
+const ns = [
   { id: "camera", icon: dt, label: d("Camera", "Kamera"), emoji: "📷" },
   { id: "pdf", icon: m2, label: d("PDF", "PDF"), emoji: "📄" },
   { id: "gallery", icon: Tt, label: d("Gallery", "Galeri"), emoji: "🖼" },
-  { id: "voice", icon: T2, label: d("Voice", "Suara"), emoji: "🎤" }
+  { id: "voice", icon: R2, label: d("Voice", "Suara"), emoji: "🎤" }
 ], U0 = ["uploaded", "ocr", "analyzing", "completed"];
-function rs({
+function os({
   lang: e = "en",
   pipelineStatus: a = "analyzing",
   progress: l = 65,
@@ -7326,7 +7342,7 @@ function rs({
             onFilesSelected: () => c("success")
           }
         ),
-        /* @__PURE__ */ t("div", { className: "grid grid-cols-2 gap-3 sm:grid-cols-4", children: is.map((o) => {
+        /* @__PURE__ */ t("div", { className: "grid grid-cols-2 gap-3 sm:grid-cols-4", children: ns.map((o) => {
           const m = o.icon;
           return /* @__PURE__ */ r(
             P,
@@ -7344,7 +7360,7 @@ function rs({
           );
         }) })
       ] }),
-      /* @__PURE__ */ t("div", { className: "space-y-4", children: a !== "idle" ? /* @__PURE__ */ r(J2, { children: [
+      /* @__PURE__ */ t("div", { className: "space-y-4", children: a !== "idle" ? /* @__PURE__ */ r(S2, { children: [
         /* @__PURE__ */ t(Fe, { fileName: s, lang: e, uploaded: !0 }),
         /* @__PURE__ */ r("div", { className: "overflow-hidden rounded-xl border border-slate-200 bg-white p-4", children: [
           /* @__PURE__ */ t("div", { className: "mb-3 flex aspect-[4/3] items-center justify-center rounded-lg bg-slate-100", children: /* @__PURE__ */ t(m2, { className: "h-16 w-16 text-red-400", "aria-hidden": !0 }) }),
@@ -7352,15 +7368,15 @@ function rs({
           a === "ocr" || a === "analyzing" ? /* @__PURE__ */ t(Te, { value: l, className: "mt-3", showLabel: !0 }) : null
         ] }),
         /* @__PURE__ */ t("ol", { className: "space-y-2", children: U0.map((o, m) => {
-          const h = Math.max(0, U0.indexOf(a)), p = m < h || a === "completed", f = a === o;
+          const h = Math.max(0, U0.indexOf(a)), f = m < h || a === "completed", p = a === o;
           return /* @__PURE__ */ r(
             "li",
             {
               className: u(
                 "flex min-h-12 items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium",
-                p && "bg-emerald-50 text-emerald-800",
-                f && "bg-blue-50 text-blue-800",
-                !p && !f && "bg-slate-50 text-slate-500"
+                f && "bg-emerald-50 text-emerald-800",
+                p && "bg-blue-50 text-blue-800",
+                !f && !p && "bg-slate-50 text-slate-500"
               ),
               children: [
                 /* @__PURE__ */ t(
@@ -7368,14 +7384,14 @@ function rs({
                   {
                     className: u(
                       "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                      p && "bg-emerald-600 text-white",
-                      f && "bg-blue-600 text-white",
-                      !p && !f && "bg-slate-200 text-slate-600"
+                      f && "bg-emerald-600 text-white",
+                      p && "bg-blue-600 text-white",
+                      !f && !p && "bg-slate-200 text-slate-600"
                     ),
                     children: m + 1
                   }
                 ),
-                b(jl[o], e)
+                b(Ol[o], e)
               ]
             },
             o
@@ -7385,16 +7401,16 @@ function rs({
     ] })
   ] });
 }
-const ns = [
+const cs = [
   { date: "May 15, 2024", event: d("Lab report uploaded", "Laporan lab diunggah") },
   { date: "May 14, 2024", event: d("AI analysis completed", "Analisis AI selesai") },
   { date: "May 10, 2024", event: d("Follow-up scheduled", "Kontrol dijadwalkan") }
-], os = [
+], ds = [
   { label: "BP", value: "120/80" },
   { label: "HR", value: "72 bpm" },
   { label: "Temp", value: "36.8 °C" }
 ];
-function cs({
+function ms({
   lang: e = "en",
   name: a,
   mrn: l,
@@ -7417,10 +7433,10 @@ function cs({
         o
       ] })
     ] }),
-    /* @__PURE__ */ t("div", { className: "grid grid-cols-3 gap-2", children: os.map((p) => /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { className: "py-3 text-center", children: [
-      /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: p.label }),
-      /* @__PURE__ */ t("p", { className: "text-sm font-bold", children: p.value })
-    ] }) }, p.label)) }),
+    /* @__PURE__ */ t("div", { className: "grid grid-cols-3 gap-2", children: ds.map((f) => /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { className: "py-3 text-center", children: [
+      /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: f.label }),
+      /* @__PURE__ */ t("p", { className: "text-sm font-bold", children: f.value })
+    ] }) }, f.label)) }),
     /* @__PURE__ */ t(x2, { summary: m, lang: e }),
     /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { children: [
       /* @__PURE__ */ r("div", { className: "mb-3 flex items-center gap-2", children: [
@@ -7448,13 +7464,13 @@ function cs({
           }
         )
       ] }),
-      /* @__PURE__ */ t("ul", { className: "space-y-3", children: ns.map((p) => /* @__PURE__ */ r("li", { className: "flex gap-3 text-sm", children: [
+      /* @__PURE__ */ t("ul", { className: "space-y-3", children: cs.map((f) => /* @__PURE__ */ r("li", { className: "flex gap-3 text-sm", children: [
         /* @__PURE__ */ t(m2, { className: "mt-0.5 h-4 w-4 shrink-0 text-slate-400", "aria-hidden": !0 }),
         /* @__PURE__ */ r("div", { children: [
-          /* @__PURE__ */ t("p", { className: "font-medium text-slate-900", children: b(p.event, e) }),
-          /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: p.date })
+          /* @__PURE__ */ t("p", { className: "font-medium text-slate-900", children: b(f.event, e) }),
+          /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: f.date })
         ] })
-      ] }, p.date)) })
+      ] }, f.date)) })
     ] }) }),
     /* @__PURE__ */ r("div", { className: "flex flex-wrap gap-2", children: [
       /* @__PURE__ */ t(Y, { variant: "low", children: e === "id" ? "Trombosit rendah" : "Low platelet" }),
@@ -7463,7 +7479,7 @@ function cs({
   ] });
   return n ? h : /* @__PURE__ */ t("div", { className: "max-w-2xl p-4", children: h });
 }
-const ds = [
+const hs = [
   {
     id: "1",
     name: "John Doe",
@@ -7485,14 +7501,14 @@ const ds = [
     status: "follow-up",
     statusLabel: { en: "Follow-up", id: "Tindak lanjut" }
   }
-], ms = {
+], us = {
   waiting: "info",
   "in-review": "ai",
   "follow-up": "low"
 };
-function hs({
+function ps({
   lang: e = "en",
-  patients: a = ds,
+  patients: a = hs,
   orientation: l = "landscape",
   ...s
 }) {
@@ -7550,14 +7566,14 @@ function hs({
                       /* @__PURE__ */ t("p", { className: "font-semibold text-slate-900", children: m.name }),
                       /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: m.mrn })
                     ] }),
-                    /* @__PURE__ */ t(Y, { variant: ms[m.status], children: b(m.statusLabel, e) })
+                    /* @__PURE__ */ t(Y, { variant: us[m.status], children: b(m.statusLabel, e) })
                   ]
                 }
               ) }, m.id))
             }
           ),
           /* @__PURE__ */ t("div", { className: "min-w-0 flex-1 overflow-y-auto p-4", children: c ? /* @__PURE__ */ t(
-            cs,
+            ms,
             {
               lang: e,
               name: c.name,
@@ -7570,13 +7586,13 @@ function hs({
     )
   ] });
 }
-const us = d(
+const fs = d(
   "Platelet mildly low. Otherwise stable. Recommend repeat CBC in 3 months.",
   "Trombosit sedikit rendah. Selain itu stabil. Disarankan ulang CBC dalam 3 bulan."
-), ps = [
+), bs = [
   { label: "Platelet", value: "142,000 /µL", status: "low" },
   { label: "Hemoglobin", value: "13.2 g/dL", status: "normal" }
-], fs = [
+], xs = [
   { value: "approve", label: d("Approve", "Setujui"), icon: a0, variant: "success" },
   { value: "partial", label: d("Partial approve", "Setujui sebagian"), icon: Ne, variant: "secondary" },
   { value: "reject", label: d("Reject", "Tolak"), icon: Na, variant: "danger" }
@@ -7603,8 +7619,8 @@ Monitor 3 months`
     ),
     /* @__PURE__ */ r("div", { className: "grid gap-6 lg:grid-cols-2", children: [
       /* @__PURE__ */ r("div", { className: "space-y-4", children: [
-        /* @__PURE__ */ t(x2, { summary: us, lang: e, dualLanguageTitle: !0 }),
-        /* @__PURE__ */ t(m0, { findings: ps, lang: e, dualLanguageTitle: !0 }),
+        /* @__PURE__ */ t(x2, { summary: fs, lang: e, dualLanguageTitle: !0 }),
+        /* @__PURE__ */ t(m0, { findings: bs, lang: e, dualLanguageTitle: !0 }),
         /* @__PURE__ */ t(d0, { score: 96, lang: e, dualLanguageTitle: !0 })
       ] }),
       /* @__PURE__ */ r("div", { className: "space-y-4 rounded-2xl border border-slate-200 bg-white p-6", children: [
@@ -7631,8 +7647,8 @@ Monitor 3 months`
         ),
         /* @__PURE__ */ r("fieldset", { children: [
           /* @__PURE__ */ t("legend", { className: "mb-3 text-sm font-semibold text-slate-900", children: e === "id" ? "Keputusan" : "Decision" }),
-          /* @__PURE__ */ t("div", { className: "grid gap-3 sm:grid-cols-3", children: fs.map((h) => {
-            const p = h.icon;
+          /* @__PURE__ */ t("div", { className: "grid gap-3 sm:grid-cols-3", children: xs.map((h) => {
+            const f = h.icon;
             return /* @__PURE__ */ r(
               P,
               {
@@ -7642,7 +7658,7 @@ Monitor 3 months`
                 onClick: () => i(h.value),
                 "aria-pressed": s === h.value,
                 children: [
-                  /* @__PURE__ */ t(p, { className: "h-5 w-5", "aria-hidden": !0 }),
+                  /* @__PURE__ */ t(f, { className: "h-5 w-5", "aria-hidden": !0 }),
                   b(h.label, e)
                 ]
               },
@@ -7665,19 +7681,19 @@ Monitor 3 months`
     ] })
   ] });
 }
-const bs = [
+const gs = [
   d("Is this platelet concerning?", "Apakah trombosit ini mengkhawatirkan?"),
   d("Summarize in Bahasa Indonesia", "Ringkas dalam Bahasa Indonesia"),
   d("Generate patient explanation", "Buat penjelasan untuk pasien")
-], xs = [
+], vs = [
   d("Explain to patient", "Jelaskan ke pasien"),
   d("Doctor summary", "Ringkasan dokter"),
   d("Compare previous result", "Bandingkan hasil sebelumnya")
-], gs = [
+], ys = [
   { id: "1", title: "Platelet review", time: "10:32" },
   { id: "2", title: "Lab summary ID", time: "09:15" },
   { id: "3", title: "Glucose context", time: "Yesterday" }
-], vs = [
+], ws = [
   {
     role: "user",
     content: "Is this platelet count concerning for this patient?"
@@ -7687,12 +7703,12 @@ const bs = [
     content: "142,000 /µL is mildly below the typical reference range. Consider clinical context, symptoms, and trend vs prior labs. Follow-up CBC in 3 months is reasonable if stable."
   }
 ];
-function ys({
+function ks({
   lang: e = "en",
   orientation: a = "landscape",
   ...l
 }) {
-  const [s, i] = _(vs), [n, c] = _("1");
+  const [s, i] = _(ws), [n, c] = _("1");
   return /* @__PURE__ */ r(s2, { lang: e, activeNav: "chat", orientation: a, ...l, children: [
     /* @__PURE__ */ t(
       j,
@@ -7720,7 +7736,7 @@ function ys({
               ),
               children: [
                 /* @__PURE__ */ t("p", { className: "mb-2 px-2 text-xs font-semibold uppercase text-slate-500", children: e === "id" ? "Riwayat" : "History" }),
-                /* @__PURE__ */ t("ul", { className: "space-y-1", children: gs.map((o) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
+                /* @__PURE__ */ t("ul", { className: "space-y-1", children: ys.map((o) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
                   "button",
                   {
                     type: "button",
@@ -7742,7 +7758,7 @@ function ys({
             /* @__PURE__ */ t("div", { className: "flex-1 space-y-4 overflow-y-auto p-4", children: s.map((o, m) => /* @__PURE__ */ t(We, { role: o.role, content: o.content }, m)) }),
             /* @__PURE__ */ r("div", { className: "border-t border-slate-100 p-4", children: [
               /* @__PURE__ */ t("p", { className: "mb-2 text-xs font-semibold text-slate-500", children: e === "id" ? "Saran pertanyaan" : "Suggested prompts" }),
-              /* @__PURE__ */ t("div", { className: "mb-3 flex flex-wrap gap-2", children: bs.map((o, m) => /* @__PURE__ */ t(
+              /* @__PURE__ */ t("div", { className: "mb-3 flex flex-wrap gap-2", children: gs.map((o, m) => /* @__PURE__ */ t(
                 P,
                 {
                   variant: "secondary",
@@ -7756,7 +7772,7 @@ function ys({
                 },
                 m
               )) }),
-              /* @__PURE__ */ t("div", { className: "mb-3 flex flex-wrap gap-2", children: xs.map((o, m) => /* @__PURE__ */ t(P, { variant: "ghost", size: "md", children: b(o, e) }, m)) }),
+              /* @__PURE__ */ t("div", { className: "mb-3 flex flex-wrap gap-2", children: vs.map((o, m) => /* @__PURE__ */ t(P, { variant: "ghost", size: "md", children: b(o, e) }, m)) }),
               /* @__PURE__ */ t(
                 Nl,
                 {
@@ -7771,15 +7787,15 @@ function ys({
     )
   ] });
 }
-const ws = d(
+const Ns = d(
   "Patient reports mild cough and low-grade fever. Vitals stable on video assessment.",
   "Pasien melaporkan batuk ringan dan demam rendah. Tanda vital stabil pada penilaian video."
-), ks = [
+), Ms = [
   { role: "assistant", content: "Patient: I have had a cough for two days." },
   { role: "user", content: "Doctor: Any difficulty breathing?" },
   { role: "assistant", content: "Patient: No, just a mild dry cough." }
 ];
-function Ns({
+function zs({
   lang: e = "en",
   orientation: a = "landscape",
   ...l
@@ -7816,7 +7832,7 @@ function Ns({
                     variant: "ghost",
                     className: "min-h-12 min-w-12 rounded-full bg-white/10 text-white hover:bg-white/20",
                     "aria-label": e === "id" ? "Bisukan" : "Mute",
-                    children: /* @__PURE__ */ t(T2, { className: "h-5 w-5", "aria-hidden": !0 })
+                    children: /* @__PURE__ */ t(R2, { className: "h-5 w-5", "aria-hidden": !0 })
                   }
                 ),
                 /* @__PURE__ */ t(
@@ -7841,11 +7857,11 @@ function Ns({
             ] }),
             /* @__PURE__ */ r("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
               /* @__PURE__ */ t("p", { className: "mb-3 text-sm font-semibold text-slate-900", children: e === "id" ? "Transkrip langsung" : "Live transcript" }),
-              /* @__PURE__ */ t("div", { className: "max-h-40 space-y-2 overflow-y-auto", children: ks.map((s, i) => /* @__PURE__ */ t(We, { role: s.role, content: s.content }, i)) })
+              /* @__PURE__ */ t("div", { className: "max-h-40 space-y-2 overflow-y-auto", children: Ms.map((s, i) => /* @__PURE__ */ t(We, { role: s.role, content: s.content }, i)) })
             ] })
           ] }),
           /* @__PURE__ */ r("aside", { className: "space-y-4", children: [
-            /* @__PURE__ */ t(x2, { summary: ws, lang: e }),
+            /* @__PURE__ */ t(x2, { summary: Ns, lang: e }),
             /* @__PURE__ */ t(P, { fullWidth: !0, variant: "success", className: "min-h-14", children: e === "id" ? "Simpan ringkasan" : "Save summary" })
           ] })
         ]
@@ -7864,14 +7880,14 @@ const ei = {
     styles: { width: "800px", height: "1280px" },
     type: "desktop"
   }
-}, Ms = d(
+}, Es = d(
   "Overall health status appears stable. Mildly elevated LDL cholesterol noted; platelet count is slightly below reference range. Recommend follow-up in 3 months.",
   "Status kesehatan secara umum stabil. Kolesterol LDL sedikit meningkat; trombosit sedikit di bawah rentang referensi. Disarankan kontrol dalam 3 bulan."
-), zs = [
+), Cs = [
   { label: "Hemoglobin", value: "13.2 g/dL", status: "normal" },
   { label: "WBC", value: "8,100 /µL", status: "normal" },
   { label: "Platelet", value: "142,000 /µL", status: "low" }
-], Es = [
+], As = [
   {
     id: "1",
     title: d("Maintain healthy lifestyle", "Pertahankan gaya hidup sehat"),
@@ -7884,7 +7900,7 @@ const ei = {
     description: d("Repeat CBC and lipid panel", "Ulang CBC dan panel lipid"),
     icon: "calendar"
   }
-], Cs = [
+], Ss = [
   { en: "Upload Report", id: "Unggah Laporan", color: "bg-blue-600" },
   { en: "AI Analysis", id: "Analisis AI", color: "bg-teal-500" },
   { en: "Doctor Summary", id: "Ringkasan Dokter", color: "bg-blue-600" }
@@ -7903,7 +7919,7 @@ function ti({
     ] }),
     /* @__PURE__ */ r("div", { className: "relative mb-10 flex justify-between px-4", children: [
       /* @__PURE__ */ t("div", { className: "absolute left-8 right-8 top-4 h-0.5 bg-slate-200", "aria-hidden": !0 }),
-      Cs.map((l, s) => /* @__PURE__ */ r("div", { className: "relative z-10 flex flex-col items-center gap-2", children: [
+      Ss.map((l, s) => /* @__PURE__ */ r("div", { className: "relative z-10 flex flex-col items-center gap-2", children: [
         /* @__PURE__ */ t(
           "div",
           {
@@ -7929,11 +7945,11 @@ function ti({
         /* @__PURE__ */ t(cl, { lang: e, status: a >= 1 ? "complete" : "pending" })
       ] }),
       /* @__PURE__ */ r("section", { className: "space-y-4", "aria-label": e === "id" ? "Analisis AI" : "AI Analysis", children: [
-        /* @__PURE__ */ t(x2, { summary: Ms, lang: e, loading: a < 2 }),
-        /* @__PURE__ */ t(m0, { findings: zs, lang: e }),
+        /* @__PURE__ */ t(x2, { summary: Es, lang: e, loading: a < 2 }),
+        /* @__PURE__ */ t(m0, { findings: Cs, lang: e }),
         /* @__PURE__ */ t(d0, { score: 96, lang: e })
       ] }),
-      /* @__PURE__ */ t("section", { className: "space-y-4", "aria-label": e === "id" ? "Dokter" : "Doctor", children: /* @__PURE__ */ t(He, { items: Es, lang: e }) })
+      /* @__PURE__ */ t("section", { className: "space-y-4", "aria-label": e === "id" ? "Dokter" : "Doctor", children: /* @__PURE__ */ t(He, { items: As, lang: e }) })
     ] })
   ] }) });
 }
@@ -7969,17 +7985,17 @@ function li({
   };
   switch (s) {
     case "upload":
-      return /* @__PURE__ */ t(rs, { ...n, activeNav: "upload" });
+      return /* @__PURE__ */ t(os, { ...n, activeNav: "upload" });
     case "queue":
-      return /* @__PURE__ */ t(hs, { ...n, activeNav: "queue" });
+      return /* @__PURE__ */ t(ps, { ...n, activeNav: "queue" });
     case "analysis":
       return /* @__PURE__ */ t(Qe, { ...n, activeNav: "analysis" });
     case "review":
       return /* @__PURE__ */ t(Xe, { ...n, activeNav: "review" });
     case "chat":
-      return /* @__PURE__ */ t(ys, { ...n, activeNav: "chat" });
+      return /* @__PURE__ */ t(ks, { ...n, activeNav: "chat" });
     default:
-      return /* @__PURE__ */ t(ss, { ...n, activeNav: "dashboard" });
+      return /* @__PURE__ */ t(rs, { ...n, activeNav: "dashboard" });
   }
 }
 function si({
@@ -7992,27 +8008,27 @@ function ii({
   lang: e = "en",
   orientation: a = "landscape"
 }) {
-  return /* @__PURE__ */ t(Ns, { lang: e, orientation: a });
+  return /* @__PURE__ */ t(zs, { lang: e, orientation: a });
 }
 export {
-  Hs as AIStatusBadge,
+  Us as AIStatusBadge,
   Ue as AUTH_API,
-  Il as AdminLogin,
-  I2 as AlocareLogo,
-  Vs as AlocareThemeProvider,
+  Rl as AdminLogin,
+  T2 as AlocareLogo,
+  Fs as AlocareThemeProvider,
   Ys as AuthLoginShowcase,
   Ve as Avatar,
   K0 as BRAND_LOGO_ASPECT,
-  _s as BRAND_LOGO_PATH,
-  Ls as BRAND_LOGO_PNG_PATH,
+  Is as BRAND_LOGO_PATH,
+  Ts as BRAND_LOGO_PNG_PATH,
   Y as Badge,
   j as BilingualLabel,
   l2 as Button,
   D as Card,
   $ as CardContent,
-  Fs as CardFooter,
+  Ws as CardFooter,
   h2 as CardHeader,
-  Gs as CardTitle,
+  Hs as CardTitle,
   Nl as ChatInput,
   We as ChatMessage,
   li as ClinicWorkflowTablet,
@@ -8020,21 +8036,21 @@ export {
   d0 as ConfidenceScore,
   ii as ConsultationTablet,
   ai as DashboardLayout,
-  Ws as DoctorReviewPanel,
+  qs as DoctorReviewPanel,
   si as DoctorReviewTablet,
-  Zl as EMRAIVoiceConsultation,
-  Fl as EMRConsultationSOAP,
-  Kl as EMRLabRadOrders,
+  Ql as EMRAIVoiceConsultation,
+  Wl as EMRConsultationSOAP,
+  Zl as EMRLabRadOrders,
   Je as EMRLogin,
-  Ul as EMRMedicationOrders,
-  R2 as EMRPatientBanner,
-  ts as EMRReports,
+  Kl as EMRMedicationOrders,
+  j2 as EMRPatientBanner,
+  ls as EMRReports,
   g2 as EMRTabletShell,
   Xs as EMRWorkflowTablet,
-  Gl as EMRWorklist,
+  Hl as EMRWorklist,
   n2 as EMR_API,
-  Us as EmployeeHealthCard,
-  Tl as HRPortalLogin,
+  Ks as EmployeeHealthCard,
+  jl as HRPortalLogin,
   nl as Header,
   e2 as Input,
   m0 as KeyFindingCard,
@@ -8044,51 +8060,51 @@ export {
   Al as LoginBrandPanel,
   u0 as LoginCard,
   qe as LoginCardContent,
-  qs as LoginCardHeader,
-  Zs as LoginDivider,
-  Pl as LoginErrorAlert,
+  Js as LoginCardHeader,
+  _l as LoginDivider,
+  Ll as LoginErrorAlert,
   f0 as LoginFooter,
   b0 as LoginForm,
-  Js as LoginGoogleButton,
+  Pl as LoginGoogleButton,
   h0 as LoginLayout,
-  Ks as LoginMenuBar,
-  _l as LoginPasswordField,
+  Zs as LoginMenuBar,
+  Il as LoginPasswordField,
   ti as MedicalReportAnalysis,
   cl as OCRStatusCard,
-  Ll as PortalLogin,
+  Tl as PortalLogin,
   Te as Progress,
   He as RecommendationList,
   xl as RiskIndicator,
   r0 as Spinner,
   F0 as SystemHealthBadge,
   Qe as TabletAnalysisView,
-  ys as TabletChat,
-  ss as TabletDashboard,
+  ks as TabletChat,
+  rs as TabletDashboard,
   Xe as TabletDoctorReview,
   Qs as TabletNav,
-  cs as TabletPatientDetail,
-  hs as TabletPatientQueue,
+  ms as TabletPatientDetail,
+  ps as TabletPatientQueue,
   s2 as TabletShell,
-  Ns as TabletTelemedicine,
-  rs as TabletUploadFlow,
+  zs as TabletTelemedicine,
+  os as TabletUploadFlow,
   t2 as Textarea,
   P as TouchButton,
   Ge as UploadDropzone,
   Fe as UploadPreview,
   O as authCopy,
   d as bilingual,
-  V2 as brandColors,
+  G2 as brandColors,
   u as cn,
-  Is as colors,
+  Rs as colors,
   H0 as loginShadows,
   I as loginSizing,
-  $s as motion,
-  js as radius,
-  Ds as shadows,
-  Ts as spacing,
+  Vs as motion,
+  Os as radius,
+  $s as shadows,
+  js as spacing,
   b as t,
   ei as tabletViewports,
-  Rs as typography,
-  Bs as useLocale,
-  Os as zIndex
+  Ds as typography,
+  Gs as useLocale,
+  Bs as zIndex
 };

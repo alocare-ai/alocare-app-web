@@ -5,6 +5,8 @@ export type PortalLoginProps = {
     onLocaleChange?: (locale: Locale) => void;
     onLogin?: (credentials: LoginCredentials) => void;
     onForgotPassword?: () => void;
+    /** Full URL to start Google OAuth, or omit to hide Google sign-in. */
+    googleAuthUrl?: string | null;
     error?: string;
     loading?: boolean;
     logoSrc?: string;
@@ -14,5 +16,5 @@ export type PortalLoginProps = {
  * Clinician / patient portal login — matches alocare-app-web `/login` layout.
  * Single centered card: language (top-right), logo, title, form, forgot password.
  */
-export declare function PortalLogin({ lang, onLocaleChange, onLogin, onForgotPassword, error, loading, logoSrc, className, }: PortalLoginProps): import("react/jsx-runtime").JSX.Element;
+export declare function PortalLogin({ lang, onLocaleChange, onLogin, onForgotPassword, googleAuthUrl, error, loading, logoSrc, className, }: PortalLoginProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=PortalLogin.d.ts.map

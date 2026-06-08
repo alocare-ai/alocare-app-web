@@ -5,6 +5,7 @@
 export declare const EMR_API: {
     readonly auth: {
         readonly login: "POST /auth/login";
+        readonly google: "POST /auth/google";
         readonly logout: "POST /auth/logout";
         readonly refresh: "POST /auth/refresh";
         readonly profile: "GET /users/me";
