@@ -12,4 +12,5 @@ export const PROTECTED_PREFIXES = [
   "/enterprise",
   "/telemedicine",
   "/settings",
+  "/connect-google",
 ] as const;

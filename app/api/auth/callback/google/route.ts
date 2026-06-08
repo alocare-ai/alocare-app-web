@@ -65,10 +65,14 @@ export async function GET(request: Request) {
 
       if (!linkResult.ok) {
         console.error("Portal Google link failed:", linkResult.failure);
-        return NextResponse.redirect(`${appUrl}/settings?google=error`);
+        const errorTarget = new URL(returnPath || "/settings", appUrl);
+        errorTarget.searchParams.set("google", "error");
+        return NextResponse.redirect(errorTarget.toString());
       }
 
-      return NextResponse.redirect(`${appUrl}/settings?google=linked`);
+      const linkedTarget = new URL(returnPath || "/settings", appUrl);
+      linkedTarget.searchParams.set("google", "linked");
+      return NextResponse.redirect(linkedTarget.toString());
     }
 
     const loginResult = await upstreamPostJson<TokenResponse>("/auth/google", {

@@ -28,7 +28,8 @@ export function middleware(request: NextRequest) {
     (pathname === "/register" ||
       pathname === "/verify" ||
       pathname === "/forgot-password" ||
-      pathname === "/reset-password") &&
+      pathname === "/reset-password" ||
+      pathname === "/contact") &&
     token
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));

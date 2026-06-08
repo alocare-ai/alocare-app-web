@@ -23,6 +23,11 @@ import {
   sessionErrorMessage,
 } from "@/lib/auth/session";
 import { ApiError } from "@/lib/api/client";
+import {
+  googleNotLinkedLoginMessage,
+  markPendingGoogleConnect,
+  shouldPromptGoogleConnect,
+} from "@/lib/auth/google-connect-prompt";
 import { getPostLoginPath } from "@/lib/auth/post-login";
 
 type PortalLoginFormProps = {
@@ -42,9 +47,7 @@ function oauthErrorMessage(locale: "en" | "id", code: string | null): string | n
       : "The API does not support portal Google login yet. Deploy the latest alocare-api and set PORTAL_GOOGLE_CLIENT_ID.";
   }
   if (code === "google_not_linked") {
-    return locale === "id"
-      ? "Google belum terhubung. Masuk dengan email dan kata sandi, lalu hubungkan Google di Pengaturan."
-      : "Google is not connected. Sign in with email and password, then connect Google in Settings.";
+    return null;
   }
   if (code === "google_no_account") {
     return locale === "id"
@@ -91,12 +94,21 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [googleNotLinkedHint, setGoogleNotLinkedHint] = useState<{
+    title: string;
+    body: string;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (sessionError === "session") {
       void logout();
       setError(sessionErrorMessage(locale, "session"));
+      return;
+    }
+    if (sessionError === "google_not_linked") {
+      markPendingGoogleConnect();
+      setGoogleNotLinkedHint(googleNotLinkedLoginMessage(locale));
       return;
     }
     const oauthError = oauthErrorMessage(locale, sessionError);
@@ -117,6 +129,7 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
     e.preventDefault();
     setError(null);
     setInfo(null);
+    setGoogleNotLinkedHint(null);
     setLoading(true);
     try {
       await logout();
@@ -124,7 +137,13 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
       queryClient.setQueryData(["me"], user);
       const destination =
         user.role === "PATIENT" ? getPostLoginPath(user, from) : from;
-      router.push(destination);
+      if (shouldPromptGoogleConnect(user, googleEnabled)) {
+        router.push(
+          `/connect-google?from=${encodeURIComponent(destination)}`,
+        );
+      } else {
+        router.push(destination);
+      }
       router.refresh();
     } catch (err) {
       if (err instanceof ApiError && err.detail && err.status !== 401) {
@@ -177,7 +196,17 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
           </h1>
         </CardHeader>
         <CardContent className="pt-4">
-          {googleEnabled ? (
+          {googleNotLinkedHint ? (
+            <div
+              className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900"
+              role="status"
+            >
+              <p className="font-medium">{googleNotLinkedHint.title}</p>
+              <p className="mt-1 text-blue-800">{googleNotLinkedHint.body}</p>
+            </div>
+          ) : null}
+
+          {googleEnabled && !googleNotLinkedHint ? (
             <>
               <LoginGoogleButton
                 lang={locale}
@@ -237,8 +266,11 @@ function LoginForm({ googleEnabled }: PortalLoginFormProps) {
 
           <p className="mt-4 text-center text-sm text-slate-600">
             {locale === "id"
-              ? "Butuh akun? Hubungi administrator organisasi Anda."
-              : "Need an account? Contact your organization administrator."}
+              ? "Butuh akun? "
+              : "Need an account? "}
+            <Link href="/contact" className="text-blue-600 hover:underline">
+              {locale === "id" ? "Hubungi kami" : "Contact us"}
+            </Link>
           </p>
         </CardContent>
       </Card>
