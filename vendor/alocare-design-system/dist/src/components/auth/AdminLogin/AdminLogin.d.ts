@@ -6,8 +6,9 @@ export type AdminLoginProps = {
     onLogin?: (credentials: LoginCredentials) => void;
     error?: string;
     loading?: boolean;
+    logoSrc?: string;
     className?: string;
 };
 /** Tenant / platform admin — split brand panel + email login. */
-export declare function AdminLogin({ lang, onLocaleChange, onLogin, error, loading, className, }: AdminLoginProps): import("react/jsx-runtime").JSX.Element;
+export declare function AdminLogin({ lang, onLocaleChange, onLogin, error, loading, logoSrc, className, }: AdminLoginProps): import("react/jsx-runtime").JSX.Element;
 //# sourceMappingURL=AdminLogin.d.ts.map

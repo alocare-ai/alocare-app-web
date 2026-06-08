@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 type BrandLogoProps = {
@@ -15,13 +14,12 @@ export function BrandLogo({
   subtitle,
 }: BrandLogoProps) {
   const image = (
-    <Image
-      src="/logo.png"
+    <img
+      src="/logo-alocare.svg"
       alt="Alocare AI"
       width={size}
       height={size}
-      priority
-      className="shrink-0"
+      className="shrink-0 object-contain"
       style={{ width: size, height: size }}
     />
   );

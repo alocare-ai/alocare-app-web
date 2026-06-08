@@ -3,7 +3,7 @@ import { Locale } from '../../../utils/i18n';
 export type AlocareLogoLayout = "horizontal" | "stacked" | "mark";
 export type AlocareLogoProps = {
     lang?: Locale;
-    /** Override bundled logo (e.g. `/logo.png` in consuming app public folder). */
+    /** Override bundled logo (e.g. `/logo-alocare.svg` in consuming app public folder). */
     logoSrc?: string;
     layout?: AlocareLogoLayout;
     showTagline?: boolean;
