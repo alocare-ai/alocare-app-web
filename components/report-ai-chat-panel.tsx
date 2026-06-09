@@ -222,7 +222,7 @@ export function ReportAiChatPanel({
               onClick={() =>
                 handleSuggested(locale === "id" ? s.id : s.en)
               }
-              className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+              className="cursor-pointer rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-700 hover:bg-slate-100 disabled:opacity-50"
             >
               {locale === "id" ? s.id : s.en}
             </button>

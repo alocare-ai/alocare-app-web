@@ -132,7 +132,7 @@ export function ReportAiChatFab({
             <button
               type="button"
               onClick={close}
-              className="shrink-0 rounded-lg p-1.5 text-white/90 transition hover:bg-white/15 hover:text-white"
+              className="shrink-0 cursor-pointer rounded-lg p-1.5 text-white/90 transition hover:bg-white/15 hover:text-white"
               aria-label={closeLabel}
             >
               <X className="h-4 w-4" aria-hidden />

@@ -30,7 +30,7 @@ export function BrandLogo({
 
   if (!showWordmark) {
     return href ? (
-      <Link href={href} className="inline-flex transition-opacity hover:opacity-80">
+      <Link href={href} className="inline-flex cursor-pointer transition-opacity hover:opacity-80">
         {image}
       </Link>
     ) : (
@@ -48,7 +48,7 @@ export function BrandLogo({
   );
 
   return href ? (
-    <Link href={href} className="inline-flex transition-opacity hover:opacity-80">
+    <Link href={href} className="inline-flex cursor-pointer transition-opacity hover:opacity-80">
       {content}
     </Link>
   ) : (

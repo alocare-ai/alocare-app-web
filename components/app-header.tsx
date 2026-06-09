@@ -80,7 +80,7 @@ export function AppHeader({
             {user ? (
               <Link
                 href="/settings"
-                className="flex min-w-0 max-w-[8rem] items-center gap-2 rounded-lg border border-slate-200/80 bg-white px-2 py-1 shadow-sm transition-colors hover:bg-slate-50 sm:max-w-none sm:px-3 sm:py-1.5"
+                className="flex min-w-0 max-w-[8rem] cursor-pointer items-center gap-2 rounded-lg border border-slate-200/80 bg-white px-2 py-1 shadow-sm transition-colors hover:bg-slate-50 sm:max-w-none sm:px-3 sm:py-1.5"
                 title={user.email}
               >
                 <Avatar fallback={userInitials(user.full_name)} size="sm" />
@@ -118,7 +118,7 @@ export function AppHeader({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`shrink-0 rounded-md px-3 py-1.5 text-sm transition-colors ${
+                  className={`shrink-0 cursor-pointer rounded-md px-3 py-1.5 text-sm transition-colors ${
                     item.active
                       ? "bg-slate-100 font-semibold text-slate-900"
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
@@ -141,7 +141,7 @@ export function AppHeader({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`rounded-md px-3 py-2 text-sm transition-colors ${
+                  className={`cursor-pointer rounded-md px-3 py-2 text-sm transition-colors ${
                     item.active
                       ? "bg-slate-100 font-semibold text-slate-900"
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"

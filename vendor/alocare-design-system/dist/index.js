@@ -1,4 +1,4 @@
-import { jsx as t, jsxs as r, Fragment as S2 } from "react/jsx-runtime";
+import { jsx as t, jsxs as i, Fragment as S2 } from "react/jsx-runtime";
 import * as C from "react";
 import q0, { createContext as e1, useState as _, useMemo as t1, useContext as a1, forwardRef as d2, createElement as Z2, useRef as l1, useCallback as s1 } from "react";
 import "react-dom";
@@ -110,11 +110,11 @@ function d(e, a) {
   return { en: e, id: a };
 }
 const J0 = e1(null);
-function i1({
+function r1({
   children: e,
   defaultLocale: a = "en"
 }) {
-  const [l, s] = _(a), i = t1(
+  const [l, s] = _(a), r = t1(
     () => ({
       locale: l,
       setLocale: s,
@@ -122,7 +122,7 @@ function i1({
     }),
     [l]
   );
-  return /* @__PURE__ */ t(J0.Provider, { value: i, children: e });
+  return /* @__PURE__ */ t(J0.Provider, { value: r, children: e });
 }
 function Gs() {
   const e = a1(J0);
@@ -137,22 +137,22 @@ function Fs({
   children: e,
   defaultLocale: a = "en"
 }) {
-  return /* @__PURE__ */ t(i1, { defaultLocale: a, children: e });
+  return /* @__PURE__ */ t(r1, { defaultLocale: a, children: e });
 }
 function Z0(e) {
   var a, l, s = "";
   if (typeof e == "string" || typeof e == "number") s += e;
   else if (typeof e == "object") if (Array.isArray(e)) {
-    var i = e.length;
-    for (a = 0; a < i; a++) e[a] && (l = Z0(e[a])) && (s && (s += " "), s += l);
+    var r = e.length;
+    for (a = 0; a < r; a++) e[a] && (l = Z0(e[a])) && (s && (s += " "), s += l);
   } else for (l in e) e[l] && (s && (s += " "), s += l);
   return s;
 }
 function Y0() {
-  for (var e, a, l = 0, s = "", i = arguments.length; l < i; l++) (e = arguments[l]) && (a = Z0(e)) && (s && (s += " "), s += a);
+  for (var e, a, l = 0, s = "", r = arguments.length; l < r; l++) (e = arguments[l]) && (a = Z0(e)) && (s && (s += " "), s += a);
   return s;
 }
-const r1 = (e, a) => {
+const i1 = (e, a) => {
   const l = new Array(e.length + a.length);
   for (let s = 0; s < e.length; s++)
     l[s] = e[s];
@@ -181,7 +181,7 @@ const r1 = (e, a) => {
     getConflictingClassGroupIds: (c, o) => {
       if (o) {
         const m = s[c], h = l[c];
-        return m ? h ? r1(h, m) : m : h || z0;
+        return m ? h ? i1(h, m) : m : h || z0;
       }
       return l[c] || z0;
     }
@@ -189,7 +189,7 @@ const r1 = (e, a) => {
 }, X0 = (e, a, l) => {
   if (e.length - a === 0)
     return l.classGroupId;
-  const i = e[a], n = l.nextPart.get(i);
+  const r = e[a], n = l.nextPart.get(r);
   if (n) {
     const h = X0(e, a + 1, n);
     if (h) return h;
@@ -215,13 +215,13 @@ const r1 = (e, a) => {
 }, h1 = (e, a) => {
   const l = Q0();
   for (const s in e) {
-    const i = e[s];
-    e0(i, l, s, a);
+    const r = e[s];
+    e0(r, l, s, a);
   }
   return l;
 }, e0 = (e, a, l, s) => {
-  const i = e.length;
-  for (let n = 0; n < i; n++) {
+  const r = e.length;
+  for (let n = 0; n < r; n++) {
     const c = e[n];
     u1(c, a, l, s);
   }
@@ -245,15 +245,15 @@ const r1 = (e, a) => {
   }
   a.validators === null && (a.validators = []), a.validators.push(n1(l, e));
 }, b1 = (e, a, l, s) => {
-  const i = Object.entries(e), n = i.length;
+  const r = Object.entries(e), n = r.length;
   for (let c = 0; c < n; c++) {
-    const [o, m] = i[c];
+    const [o, m] = r[c];
     e0(m, ee(a, o), l, s);
   }
 }, ee = (e, a) => {
   let l = e;
-  const s = a.split(P2), i = s.length;
-  for (let n = 0; n < i; n++) {
+  const s = a.split(P2), r = s.length;
+  for (let n = 0; n < r; n++) {
     const c = s[n];
     let o = l.nextPart.get(c);
     o || (o = Q0(), l.nextPart.set(c, o)), l = o;
@@ -268,7 +268,7 @@ const r1 = (e, a) => {
       }
     };
   let a = 0, l = /* @__PURE__ */ Object.create(null), s = /* @__PURE__ */ Object.create(null);
-  const i = (n, c) => {
+  const r = (n, c) => {
     l[n] = c, a++, a > e && (a = 0, s = l, l = /* @__PURE__ */ Object.create(null));
   };
   return {
@@ -277,32 +277,32 @@ const r1 = (e, a) => {
       if (c !== void 0)
         return c;
       if ((c = s[n]) !== void 0)
-        return i(n, c), c;
+        return r(n, c), c;
     },
     set(n, c) {
-      n in l ? l[n] = c : i(n, c);
+      n in l ? l[n] = c : r(n, c);
     }
   };
-}, Y2 = "!", E0 = ":", v1 = [], C0 = (e, a, l, s, i) => ({
+}, Y2 = "!", E0 = ":", v1 = [], C0 = (e, a, l, s, r) => ({
   modifiers: e,
   hasImportantModifier: a,
   baseClassName: l,
   maybePostfixModifierPosition: s,
-  isExternal: i
+  isExternal: r
 }), y1 = (e) => {
   const {
     prefix: a,
     experimentalParseClassName: l
   } = e;
-  let s = (i) => {
+  let s = (r) => {
     const n = [];
     let c = 0, o = 0, m = 0, h;
-    const f = i.length;
+    const f = r.length;
     for (let z = 0; z < f; z++) {
-      const S = i[z];
+      const S = r[z];
       if (c === 0 && o === 0) {
         if (S === E0) {
-          n.push(i.slice(m, z)), m = z + 1;
+          n.push(r.slice(m, z)), m = z + 1;
           continue;
         }
         if (S === "/") {
@@ -312,7 +312,7 @@ const r1 = (e, a) => {
       }
       S === "[" ? c++ : S === "]" ? c-- : S === "(" ? o++ : S === ")" && o--;
     }
-    const p = n.length === 0 ? i : i.slice(m);
+    const p = n.length === 0 ? r : r.slice(m);
     let y = p, w = !1;
     p.endsWith(Y2) ? (y = p.slice(0, -1), w = !0) : (
       /**
@@ -325,14 +325,14 @@ const r1 = (e, a) => {
     return C0(n, w, y, M);
   };
   if (a) {
-    const i = a + E0, n = s;
-    s = (c) => c.startsWith(i) ? n(c.slice(i.length)) : C0(v1, !1, c, void 0, !0);
+    const r = a + E0, n = s;
+    s = (c) => c.startsWith(r) ? n(c.slice(r.length)) : C0(v1, !1, c, void 0, !0);
   }
   if (l) {
-    const i = s;
+    const r = s;
     s = (n) => l({
       className: n,
-      parseClassName: i
+      parseClassName: r
     });
   }
   return s;
@@ -342,12 +342,12 @@ const r1 = (e, a) => {
     a.set(l, 1e6 + s);
   }), (l) => {
     const s = [];
-    let i = [];
+    let r = [];
     for (let n = 0; n < l.length; n++) {
       const c = l[n], o = c[0] === "[", m = a.has(c);
-      o || m ? (i.length > 0 && (i.sort(), s.push(...i), i = []), s.push(c)) : i.push(c);
+      o || m ? (r.length > 0 && (r.sort(), s.push(...r), r = []), s.push(c)) : r.push(c);
     }
-    return i.length > 0 && (i.sort(), s.push(...i)), s;
+    return r.length > 0 && (r.sort(), s.push(...r)), s;
   };
 }, k1 = (e) => ({
   cache: g1(e.cacheSize),
@@ -365,7 +365,7 @@ const r1 = (e, a) => {
   const {
     parseClassName: l,
     getClassGroupId: s,
-    getConflictingClassGroupIds: i,
+    getConflictingClassGroupIds: r,
     sortModifiers: n,
     postfixLookupClassGroupIds: c
   } = a, o = [], m = e.trim().split(M1);
@@ -405,7 +405,7 @@ const r1 = (e, a) => {
     if (o.indexOf(q) > -1)
       continue;
     o.push(q);
-    const Q = i(L, A);
+    const Q = r(L, A);
     for (let H = 0; H < Q.length; ++H) {
       const g = Q[H];
       o.push(U + g);
@@ -414,10 +414,10 @@ const r1 = (e, a) => {
   }
   return h;
 }, E1 = (...e) => {
-  let a = 0, l, s, i = "";
+  let a = 0, l, s, r = "";
   for (; a < e.length; )
-    (l = e[a++]) && (s = te(l)) && (i && (i += " "), i += s);
-  return i;
+    (l = e[a++]) && (s = te(l)) && (r && (r += " "), r += s);
+  return r;
 }, te = (e) => {
   if (typeof e == "string")
     return e;
@@ -426,16 +426,16 @@ const r1 = (e, a) => {
     e[s] && (a = te(e[s])) && (l && (l += " "), l += a);
   return l;
 }, C1 = (e, ...a) => {
-  let l, s, i, n;
+  let l, s, r, n;
   const c = (m) => {
     const h = a.reduce((f, p) => p(f), e());
-    return l = k1(h), s = l.cache.get, i = l.cache.set, n = o, o(m);
+    return l = k1(h), s = l.cache.get, r = l.cache.set, n = o, o(m);
   }, o = (m) => {
     const h = s(m);
     if (h)
       return h;
     const f = z1(m, l);
-    return i(m, f), f;
+    return r(m, f), f;
   };
   return n = c, (...m) => n(E1(...m));
 }, A1 = [], T = (e) => {
@@ -446,14 +446,14 @@ const r1 = (e, a) => {
   // For example, `hsl(0 0% 0%)` would be classified as a length without this check.
   // I could also use lookbehind assertion in `lengthUnitRegex` but that isn't supported widely enough.
   _1.test(e) && !L1.test(e)
-), t0 = () => !1, j1 = (e) => I1.test(e), D1 = (e) => T1.test(e), O1 = (e) => !x(e) && !v(e), $1 = (e) => e.startsWith("@container") && (e[10] === "/" && e[11] !== void 0 || e[11] === "s" && e[16] !== void 0 && e.startsWith("-size/", 10) || e[11] === "n" && e[18] !== void 0 && e.startsWith("-normal/", 10)), B1 = (e) => a2(e, ne, t0), x = (e) => ae.test(e), r2 = (e) => a2(e, oe, R1), A0 = (e) => a2(e, K1, E), V1 = (e) => a2(e, de, se), G1 = (e) => a2(e, ce, t0), S0 = (e) => a2(e, ie, t0), F1 = (e) => a2(e, re, D1), M2 = (e) => a2(e, me, j1), v = (e) => le.test(e), p2 = (e) => o2(e, oe), H1 = (e) => o2(e, ce), P0 = (e) => o2(e, ie), W1 = (e) => o2(e, ne), U1 = (e) => o2(e, re), z2 = (e) => o2(e, me, !0), q1 = (e) => o2(e, de, !0), a2 = (e, a, l) => {
+), t0 = () => !1, j1 = (e) => I1.test(e), D1 = (e) => T1.test(e), O1 = (e) => !x(e) && !v(e), $1 = (e) => e.startsWith("@container") && (e[10] === "/" && e[11] !== void 0 || e[11] === "s" && e[16] !== void 0 && e.startsWith("-size/", 10) || e[11] === "n" && e[18] !== void 0 && e.startsWith("-normal/", 10)), B1 = (e) => a2(e, ne, t0), x = (e) => ae.test(e), i2 = (e) => a2(e, oe, R1), A0 = (e) => a2(e, K1, E), V1 = (e) => a2(e, de, se), G1 = (e) => a2(e, ce, t0), S0 = (e) => a2(e, re, t0), F1 = (e) => a2(e, ie, D1), M2 = (e) => a2(e, me, j1), v = (e) => le.test(e), p2 = (e) => o2(e, oe), H1 = (e) => o2(e, ce), P0 = (e) => o2(e, re), W1 = (e) => o2(e, ne), U1 = (e) => o2(e, ie), z2 = (e) => o2(e, me, !0), q1 = (e) => o2(e, de, !0), a2 = (e, a, l) => {
   const s = ae.exec(e);
   return s ? s[1] ? a(s[1]) : l(s[2]) : !1;
 }, o2 = (e, a, l = !1) => {
   const s = le.exec(e);
   return s ? s[1] ? a(s[1]) : l : !1;
-}, ie = (e) => e === "position" || e === "percentage", re = (e) => e === "image" || e === "url", ne = (e) => e === "length" || e === "size" || e === "bg-size", oe = (e) => e === "length", K1 = (e) => e === "number", ce = (e) => e === "family-name", de = (e) => e === "number" || e === "weight", me = (e) => e === "shadow", J1 = () => {
-  const e = T("color"), a = T("font"), l = T("text"), s = T("font-weight"), i = T("tracking"), n = T("leading"), c = T("breakpoint"), o = T("container"), m = T("spacing"), h = T("radius"), f = T("shadow"), p = T("inset-shadow"), y = T("text-shadow"), w = T("drop-shadow"), M = T("blur"), z = T("perspective"), S = T("aspect"), A = T("ease"), L = T("animate"), G = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], U = () => [
+}, re = (e) => e === "position" || e === "percentage", ie = (e) => e === "image" || e === "url", ne = (e) => e === "length" || e === "size" || e === "bg-size", oe = (e) => e === "length", K1 = (e) => e === "number", ce = (e) => e === "family-name", de = (e) => e === "number" || e === "weight", me = (e) => e === "shadow", J1 = () => {
+  const e = T("color"), a = T("font"), l = T("text"), s = T("font-weight"), r = T("tracking"), n = T("leading"), c = T("breakpoint"), o = T("container"), m = T("spacing"), h = T("radius"), f = T("shadow"), p = T("inset-shadow"), y = T("text-shadow"), w = T("drop-shadow"), M = T("blur"), z = T("perspective"), S = T("aspect"), A = T("ease"), L = T("animate"), G = () => ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"], U = () => [
     "center",
     "top",
     "bottom",
@@ -473,13 +473,13 @@ const r1 = (e, a) => {
     "left-bottom"
   ], q = () => [...U(), v, x], Q = () => ["auto", "hidden", "clip", "visible", "scroll"], H = () => ["auto", "contain", "none"], g = () => [v, x, m], F = () => [X, "full", "auto", ...g()], x0 = () => [K, "none", "subgrid", v, x], g0 = () => ["auto", {
     span: ["full", K, v, x]
-  }, K, v, x], v2 = () => [K, "auto", v, x], v0 = () => ["auto", "min", "max", "fr", v, x], D2 = () => ["start", "end", "center", "between", "around", "evenly", "stretch", "baseline", "center-safe", "end-safe"], c2 = () => ["start", "end", "center", "stretch", "center-safe", "end-safe"], W = () => ["auto", ...g()], i2 = () => [X, "auto", "full", "dvw", "dvh", "lvw", "lvh", "svw", "svh", "min", "max", "fit", ...g()], O2 = () => [X, "screen", "full", "dvw", "lvw", "svw", "min", "max", "fit", ...g()], $2 = () => [X, "screen", "full", "lh", "dvh", "lvh", "svh", "min", "max", "fit", ...g()], k = () => [e, v, x], y0 = () => [...U(), P0, S0, {
+  }, K, v, x], v2 = () => [K, "auto", v, x], v0 = () => ["auto", "min", "max", "fr", v, x], D2 = () => ["start", "end", "center", "between", "around", "evenly", "stretch", "baseline", "center-safe", "end-safe"], c2 = () => ["start", "end", "center", "stretch", "center-safe", "end-safe"], W = () => ["auto", ...g()], r2 = () => [X, "auto", "full", "dvw", "dvh", "lvw", "lvh", "svw", "svh", "min", "max", "fit", ...g()], O2 = () => [X, "screen", "full", "dvw", "lvw", "svw", "min", "max", "fit", ...g()], $2 = () => [X, "screen", "full", "lh", "dvh", "lvh", "svh", "min", "max", "fit", ...g()], k = () => [e, v, x], y0 = () => [...U(), P0, S0, {
     position: [v, x]
   }], w0 = () => ["no-repeat", {
     repeat: ["", "x", "y", "space", "round"]
   }], k0 = () => ["auto", "cover", "contain", W1, B1, {
     size: [v, x]
-  }], B2 = () => [F2, p2, r2], B = () => [
+  }], B2 = () => [F2, p2, i2], B = () => [
     // Deprecated since Tailwind CSS v4.0.0
     "",
     "none",
@@ -487,7 +487,7 @@ const r1 = (e, a) => {
     h,
     v,
     x
-  ], V = () => ["", E, p2, r2], y2 = () => ["solid", "dashed", "dotted", "double"], N0 = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], R = () => [E, F2, P0, S0], M0 = () => [
+  ], V = () => ["", E, p2, i2], y2 = () => ["solid", "dashed", "dotted", "double"], N0 = () => ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"], R = () => [E, F2, P0, S0], M0 = () => [
     // Deprecated since Tailwind CSS v4.0.0
     "",
     "none",
@@ -1184,7 +1184,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/width#setting-both-width-and-height
        */
       size: [{
-        size: i2()
+        size: r2()
       }],
       /**
        * Inline Size
@@ -1233,7 +1233,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/width
        */
       w: [{
-        w: [o, "screen", ...i2()]
+        w: [o, "screen", ...r2()]
       }],
       /**
        * Min-Width
@@ -1245,7 +1245,7 @@ const r1 = (e, a) => {
           "screen",
           /** Deprecated. @see https://github.com/tailwindlabs/tailwindcss.com/issues/2027#issuecomment-2620152757 */
           "none",
-          ...i2()
+          ...r2()
         ]
       }],
       /**
@@ -1263,7 +1263,7 @@ const r1 = (e, a) => {
           {
             screen: [c]
           },
-          ...i2()
+          ...r2()
         ]
       }],
       /**
@@ -1271,21 +1271,21 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/height
        */
       h: [{
-        h: ["screen", "lh", ...i2()]
+        h: ["screen", "lh", ...r2()]
       }],
       /**
        * Min-Height
        * @see https://tailwindcss.com/docs/min-height
        */
       "min-h": [{
-        "min-h": ["screen", "lh", "none", ...i2()]
+        "min-h": ["screen", "lh", "none", ...r2()]
       }],
       /**
        * Max-Height
        * @see https://tailwindcss.com/docs/max-height
        */
       "max-h": [{
-        "max-h": ["screen", "lh", ...i2()]
+        "max-h": ["screen", "lh", ...r2()]
       }],
       // ------------------
       // --- Typography ---
@@ -1295,7 +1295,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/font-size
        */
       "font-size": [{
-        text: ["base", l, p2, r2]
+        text: ["base", l, p2, i2]
       }],
       /**
        * Font Smoothing
@@ -1370,7 +1370,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/letter-spacing
        */
       tracking: [{
-        tracking: [i, v, x]
+        tracking: [r, v, x]
       }],
       /**
        * Line Clamp
@@ -1450,7 +1450,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/text-decoration-thickness
        */
       "text-decoration-thickness": [{
-        decoration: [E, "from-font", "auto", v, r2]
+        decoration: [E, "from-font", "auto", v, i2]
       }],
       /**
        * Text Decoration Color
@@ -1972,7 +1972,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/outline-width
        */
       "outline-w": [{
-        outline: ["", E, p2, r2]
+        outline: ["", E, p2, i2]
       }],
       /**
        * Outline Color
@@ -2047,7 +2047,7 @@ const r1 = (e, a) => {
        * @see https://github.com/tailwindlabs/tailwindcss/blob/v4.0.0/packages/tailwindcss/src/utilities.ts#L4158
        */
       "ring-offset-w": [{
-        "ring-offset": [E, r2]
+        "ring-offset": [E, i2]
       }],
       /**
        * Ring Offset Color
@@ -3060,7 +3060,7 @@ const r1 = (e, a) => {
        * @see https://tailwindcss.com/docs/stroke-width
        */
       "stroke-w": [{
-        stroke: [E, p2, r2, A0]
+        stroke: [E, p2, i2, A0]
       }],
       /**
        * Stroke
@@ -3146,18 +3146,18 @@ function j({
   secondaryLabel: a,
   lang: l = "en",
   className: s,
-  secondaryClassName: i,
+  secondaryClassName: r,
   as: n = "span"
 }) {
   const c = b(e, l), o = a ? b(a, l === "en" ? "id" : "en") : null;
-  return /* @__PURE__ */ r("span", { className: u("block", s), children: [
+  return /* @__PURE__ */ i("span", { className: u("block", s), children: [
     /* @__PURE__ */ t(n, { className: "font-semibold text-slate-900", children: c }),
     o ? /* @__PURE__ */ t(
       "span",
       {
         className: u(
           "mt-0.5 block text-sm font-medium text-blue-600",
-          i
+          r
         ),
         children: o
       }
@@ -3167,11 +3167,11 @@ function j({
 const _0 = (e) => typeof e == "boolean" ? `${e}` : e === 0 ? "0" : e, L0 = Y0, he = (e, a) => (l) => {
   var s;
   if ((a == null ? void 0 : a.variants) == null) return L0(e, l == null ? void 0 : l.class, l == null ? void 0 : l.className);
-  const { variants: i, defaultVariants: n } = a, c = Object.keys(i).map((h) => {
+  const { variants: r, defaultVariants: n } = a, c = Object.keys(r).map((h) => {
     const f = l == null ? void 0 : l[h], p = n == null ? void 0 : n[h];
     if (f === null) return null;
     const y = _0(f) || _0(p);
-    return i[h][y];
+    return r[h][y];
   }), o = l && Object.entries(l).reduce((h, f) => {
     let [p, y] = f;
     return y === void 0 || (h[p] = y), h;
@@ -3240,7 +3240,7 @@ const tt = d2(
     size: a = 24,
     strokeWidth: l = 2,
     absoluteStrokeWidth: s,
-    className: i = "",
+    className: r = "",
     children: n,
     iconNode: c,
     ...o
@@ -3253,7 +3253,7 @@ const tt = d2(
       height: a,
       stroke: e,
       strokeWidth: s ? Number(l) * 24 / Number(a) : l,
-      className: ue("lucide", i),
+      className: ue("lucide", r),
       ...!n && !X1(o) && { "aria-hidden": "true" },
       ...o
     },
@@ -3271,7 +3271,7 @@ const tt = d2(
  */
 const N = (e, a) => {
   const l = d2(
-    ({ className: s, ...i }, n) => Z2(tt, {
+    ({ className: s, ...r }, n) => Z2(tt, {
       ref: n,
       iconNode: a,
       className: ue(
@@ -3279,7 +3279,7 @@ const N = (e, a) => {
         `lucide-${e}`,
         s
       ),
-      ...i
+      ...r
     })
   );
   return l.displayName = I0(e), l;
@@ -3343,14 +3343,14 @@ const st = [
   ["path", { d: "M19.938 10.5a4 4 0 0 1 .585.396", key: "1qfode" }],
   ["path", { d: "M6 18a4 4 0 0 1-1.967-.516", key: "2e4loj" }],
   ["path", { d: "M19.967 17.484A4 4 0 0 1 18 18", key: "159ez6" }]
-], it = N("brain", st);
+], rt = N("brain", st);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const rt = [
+const it = [
   ["path", { d: "M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", key: "1b4qmf" }],
   ["path", { d: "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", key: "i71pzd" }],
   ["path", { d: "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", key: "10jefs" }],
@@ -3358,7 +3358,7 @@ const rt = [
   ["path", { d: "M10 10h4", key: "tcdvrf" }],
   ["path", { d: "M10 14h4", key: "kelpxr" }],
   ["path", { d: "M10 18h4", key: "1ulq68" }]
-], nt = N("building-2", rt);
+], nt = N("building-2", it);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -3785,7 +3785,7 @@ const la = [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const ia = [
+const ra = [
   [
     "path",
     {
@@ -3794,7 +3794,7 @@ const ia = [
     }
   ],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-], ra = N("shield-check", ia);
+], ia = N("shield-check", ra);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -3888,7 +3888,7 @@ const fa = [
   ["path", { d: "M12 3v12", key: "1x0j5s" }],
   ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
-], i0 = N("upload", fa);
+], r0 = N("upload", fa);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -3953,7 +3953,7 @@ const ka = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ], Na = N("x", ka), Ma = { sm: "h-4 w-4", md: "h-6 w-6", lg: "h-8 w-8" };
-function r0({ size: e = "md", className: a, label: l = "Loading" }) {
+function i0({ size: e = "md", className: a, label: l = "Loading" }) {
   return /* @__PURE__ */ t(
     ve,
     {
@@ -3995,23 +3995,23 @@ const za = he(
     variant: a,
     size: l,
     fullWidth: s,
-    loading: i,
+    loading: r,
     leftIcon: n,
     rightIcon: c,
     children: o,
     disabled: m,
     ...h
-  }, f) => /* @__PURE__ */ r(
+  }, f) => /* @__PURE__ */ i(
     "button",
     {
       ref: f,
       className: u(za({ variant: a, size: l, fullWidth: s }), e),
-      disabled: m || i,
+      disabled: m || r,
       ...h,
       children: [
-        i ? /* @__PURE__ */ t(r0, { size: "sm", className: "text-current" }) : n,
+        r ? /* @__PURE__ */ t(i0, { size: "sm", className: "text-current" }) : n,
         o,
-        !i && c
+        !r && c
       ]
     }
   )
@@ -4090,15 +4090,15 @@ function Ws({
   return /* @__PURE__ */ t("div", { className: u("border-t border-slate-100 px-5 py-4", e), ...l, children: a });
 }
 const e2 = d2(
-  ({ className: e, label: a, helperText: l, errorText: s, lang: i = "en", labelClassName: n, id: c, ...o }, m) => {
+  ({ className: e, label: a, helperText: l, errorText: s, lang: r = "en", labelClassName: n, id: c, ...o }, m) => {
     const h = c ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), f = !!s;
-    return /* @__PURE__ */ r("div", { className: "flex flex-col gap-1.5", children: [
+    return /* @__PURE__ */ i("div", { className: "flex flex-col gap-1.5", children: [
       a ? /* @__PURE__ */ t(
         "label",
         {
           htmlFor: h,
           className: u("text-sm font-medium text-slate-700", n),
-          children: b(a, i)
+          children: b(a, r)
         }
       ) : null,
       /* @__PURE__ */ t(
@@ -4125,7 +4125,7 @@ const e2 = d2(
             "text-xs",
             f ? "text-red-600" : "text-slate-500"
           ),
-          children: b(s ?? l ?? "", i)
+          children: b(s ?? l ?? "", r)
         }
       )
     ] });
@@ -4133,10 +4133,10 @@ const e2 = d2(
 );
 e2.displayName = "Input";
 const t2 = d2(
-  ({ className: e, label: a, helperText: l, errorText: s, lang: i = "en", id: n, rows: c = 4, ...o }, m) => {
+  ({ className: e, label: a, helperText: l, errorText: s, lang: r = "en", id: n, rows: c = 4, ...o }, m) => {
     const h = n ?? (typeof a == "string" ? a : a == null ? void 0 : a.en), f = !!s;
-    return /* @__PURE__ */ r("div", { className: "flex flex-col gap-1.5", children: [
-      a ? /* @__PURE__ */ t("label", { htmlFor: h, className: "text-sm font-medium text-slate-700", children: b(a, i) }) : null,
+    return /* @__PURE__ */ i("div", { className: "flex flex-col gap-1.5", children: [
+      a ? /* @__PURE__ */ t("label", { htmlFor: h, className: "text-sm font-medium text-slate-700", children: b(a, r) }) : null,
       /* @__PURE__ */ t(
         "textarea",
         {
@@ -4153,7 +4153,7 @@ const t2 = d2(
           ...o
         }
       ),
-      (l || s) && /* @__PURE__ */ t("p", { className: u("text-xs", f ? "text-red-600" : "text-slate-500"), children: b(s ?? l ?? "", i) })
+      (l || s) && /* @__PURE__ */ t("p", { className: u("text-xs", f ? "text-red-600" : "text-slate-500"), children: b(s ?? l ?? "", r) })
     ] });
   }
 );
@@ -4180,7 +4180,7 @@ function Ae(e, a = []) {
     }
     return [h, f];
   }
-  const i = () => {
+  const r = () => {
     const n = l.map((c) => C.createContext(c));
     return function(o) {
       const m = (o == null ? void 0 : o[e]) || n;
@@ -4190,15 +4190,15 @@ function Ae(e, a = []) {
       );
     };
   };
-  return i.scopeName = e, [s, Ca(i, ...a)];
+  return r.scopeName = e, [s, Ca(r, ...a)];
 }
 function Ca(...e) {
   const a = e[0];
   if (e.length === 1) return a;
   const l = () => {
-    const s = e.map((i) => ({
-      useScope: i(),
-      scopeName: i.scopeName
+    const s = e.map((r) => ({
+      useScope: r(),
+      scopeName: r.scopeName
     }));
     return function(n) {
       const c = s.reduce((o, { useScope: m, scopeName: h }) => {
@@ -4218,15 +4218,15 @@ function T0(e, a) {
 function Aa(...e) {
   return (a) => {
     let l = !1;
-    const s = e.map((i) => {
-      const n = T0(i, a);
+    const s = e.map((r) => {
+      const n = T0(r, a);
       return !l && typeof n == "function" && (l = !0), n;
     });
     if (l)
       return () => {
-        for (let i = 0; i < s.length; i++) {
-          const n = s[i];
-          typeof n == "function" ? n() : T0(e[i], null);
+        for (let r = 0; r < s.length; r++) {
+          const n = s[r];
+          typeof n == "function" ? n() : T0(e[r], null);
         }
       };
   };
@@ -4240,27 +4240,27 @@ function Se(e) {
 }
 // @__NO_SIDE_EFFECTS__
 function _a(e) {
-  const a = /* @__PURE__ */ La(e), l = C.forwardRef((s, i) => {
+  const a = /* @__PURE__ */ La(e), l = C.forwardRef((s, r) => {
     let { children: n, ...c } = s;
     Se(n) && typeof L2 == "function" && (n = L2(n._payload));
     const o = C.Children.toArray(n), m = o.find(Ta);
     if (m) {
       const h = m.props.children, f = o.map((p) => p === m ? C.Children.count(h) > 1 ? C.Children.only(null) : C.isValidElement(h) ? h.props.children : null : p);
-      return /* @__PURE__ */ t(a, { ...c, ref: i, children: C.isValidElement(h) ? C.cloneElement(h, void 0, f) : null });
+      return /* @__PURE__ */ t(a, { ...c, ref: r, children: C.isValidElement(h) ? C.cloneElement(h, void 0, f) : null });
     }
-    return /* @__PURE__ */ t(a, { ...c, ref: i, children: n });
+    return /* @__PURE__ */ t(a, { ...c, ref: r, children: n });
   });
   return l.displayName = `${e}.Slot`, l;
 }
 // @__NO_SIDE_EFFECTS__
 function La(e) {
   const a = C.forwardRef((l, s) => {
-    let { children: i, ...n } = l;
-    if (Se(i) && typeof L2 == "function" && (i = L2(i._payload)), C.isValidElement(i)) {
-      const c = ja(i), o = Ra(n, i.props);
-      return i.type !== C.Fragment && (o.ref = s ? Aa(s, c) : c), C.cloneElement(i, o);
+    let { children: r, ...n } = l;
+    if (Se(r) && typeof L2 == "function" && (r = L2(r._payload)), C.isValidElement(r)) {
+      const c = ja(r), o = Ra(n, r.props);
+      return r.type !== C.Fragment && (o.ref = s ? Aa(s, c) : c), C.cloneElement(r, o);
     }
-    return C.Children.count(i) > 1 ? C.Children.only(null) : null;
+    return C.Children.count(r) > 1 ? C.Children.only(null) : null;
   });
   return a.displayName = `${e}.SlotClone`, a;
 }
@@ -4271,18 +4271,18 @@ function Ta(e) {
 function Ra(e, a) {
   const l = { ...a };
   for (const s in a) {
-    const i = e[s], n = a[s];
-    /^on[A-Z]/.test(s) ? i && n ? l[s] = (...o) => {
+    const r = e[s], n = a[s];
+    /^on[A-Z]/.test(s) ? r && n ? l[s] = (...o) => {
       const m = n(...o);
-      return i(...o), m;
-    } : i && (l[s] = i) : s === "style" ? l[s] = { ...i, ...n } : s === "className" && (l[s] = [i, n].filter(Boolean).join(" "));
+      return r(...o), m;
+    } : r && (l[s] = r) : s === "style" ? l[s] = { ...r, ...n } : s === "className" && (l[s] = [r, n].filter(Boolean).join(" "));
   }
   return { ...e, ...l };
 }
 function ja(e) {
-  var s, i;
+  var s, r;
   let a = (s = Object.getOwnPropertyDescriptor(e.props, "ref")) == null ? void 0 : s.get, l = a && "isReactWarning" in a && a.isReactWarning;
-  return l ? e.ref : (a = (i = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : i.get, l = a && "isReactWarning" in a && a.isReactWarning, l ? e.props.ref : e.props.ref || e.ref);
+  return l ? e.ref : (a = (r = Object.getOwnPropertyDescriptor(e, "ref")) == null ? void 0 : r.get, l = a && "isReactWarning" in a && a.isReactWarning, l ? e.props.ref : e.props.ref || e.ref);
 }
 var Da = [
   "a",
@@ -4303,8 +4303,8 @@ var Da = [
   "svg",
   "ul"
 ], b2 = Da.reduce((e, a) => {
-  const l = /* @__PURE__ */ _a(`Primitive.${a}`), s = C.forwardRef((i, n) => {
-    const { asChild: c, ...o } = i, m = c ? l : a;
+  const l = /* @__PURE__ */ _a(`Primitive.${a}`), s = C.forwardRef((r, n) => {
+    const { asChild: c, ...o } = r, m = c ? l : a;
     return typeof window < "u" && (window[Symbol.for("radix-ui")] = !0), /* @__PURE__ */ t(m, { ...o, ref: n });
   });
   return s.displayName = `Primitive.${a}`, { ...e, [a]: s };
@@ -4313,12 +4313,12 @@ var Da = [
     const {
       __scopeProgress: l,
       value: s = null,
-      max: i,
+      max: r,
       getValueLabel: n = Va,
       ...c
     } = e;
-    (i || i === 0) && !R0(i) && console.error(Ga(`${i}`, "Progress"));
-    const o = R0(i) ? i : o0;
+    (r || r === 0) && !R0(r) && console.error(Ga(`${r}`, "Progress"));
+    const o = R0(r) ? r : o0;
     s !== null && !j0(s, o) && console.error(Fa(`${s}`, "Progress"));
     const m = j0(s, o) ? s : null, h = I2(m) ? n(m, o) : void 0;
     return /* @__PURE__ */ t($a, { scope: l, value: m, max: o, children: /* @__PURE__ */ t(
@@ -4341,13 +4341,13 @@ var Da = [
 Pe.displayName = n0;
 var _e = "ProgressIndicator", Le = C.forwardRef(
   (e, a) => {
-    const { __scopeProgress: l, ...s } = e, i = Ba(_e, l);
+    const { __scopeProgress: l, ...s } = e, r = Ba(_e, l);
     return /* @__PURE__ */ t(
       b2.div,
       {
-        "data-state": Ie(i.value, i.max),
-        "data-value": i.value ?? void 0,
-        "data-max": i.max,
+        "data-state": Ie(r.value, r.max),
+        "data-value": r.value ?? void 0,
+        "data-max": r.max,
         ...s,
         ref: a
       }
@@ -4387,10 +4387,10 @@ function Te({
   max: a = 100,
   className: l,
   label: s = "Progress",
-  showLabel: i = !1
+  showLabel: r = !1
 }) {
   const n = Math.min(100, Math.max(0, e / a * 100));
-  return /* @__PURE__ */ r("div", { className: u("w-full", l), children: [
+  return /* @__PURE__ */ i("div", { className: u("w-full", l), children: [
     /* @__PURE__ */ t(
       Ha,
       {
@@ -4406,7 +4406,7 @@ function Te({
         )
       }
     ),
-    i ? /* @__PURE__ */ r("p", { className: "mt-1 text-right text-xs text-slate-500", children: [
+    r ? /* @__PURE__ */ i("p", { className: "mt-1 text-right text-xs text-slate-500", children: [
       Math.round(n),
       "%"
     ] }) : null
@@ -4440,7 +4440,7 @@ function qa() {
   function a(p, y) {
     return p === y && (p !== 0 || 1 / p === 1 / y) || p !== p && y !== y;
   }
-  var l = typeof Object.is == "function" ? Object.is : a, s = e.useState, i = e.useEffect, n = e.useLayoutEffect, c = e.useDebugValue;
+  var l = typeof Object.is == "function" ? Object.is : a, s = e.useState, r = e.useEffect, n = e.useLayoutEffect, c = e.useDebugValue;
   function o(p, y) {
     var w = y(), M = s({ inst: { value: w, getSnapshot: y } }), z = M[0].inst, S = M[1];
     return n(
@@ -4448,7 +4448,7 @@ function qa() {
         z.value = w, z.getSnapshot = y, m(z) && S({ inst: z });
       },
       [p, w, y]
-    ), i(
+    ), r(
       function() {
         return m(z) && S({ inst: z }), p(function() {
           m(z) && S({ inst: z });
@@ -4490,7 +4490,7 @@ function Ka() {
       return w === M && (w !== 0 || 1 / w === 1 / M) || w !== w && M !== M;
     }
     function a(w, M) {
-      f || i.startTransition === void 0 || (f = !0, console.error(
+      f || r.startTransition === void 0 || (f = !0, console.error(
         "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
       ));
       var z = M();
@@ -4532,8 +4532,8 @@ function Ka() {
       return M();
     }
     typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-    var i = q0, n = typeof Object.is == "function" ? Object.is : e, c = i.useState, o = i.useEffect, m = i.useLayoutEffect, h = i.useDebugValue, f = !1, p = !1, y = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? s : a;
-    W2.useSyncExternalStore = i.useSyncExternalStore !== void 0 ? i.useSyncExternalStore : y, typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
+    var r = q0, n = typeof Object.is == "function" ? Object.is : e, c = r.useState, o = r.useEffect, m = r.useLayoutEffect, h = r.useDebugValue, f = !1, p = !1, y = typeof window > "u" || typeof window.document > "u" || typeof window.document.createElement > "u" ? s : a;
+    W2.useSyncExternalStore = r.useSyncExternalStore !== void 0 ? r.useSyncExternalStore : y, typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop == "function" && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(Error());
   })()), W2;
 }
 var $0;
@@ -4554,12 +4554,12 @@ function Qa() {
 }
 var c0 = "Avatar", [Xa] = Ae(c0), [el, Re] = Xa(c0), je = C.forwardRef(
   (e, a) => {
-    const { __scopeAvatar: l, ...s } = e, [i, n] = C.useState("idle");
+    const { __scopeAvatar: l, ...s } = e, [r, n] = C.useState("idle");
     return /* @__PURE__ */ t(
       el,
       {
         scope: l,
-        imageLoadingStatus: i,
+        imageLoadingStatus: r,
         onImageLoadingStatusChange: n,
         children: /* @__PURE__ */ t(b2.span, { ...s, ref: a })
       }
@@ -4569,9 +4569,9 @@ var c0 = "Avatar", [Xa] = Ae(c0), [el, Re] = Xa(c0), je = C.forwardRef(
 je.displayName = c0;
 var De = "AvatarImage", Oe = C.forwardRef(
   (e, a) => {
-    const { __scopeAvatar: l, src: s, onLoadingStatusChange: i = () => {
+    const { __scopeAvatar: l, src: s, onLoadingStatusChange: r = () => {
     }, ...n } = e, c = Re(De, l), o = tl(s, n), m = Ua((h) => {
-      i(h), c.onImageLoadingStatusChange(h);
+      r(h), c.onImageLoadingStatusChange(h);
     });
     return X2(() => {
       o !== "idle" && m(o);
@@ -4581,13 +4581,13 @@ var De = "AvatarImage", Oe = C.forwardRef(
 Oe.displayName = De;
 var $e = "AvatarFallback", Be = C.forwardRef(
   (e, a) => {
-    const { __scopeAvatar: l, delayMs: s, ...i } = e, n = Re($e, l), [c, o] = C.useState(s === void 0);
+    const { __scopeAvatar: l, delayMs: s, ...r } = e, n = Re($e, l), [c, o] = C.useState(s === void 0);
     return C.useEffect(() => {
       if (s !== void 0) {
         const m = window.setTimeout(() => o(!0), s);
         return () => window.clearTimeout(m);
       }
-    }, [s]), c && n.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ t(b2.span, { ...i, ref: a }) : null;
+    }, [s]), c && n.imageLoadingStatus !== "loaded" ? /* @__PURE__ */ t(b2.span, { ...r, ref: a }) : null;
   }
 );
 Be.displayName = $e;
@@ -4595,7 +4595,7 @@ function B0(e, a) {
   return e ? a ? (e.src !== a && (e.src = a), e.complete && e.naturalWidth > 0 ? "loaded" : "loading") : "error" : "idle";
 }
 function tl(e, { referrerPolicy: a, crossOrigin: l }) {
-  const s = Ya(), i = C.useRef(null), n = s ? (i.current || (i.current = new window.Image()), i.current) : null, [c, o] = C.useState(
+  const s = Ya(), r = C.useRef(null), n = s ? (r.current || (r.current = new window.Image()), r.current) : null, [c, o] = C.useState(
     () => B0(n, e)
   );
   return X2(() => {
@@ -4612,19 +4612,19 @@ function tl(e, { referrerPolicy: a, crossOrigin: l }) {
   }, [n, l, a]), c;
 }
 var al = je, ll = Oe, sl = Be;
-const il = {
+const rl = {
   sm: "h-8 w-8 text-xs",
   md: "h-10 w-10 text-sm",
   lg: "h-12 w-12 text-base"
 };
-function Ve({ src: e, alt: a, fallback: l, size: s = "md", className: i }) {
-  return /* @__PURE__ */ r(
+function Ve({ src: e, alt: a, fallback: l, size: s = "md", className: r }) {
+  return /* @__PURE__ */ i(
     al,
     {
       className: u(
         "inline-flex shrink-0 select-none items-center justify-center overflow-hidden rounded-full bg-slate-100",
-        il[s],
-        i
+        rl[s],
+        r
       ),
       children: [
         /* @__PURE__ */ t(ll, { src: e, alt: a, className: "h-full w-full object-cover" }),
@@ -4633,7 +4633,7 @@ function Ve({ src: e, alt: a, fallback: l, size: s = "md", className: i }) {
     }
   );
 }
-const rl = {
+const il = {
   en: "EN",
   id: "ID"
 };
@@ -4643,13 +4643,13 @@ function u2({
   variant: l = "default",
   className: s
 }) {
-  const i = l === "marketing";
+  const r = l === "marketing";
   return /* @__PURE__ */ t(
     "div",
     {
       className: u(
         "inline-flex items-center rounded-full border border-slate-200 bg-white text-xs font-semibold text-slate-700",
-        i ? "p-1" : "p-0.5 shadow-sm",
+        r ? "p-1" : "p-0.5 shadow-sm",
         s
       ),
       role: "group",
@@ -4664,9 +4664,9 @@ function u2({
             "aria-pressed": c,
             className: u(
               "cursor-pointer rounded-full px-3 py-1.5 transition-colors",
-              c ? i ? "bg-slate-950 text-white" : "bg-slate-900 text-white" : i ? "text-slate-700 hover:bg-slate-100" : "text-slate-600 hover:text-slate-900"
+              c ? r ? "bg-slate-950 text-white" : "bg-slate-900 text-white" : r ? "text-slate-700 hover:bg-slate-100" : "text-slate-600 hover:text-slate-900"
             ),
-            children: rl[n]
+            children: il[n]
           },
           n
         );
@@ -4679,7 +4679,7 @@ function nl({
   title: a = "alocare.ai",
   subtitle: l = "AI-Powered Health Intelligence",
   navItems: s = [],
-  locale: i = "en",
+  locale: r = "en",
   onLocaleChange: n,
   actions: c,
   className: o
@@ -4691,9 +4691,9 @@ function nl({
         "sticky top-0 z-[1100] border-b border-slate-200/70 bg-white/80 backdrop-blur",
         o
       ),
-      children: /* @__PURE__ */ r("div", { className: "mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4", children: [
-        /* @__PURE__ */ r("div", { className: "flex min-w-0 items-center gap-3", children: [
-          e ?? /* @__PURE__ */ t("span", { className: "leading-tight", children: /* @__PURE__ */ r("span", { className: "block text-xl font-semibold tracking-tight text-[#001450]", children: [
+      children: /* @__PURE__ */ i("div", { className: "mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4", children: [
+        /* @__PURE__ */ i("div", { className: "flex min-w-0 items-center gap-3", children: [
+          e ?? /* @__PURE__ */ t("span", { className: "leading-tight", children: /* @__PURE__ */ i("span", { className: "block text-xl font-semibold tracking-tight text-[#001450]", children: [
             "alocare",
             /* @__PURE__ */ t("span", { className: "text-[#1078E0]", children: " AI" })
           ] }) }),
@@ -4704,15 +4704,15 @@ function nl({
           {
             href: m.href,
             className: u(
-              "text-sm transition-colors",
+              "cursor-pointer text-sm transition-colors",
               m.active ? "font-semibold text-slate-950" : "text-slate-700 hover:text-slate-950"
             ),
             children: m.label
           },
           m.href
         )) }) : null,
-        /* @__PURE__ */ r("div", { className: "flex items-center gap-3", children: [
-          n ? /* @__PURE__ */ t(u2, { locale: i, onChange: n }) : null,
+        /* @__PURE__ */ i("div", { className: "flex items-center gap-3", children: [
+          n ? /* @__PURE__ */ t(u2, { locale: r, onChange: n }) : null,
           c
         ] })
       ] })
@@ -4743,22 +4743,22 @@ function Ge({
   state: a = "empty",
   accept: l = ".pdf,.jpg,.jpeg,.png",
   multiple: s = !1,
-  onFilesSelected: i,
+  onFilesSelected: r,
   className: n,
   hideHeader: c = !1
 }) {
   const [o, m] = _(!1), h = l1(null), f = s1(
     (p) => {
-      p != null && p.length && (i == null || i(p));
+      p != null && p.length && (r == null || r(p));
     },
-    [i]
+    [r]
   );
-  return /* @__PURE__ */ r("div", { className: u("max-w-md", n), children: [
-    c ? null : /* @__PURE__ */ r(S2, { children: [
+  return /* @__PURE__ */ i("div", { className: u("max-w-md", n), children: [
+    c ? null : /* @__PURE__ */ i(S2, { children: [
       /* @__PURE__ */ t("h2", { className: "mb-1 font-heading text-2xl font-bold text-slate-900", children: b(Z.title, e) }),
       /* @__PURE__ */ t("p", { className: "mb-4 text-sm text-slate-600", children: b(Z.subtitle, e) })
     ] }),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         role: "button",
@@ -4781,10 +4781,10 @@ function Ge({
           o && "border-blue-500 bg-blue-50"
         ),
         children: [
-          /* @__PURE__ */ t("div", { className: "mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm", children: a === "uploading" ? /* @__PURE__ */ t(r0, { size: "lg" }) : /* @__PURE__ */ t(Ct, { className: "h-8 w-8 text-blue-600", "aria-hidden": !0 }) }),
+          /* @__PURE__ */ t("div", { className: "mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm", children: a === "uploading" ? /* @__PURE__ */ t(i0, { size: "lg" }) : /* @__PURE__ */ t(Ct, { className: "h-8 w-8 text-blue-600", "aria-hidden": !0 }) }),
           /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(Z.drag, e) }),
           /* @__PURE__ */ t("p", { className: "mt-1 text-xs text-slate-500", children: b(Z.formats, e) }),
-          a === "success" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-emerald-600", children: b(Z.success, e) }) : a === "error" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-red-600", children: b(Z.error, e) }) : /* @__PURE__ */ r(S2, { children: [
+          a === "success" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-emerald-600", children: b(Z.success, e) }) : a === "error" ? /* @__PURE__ */ t("p", { className: "mt-3 text-sm font-medium text-red-600", children: b(Z.error, e) }) : /* @__PURE__ */ i(S2, { children: [
             /* @__PURE__ */ t(
               "input",
               {
@@ -4803,7 +4803,7 @@ function Ge({
               {
                 type: "button",
                 className: "mt-5 cursor-pointer",
-                leftIcon: /* @__PURE__ */ t(i0, { className: "h-4 w-4", "aria-hidden": !0 }),
+                leftIcon: /* @__PURE__ */ t(r0, { className: "h-4 w-4", "aria-hidden": !0 }),
                 onClick: () => {
                   var p;
                   return (p = h.current) == null ? void 0 : p.click();
@@ -4823,11 +4823,11 @@ function Fe({
   fileSize: a = "2.4 MB",
   lang: l = "en",
   uploaded: s = !0,
-  className: i
+  className: r
 }) {
-  return /* @__PURE__ */ t(D, { className: u("", i), children: /* @__PURE__ */ r($, { className: "flex items-center gap-3 py-3", children: [
+  return /* @__PURE__ */ t(D, { className: u("", r), children: /* @__PURE__ */ i($, { className: "flex items-center gap-3 py-3", children: [
     /* @__PURE__ */ t("div", { className: "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50", children: /* @__PURE__ */ t(m2, { className: "h-5 w-5 text-red-600", "aria-hidden": !0 }) }),
-    /* @__PURE__ */ r("div", { className: "min-w-0 flex-1", children: [
+    /* @__PURE__ */ i("div", { className: "min-w-0 flex-1", children: [
       /* @__PURE__ */ t("p", { className: "truncate text-sm font-semibold text-slate-900", children: e }),
       /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: a })
     ] }),
@@ -4852,7 +4852,7 @@ function cl({
   progress: l = 100,
   className: s
 }) {
-  const i = a === "processing" ? ve : a === "complete" ? ft : Qt;
+  const r = a === "processing" ? ve : a === "complete" ? ft : Qt;
   return /* @__PURE__ */ t(
     D,
     {
@@ -4861,9 +4861,9 @@ function cl({
         a === "error" && "border-red-200 bg-red-50/60",
         s
       ),
-      children: /* @__PURE__ */ r($, { className: "flex items-center gap-3 py-3", children: [
+      children: /* @__PURE__ */ i($, { className: "flex items-center gap-3 py-3", children: [
         /* @__PURE__ */ t(
-          i,
+          r,
           {
             className: u(
               "h-5 w-5 shrink-0",
@@ -4875,7 +4875,7 @@ function cl({
             "aria-hidden": !0
           }
         ),
-        /* @__PURE__ */ r("div", { className: "min-w-0 flex-1", children: [
+        /* @__PURE__ */ i("div", { className: "min-w-0 flex-1", children: [
           /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(ol[a], e) }),
           a === "processing" ? /* @__PURE__ */ t(Te, { value: l, className: "mt-2", showLabel: !0 }) : null
         ] })
@@ -4894,7 +4894,7 @@ function Us({
   lang: a = "en",
   className: l
 }) {
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     Y,
     {
       variant: "ai",
@@ -4917,12 +4917,12 @@ function d0({
   lang: a = "en",
   description: l,
   dualLanguageTitle: s = !1,
-  className: i
+  className: r
 }) {
   const n = Math.min(100, Math.max(0, e)), c = 2 * Math.PI * 36, o = c - n / 100 * c;
-  return /* @__PURE__ */ r(D, { className: u("", i), children: [
-    /* @__PURE__ */ r(h2, { className: "border-0 pb-0", children: [
-      /* @__PURE__ */ t("div", { className: "flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50", children: /* @__PURE__ */ t(ra, { className: "h-5 w-5 text-blue-600", "aria-hidden": !0 }) }),
+  return /* @__PURE__ */ i(D, { className: u("", r), children: [
+    /* @__PURE__ */ i(h2, { className: "border-0 pb-0", children: [
+      /* @__PURE__ */ t("div", { className: "flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50", children: /* @__PURE__ */ t(ia, { className: "h-5 w-5 text-blue-600", "aria-hidden": !0 }) }),
       /* @__PURE__ */ t("div", { children: /* @__PURE__ */ t(
         j,
         {
@@ -4933,16 +4933,16 @@ function d0({
         }
       ) })
     ] }),
-    /* @__PURE__ */ r($, { className: "flex items-center justify-between gap-4 pt-2", children: [
+    /* @__PURE__ */ i($, { className: "flex items-center justify-between gap-4 pt-2", children: [
       /* @__PURE__ */ t("p", { className: "max-w-[12rem] text-sm text-slate-600", children: l ?? b(ml, a) }),
-      /* @__PURE__ */ r(
+      /* @__PURE__ */ i(
         "div",
         {
           className: "relative h-20 w-20 shrink-0",
           role: "img",
           "aria-label": `${n}% confidence`,
           children: [
-            /* @__PURE__ */ r("svg", { className: "h-20 w-20 -rotate-90", viewBox: "0 0 80 80", children: [
+            /* @__PURE__ */ i("svg", { className: "h-20 w-20 -rotate-90", viewBox: "0 0 80 80", children: [
               /* @__PURE__ */ t(
                 "circle",
                 {
@@ -4969,7 +4969,7 @@ function d0({
                 }
               )
             ] }),
-            /* @__PURE__ */ r("span", { className: "absolute inset-0 flex items-center justify-center text-lg font-bold text-blue-600", children: [
+            /* @__PURE__ */ i("span", { className: "absolute inset-0 flex items-center justify-center text-lg font-bold text-blue-600", children: [
               n,
               "%"
             ] })
@@ -4996,7 +4996,7 @@ function m0({
   dualLanguageTitle: l = !1,
   className: s
 }) {
-  return /* @__PURE__ */ r(D, { className: u("", s), children: [
+  return /* @__PURE__ */ i(D, { className: u("", s), children: [
     /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ t(
       j,
       {
@@ -5006,19 +5006,19 @@ function m0({
         as: "h3"
       }
     ) }),
-    /* @__PURE__ */ t($, { className: "pt-0", children: /* @__PURE__ */ t("ul", { className: "divide-y divide-slate-100", role: "list", children: e.map((i) => /* @__PURE__ */ r(
+    /* @__PURE__ */ t($, { className: "pt-0", children: /* @__PURE__ */ t("ul", { className: "divide-y divide-slate-100", role: "list", children: e.map((r) => /* @__PURE__ */ i(
       "li",
       {
         className: "flex items-center justify-between gap-4 py-3 first:pt-0",
         children: [
-          /* @__PURE__ */ r("div", { className: "min-w-0", children: [
-            /* @__PURE__ */ t("p", { className: "text-sm font-medium text-slate-900", children: i.label }),
-            /* @__PURE__ */ t("p", { className: "text-sm text-slate-600", children: i.value })
+          /* @__PURE__ */ i("div", { className: "min-w-0", children: [
+            /* @__PURE__ */ t("p", { className: "text-sm font-medium text-slate-900", children: r.label }),
+            /* @__PURE__ */ t("p", { className: "text-sm text-slate-600", children: r.value })
           ] }),
-          /* @__PURE__ */ t(Y, { variant: ul[i.status], children: (i.statusLabel ?? hl[i.status])[a] })
+          /* @__PURE__ */ t(Y, { variant: ul[r.status], children: (r.statusLabel ?? hl[r.status])[a] })
         ]
       },
-      i.label
+      r.label
     )) }) })
   ] });
 }
@@ -5028,7 +5028,7 @@ function x2({
   lang: a = "en",
   loading: l = !1,
   riskLevel: s = "normal",
-  dualLanguageTitle: i = !1,
+  dualLanguageTitle: r = !1,
   className: n
 }) {
   const c = {
@@ -5036,13 +5036,13 @@ function x2({
     elevated: "border-amber-200",
     high: "border-red-200"
   }[s];
-  return /* @__PURE__ */ r(D, { className: u(c, n), children: [
-    /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ r("div", { className: "flex w-full items-start justify-between gap-3", children: [
+  return /* @__PURE__ */ i(D, { className: u(c, n), children: [
+    /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ i("div", { className: "flex w-full items-start justify-between gap-3", children: [
       /* @__PURE__ */ t(
         j,
         {
           label: K2,
-          secondaryLabel: i ? a === "en" ? K2.id : K2.en : void 0,
+          secondaryLabel: r ? a === "en" ? K2.id : K2.en : void 0,
           lang: a,
           as: "h3"
         }
@@ -5056,8 +5056,8 @@ function x2({
         }
       )
     ] }) }),
-    /* @__PURE__ */ t($, { className: "pt-0", children: l ? /* @__PURE__ */ r("div", { className: "flex items-center gap-2 py-4", children: [
-      /* @__PURE__ */ t(r0, {}),
+    /* @__PURE__ */ t($, { className: "pt-0", children: l ? /* @__PURE__ */ i("div", { className: "flex items-center gap-2 py-4", children: [
+      /* @__PURE__ */ t(i0, {}),
       /* @__PURE__ */ t("span", { className: "text-sm text-slate-500", children: a === "id" ? "Menghasilkan ringkasan…" : "Generating summary…" })
     ] }) : /* @__PURE__ */ t("p", { className: "text-sm leading-relaxed text-slate-700", children: b(e, a) }) })
   ] });
@@ -5074,7 +5074,7 @@ function He({
   dualLanguageTitle: l = !1,
   className: s
 }) {
-  return /* @__PURE__ */ r(D, { className: u("", s), children: [
+  return /* @__PURE__ */ i(D, { className: u("", s), children: [
     /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ t(
       j,
       {
@@ -5084,15 +5084,15 @@ function He({
         as: "h3"
       }
     ) }),
-    /* @__PURE__ */ t($, { className: "space-y-4 pt-0", children: e.map((i) => {
-      const n = pl[i.icon ?? "default"];
-      return /* @__PURE__ */ r("div", { className: "flex gap-3", children: [
+    /* @__PURE__ */ t($, { className: "space-y-4 pt-0", children: e.map((r) => {
+      const n = pl[r.icon ?? "default"];
+      return /* @__PURE__ */ i("div", { className: "flex gap-3", children: [
         /* @__PURE__ */ t("div", { className: "flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50", children: /* @__PURE__ */ t(n, { className: "h-4 w-4 text-emerald-600", "aria-hidden": !0 }) }),
-        /* @__PURE__ */ r("div", { children: [
-          /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(i.title, a) }),
-          i.description ? /* @__PURE__ */ t("p", { className: "mt-0.5 text-xs text-slate-600", children: b(i.description, a) }) : null
+        /* @__PURE__ */ i("div", { children: [
+          /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(r.title, a) }),
+          r.description ? /* @__PURE__ */ t("p", { className: "mt-0.5 text-xs text-slate-600", children: b(r.description, a) }) : null
         ] })
-      ] }, i.id);
+      ] }, r.id);
     }) })
   ] });
 }
@@ -5111,7 +5111,7 @@ function xl({
   lang: l = "en",
   className: s
 }) {
-  return /* @__PURE__ */ r("div", { className: u("flex items-center gap-2", s), role: "status", children: [
+  return /* @__PURE__ */ i("div", { className: u("flex items-center gap-2", s), role: "status", children: [
     /* @__PURE__ */ t(
       "span",
       {
@@ -5119,7 +5119,7 @@ function xl({
         "aria-hidden": !0
       }
     ),
-    /* @__PURE__ */ r("span", { className: "text-sm font-medium text-slate-700", children: [
+    /* @__PURE__ */ i("span", { className: "text-sm font-medium text-slate-700", children: [
       b(fl[e], l),
       a !== void 0 ? ` (${a}%)` : ""
     ] })
@@ -5138,15 +5138,15 @@ function qs({
   onSubmit: a,
   className: l
 }) {
-  const [s, i] = _("agree"), [n, c] = _(""), [o, m] = _(!1);
-  return /* @__PURE__ */ r("div", { className: u("max-w-sm space-y-4", l), children: [
+  const [s, r] = _("agree"), [n, c] = _(""), [o, m] = _(!1);
+  return /* @__PURE__ */ i("div", { className: u("max-w-sm space-y-4", l), children: [
     /* @__PURE__ */ t(j, { label: gl, lang: e, as: "h2" }),
-    /* @__PURE__ */ r(D, { children: [
+    /* @__PURE__ */ i(D, { children: [
       /* @__PURE__ */ t(h2, { className: "border-0 pb-2", children: /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: b(V0, e) }) }),
-      /* @__PURE__ */ r($, { className: "space-y-4 pt-0", children: [
-        /* @__PURE__ */ r("fieldset", { className: "space-y-2", children: [
+      /* @__PURE__ */ i($, { className: "space-y-4 pt-0", children: [
+        /* @__PURE__ */ i("fieldset", { className: "space-y-2", children: [
           /* @__PURE__ */ t("legend", { className: "sr-only", children: b(V0, e) }),
-          vl.map((h) => /* @__PURE__ */ r(
+          vl.map((h) => /* @__PURE__ */ i(
             "label",
             {
               className: "flex cursor-pointer items-center gap-2 text-sm text-slate-700",
@@ -5158,7 +5158,7 @@ function qs({
                     name: "assessment",
                     value: h.value,
                     checked: s === h.value,
-                    onChange: () => i(h.value),
+                    onChange: () => r(h.value),
                     className: "h-4 w-4 border-slate-300 text-blue-600 focus:ring-blue-600"
                   }
                 ),
@@ -5178,7 +5178,7 @@ function qs({
             onChange: (h) => c(h.target.value)
           }
         ),
-        /* @__PURE__ */ r("label", { className: "flex cursor-pointer items-center gap-2 text-sm text-slate-700", children: [
+        /* @__PURE__ */ i("label", { className: "flex cursor-pointer items-center gap-2 text-sm text-slate-700", children: [
           /* @__PURE__ */ t(
             "input",
             {
@@ -5210,21 +5210,21 @@ function qs({
   ] });
 }
 function We({ role: e, content: a, timestamp: l, className: s }) {
-  const i = e === "user";
+  const r = e === "user";
   return /* @__PURE__ */ t(
     "div",
     {
       className: u(
         "flex",
-        i ? "justify-end" : "justify-start",
+        r ? "justify-end" : "justify-start",
         s
       ),
-      children: /* @__PURE__ */ r(
+      children: /* @__PURE__ */ i(
         "div",
         {
           className: u(
             "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
-            i ? "bg-blue-600 text-white" : "border border-slate-200 bg-white text-slate-800 shadow-sm",
+            r ? "bg-blue-600 text-white" : "border border-slate-200 bg-white text-slate-800 shadow-sm",
             e === "system" && "bg-slate-50 text-slate-600 italic"
           ),
           role: e === "assistant" ? "article" : void 0,
@@ -5248,11 +5248,11 @@ function Nl({
   disabled: l,
   className: s
 }) {
-  const [i, n] = _(""), c = () => {
-    const o = i.trim();
+  const [r, n] = _(""), c = () => {
+    const o = r.trim();
     o && (a == null || a(o), n(""));
   };
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       className: u(
@@ -5264,7 +5264,7 @@ function Nl({
           "textarea",
           {
             rows: 1,
-            value: i,
+            value: r,
             onChange: (o) => n(o.target.value),
             onKeyDown: (o) => {
               o.key === "Enter" && !o.shiftKey && (o.preventDefault(), c());
@@ -5279,7 +5279,7 @@ function Nl({
           l2,
           {
             size: "sm",
-            disabled: l || !i.trim(),
+            disabled: l || !r.trim(),
             onClick: c,
             "aria-label": e === "id" ? "Kirim" : "Send",
             children: /* @__PURE__ */ t(aa, { className: "h-4 w-4", "aria-hidden": !0 })
@@ -5295,11 +5295,11 @@ function Ks({
   trendUp: l = !0,
   className: s
 }) {
-  return /* @__PURE__ */ t(D, { className: u("", s), children: /* @__PURE__ */ t($, { children: /* @__PURE__ */ r("div", { className: "flex items-start justify-between", children: [
-    /* @__PURE__ */ r("div", { children: [
+  return /* @__PURE__ */ t(D, { className: u("", s), children: /* @__PURE__ */ t($, { children: /* @__PURE__ */ i("div", { className: "flex items-start justify-between", children: [
+    /* @__PURE__ */ i("div", { children: [
       /* @__PURE__ */ t("p", { className: "text-xs font-semibold uppercase tracking-wide text-slate-500", children: "Total Employees" }),
       /* @__PURE__ */ t("p", { className: "mt-2 text-4xl font-bold text-slate-900", children: e.toLocaleString() }),
-      /* @__PURE__ */ r(
+      /* @__PURE__ */ i(
         "p",
         {
           className: u(
@@ -5331,7 +5331,7 @@ function F0({
   className: a
 }) {
   const { icon: l, text: s } = Ml[e];
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       className: u(
@@ -5409,9 +5409,9 @@ function h0({
   variant: a = "plain",
   accent: l = "blue",
   sidePanel: s,
-  className: i
+  className: r
 }) {
-  return a === "split" && s ? /* @__PURE__ */ r("div", { className: u("flex min-h-screen", i), children: [
+  return a === "split" && s ? /* @__PURE__ */ i("div", { className: u("flex min-h-screen", r), children: [
     /* @__PURE__ */ t(
       "aside",
       {
@@ -5429,7 +5429,7 @@ function h0({
       className: u(
         "flex min-h-screen flex-col items-center justify-center px-4 py-10",
         a === "gradient" ? u("bg-gradient-to-br", zl[l]) : "bg-slate-50",
-        i
+        r
       ),
       children: e
     }
@@ -5554,12 +5554,12 @@ function T2({
   logoSrc: a,
   layout: l = "horizontal",
   showTagline: s = !0,
-  logoSize: i,
+  logoSize: r,
   loginSize: n = "md",
   className: c,
   imageClassName: o
 }) {
-  const m = a ?? Ke, h = i ?? I.logoPx[n], f = Math.round(h * K0), p = {
+  const m = a ?? Ke, h = r ?? I.logoPx[n], f = Math.round(h * K0), p = {
     md: "text-xs",
     lg: "text-sm"
   }[n], y = /* @__PURE__ */ t(
@@ -5573,10 +5573,10 @@ function T2({
       style: { width: f, height: h }
     }
   ), w = s ? /* @__PURE__ */ t("span", { className: u("font-medium text-slate-600", p), children: b(O.brandTagline, e) }) : null;
-  return l === "mark" ? /* @__PURE__ */ t("div", { className: u("inline-flex", c), children: y }) : l === "stacked" ? /* @__PURE__ */ r("div", { className: u("flex flex-col items-center gap-2 text-center", c), children: [
+  return l === "mark" ? /* @__PURE__ */ t("div", { className: u("inline-flex", c), children: y }) : l === "stacked" ? /* @__PURE__ */ i("div", { className: u("flex flex-col items-center gap-2 text-center", c), children: [
     y,
     w
-  ] }) : /* @__PURE__ */ r("div", { className: u("flex flex-col gap-1", c), children: [
+  ] }) : /* @__PURE__ */ i("div", { className: u("flex flex-col gap-1", c), children: [
     y,
     w
   ] });
@@ -5586,16 +5586,16 @@ function Zs({
   onLocaleChange: a,
   logoSrc: l,
   showBrand: s = !0,
-  className: i
+  className: r
 }) {
   return /* @__PURE__ */ t(
     "header",
     {
       className: u(
         "sticky top-0 z-20 w-full border-b border-slate-200/70 bg-white/80 backdrop-blur",
-        i
+        r
       ),
-      children: /* @__PURE__ */ r("div", { className: "mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4", children: [
+      children: /* @__PURE__ */ i("div", { className: "mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4", children: [
         s ? /* @__PURE__ */ t(T2, { lang: e, logoSrc: l, layout: "horizontal", loginSize: "md" }) : /* @__PURE__ */ t("span", { className: "flex-1", "aria-hidden": !0 }),
         a ? /* @__PURE__ */ t(
           u2,
@@ -5644,13 +5644,13 @@ function p0({
   layout: a = "portal",
   lang: l = "en",
   loginSize: s = "lg",
-  title: i,
+  title: r,
   subtitle: n,
   logoSrc: c,
   className: o
 }) {
-  const m = Cl[e], h = i ?? b(m.title, l), f = n ?? b(m.subtitle, l);
-  return e === "alocare" && a === "portal" ? /* @__PURE__ */ r("div", { className: u(I.brandBlock[s], o), children: [
+  const m = Cl[e], h = r ?? b(m.title, l), f = n ?? b(m.subtitle, l);
+  return e === "alocare" && a === "portal" ? /* @__PURE__ */ i("div", { className: u(I.brandBlock[s], o), children: [
     /* @__PURE__ */ t(
       T2,
       {
@@ -5661,7 +5661,7 @@ function p0({
         className: "mx-auto"
       }
     ),
-    /* @__PURE__ */ r("div", { className: u("w-full", I.brandLogoToTitle[s]), children: [
+    /* @__PURE__ */ i("div", { className: u("w-full", I.brandLogoToTitle[s]), children: [
       /* @__PURE__ */ t("h1", { className: I.title[s], children: h }),
       /* @__PURE__ */ t(
         "p",
@@ -5676,7 +5676,7 @@ function p0({
         }
       )
     ] })
-  ] }) : /* @__PURE__ */ r("div", { className: u("mb-6", o), children: [
+  ] }) : /* @__PURE__ */ i("div", { className: u("mb-6", o), children: [
     e === "alocare" ? /* @__PURE__ */ t("div", { className: "mb-6 flex justify-center", children: /* @__PURE__ */ t(T2, { lang: l, logoSrc: c, layout: "horizontal", loginSize: s }) }) : /* @__PURE__ */ t(
       "div",
       {
@@ -5690,7 +5690,7 @@ function p0({
         children: e === "emr" ? "EMR" : e === "admin" ? /* @__PURE__ */ t(l0, { className: "h-7 w-7" }) : /* @__PURE__ */ t(nt, { className: "h-7 w-7" })
       }
     ),
-    /* @__PURE__ */ r("div", { className: "text-center", children: [
+    /* @__PURE__ */ i("div", { className: "text-center", children: [
       /* @__PURE__ */ t("h1", { className: I.title[s], children: h }),
       /* @__PURE__ */ t("p", { className: I.subtitle[s], children: f })
     ] })
@@ -5701,7 +5701,7 @@ function Al({
   logoSrc: a,
   className: l
 }) {
-  return /* @__PURE__ */ t("div", { className: u("space-y-6", l), children: /* @__PURE__ */ r("div", { className: "flex flex-col gap-4", children: [
+  return /* @__PURE__ */ t("div", { className: u("space-y-6", l), children: /* @__PURE__ */ i("div", { className: "flex flex-col gap-4", children: [
     /* @__PURE__ */ t(
       "img",
       {
@@ -5722,7 +5722,7 @@ function Al({
   ] }) });
 }
 function Sl({ className: e }) {
-  return /* @__PURE__ */ r("svg", { className: e, viewBox: "0 0 24 24", "aria-hidden": !0, children: [
+  return /* @__PURE__ */ i("svg", { className: e, viewBox: "0 0 24 24", "aria-hidden": !0, children: [
     /* @__PURE__ */ t(
       "path",
       {
@@ -5758,7 +5758,7 @@ function Pl({
   loginSize: a = "lg",
   onClick: l,
   loading: s,
-  disabled: i,
+  disabled: r,
   className: n
 }) {
   return /* @__PURE__ */ t(
@@ -5769,7 +5769,7 @@ function Pl({
       fullWidth: !0,
       size: I.button[a],
       loading: s,
-      disabled: i || !l,
+      disabled: r || !l,
       onClick: l,
       className: u("border-slate-200 bg-white", n),
       leftIcon: /* @__PURE__ */ t(Sl, { className: "h-5 w-5" }),
@@ -5778,13 +5778,13 @@ function Pl({
   );
 }
 function _l({ lang: e = "en", className: a }) {
-  return /* @__PURE__ */ r("div", { className: u("relative my-6", a), children: [
+  return /* @__PURE__ */ i("div", { className: u("relative my-6", a), children: [
     /* @__PURE__ */ t("div", { className: "absolute inset-0 flex items-center", "aria-hidden": !0, children: /* @__PURE__ */ t("div", { className: "w-full border-t border-slate-200" }) }),
     /* @__PURE__ */ t("div", { className: "relative flex justify-center text-xs font-medium uppercase tracking-wide", children: /* @__PURE__ */ t("span", { className: "bg-white px-3 text-slate-500", children: b(O.orDivider, e) }) })
   ] });
 }
 function Ll({ message: e, className: a }) {
-  return e ? /* @__PURE__ */ r(
+  return e ? /* @__PURE__ */ i(
     "div",
     {
       role: "alert",
@@ -5804,17 +5804,17 @@ function Il({
   loginSize: a = "lg",
   label: l = d("Password", "Kata sandi"),
   className: s,
-  labelClassName: i,
+  labelClassName: r,
   ...n
 }) {
   const [c, o] = _(!1);
-  return /* @__PURE__ */ r("div", { className: "relative", children: [
+  return /* @__PURE__ */ i("div", { className: "relative", children: [
     /* @__PURE__ */ t(
       e2,
       {
         lang: e,
         label: l,
-        labelClassName: i ?? I.label[a],
+        labelClassName: r ?? I.label[a],
         type: c ? "text" : "password",
         autoComplete: "current-password",
         className: u(I.input[a], "pr-12", s),
@@ -5827,7 +5827,7 @@ function Il({
         type: "button",
         onClick: () => o((m) => !m),
         className: u(
-          "absolute right-3 rounded p-1 text-slate-500 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
+          "absolute right-3 cursor-pointer rounded p-1 text-slate-500 hover:text-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
           I.passwordToggleTop[a]
         ),
         "aria-label": b(c ? d("Hide password", "Sembunyikan kata sandi") : d("Show password", "Tampilkan kata sandi"), e),
@@ -5841,14 +5841,14 @@ function f0({
   onLocaleChange: a,
   onForgotPassword: l,
   showForgotPassword: s = !0,
-  showLanguageSwitcher: i = !0,
+  showLanguageSwitcher: r = !0,
   languageVariant: n = "marketing",
   showApiHint: c = !1,
   className: o
 }) {
-  const m = i && a;
-  return /* @__PURE__ */ r("div", { className: u("mt-6 space-y-4", o), children: [
-    (m || s) && /* @__PURE__ */ r("div", { className: "flex items-center justify-between border-t border-slate-100 pt-4", children: [
+  const m = r && a;
+  return /* @__PURE__ */ i("div", { className: u("mt-6 space-y-4", o), children: [
+    (m || s) && /* @__PURE__ */ i("div", { className: "flex items-center justify-between border-t border-slate-100 pt-4", children: [
       m && a ? /* @__PURE__ */ t(
         u2,
         {
@@ -5862,7 +5862,7 @@ function f0({
         {
           type: "button",
           onClick: l,
-          className: "text-sm font-medium text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded",
+          className: "cursor-pointer rounded text-sm font-medium text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
           children: b(O.forgotPassword, e)
         }
       ) : null
@@ -5887,7 +5887,7 @@ function b0({
   loginSize: a = "lg",
   identifierMode: l = "email",
   onSubmit: s,
-  error: i,
+  error: r,
   loading: n,
   touchOptimized: c = !1,
   showRememberMe: o = !1,
@@ -5896,7 +5896,7 @@ function b0({
   className: f
 }) {
   const [p, y] = _(""), [w, M] = _(""), [z, S] = _(!1), A = c ? P : l2, L = m ?? b(l === "email" ? O.signIn : O.login, e), G = l === "email" ? O.email : O.username, U = c ? void 0 : I.input[a], q = c ? void 0 : I.label[a], Q = c ? "space-y-4" : I.form[a], H = c ? "xl" : I.button[a];
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "form",
     {
       className: u(Q, f),
@@ -5943,7 +5943,7 @@ function b0({
             required: !0
           }
         ),
-        o ? /* @__PURE__ */ r(
+        o ? /* @__PURE__ */ i(
           "label",
           {
             className: u(
@@ -5964,7 +5964,7 @@ function b0({
             ]
           }
         ) : null,
-        i ? /* @__PURE__ */ t(Ll, { message: i }) : null,
+        r ? /* @__PURE__ */ t(Ll, { message: r }) : null,
         /* @__PURE__ */ t(
           A,
           {
@@ -5986,7 +5986,7 @@ function Tl({
   onLocaleChange: a,
   onLogin: l,
   onForgotPassword: s,
-  googleAuthUrl: i,
+  googleAuthUrl: r,
   error: n,
   loading: c = !1,
   logoSrc: o,
@@ -6002,10 +6002,10 @@ function Tl({
         "flex min-h-screen items-center justify-center bg-slate-50 px-4",
         m
       ),
-      children: /* @__PURE__ */ r(D, { className: "w-full max-w-md shadow-lg", children: [
-        /* @__PURE__ */ r(h2, { className: "flex flex-col items-stretch gap-0 border-b border-slate-100 px-5 py-4", children: [
+      children: /* @__PURE__ */ i(D, { className: "w-full max-w-md shadow-lg", children: [
+        /* @__PURE__ */ i(h2, { className: "flex flex-col items-stretch gap-0 border-b border-slate-100 px-5 py-4", children: [
           a ? /* @__PURE__ */ t("div", { className: "mb-4 flex justify-end", children: /* @__PURE__ */ t(u2, { locale: e, onChange: a }) }) : null,
-          /* @__PURE__ */ r("div", { className: "flex flex-col items-center text-center", children: [
+          /* @__PURE__ */ i("div", { className: "flex flex-col items-center text-center", children: [
             /* @__PURE__ */ t(
               T2,
               {
@@ -6020,8 +6020,8 @@ function Tl({
             /* @__PURE__ */ t("p", { className: "mt-1 text-sm text-slate-600", children: b(O.portalSubtitle, e) })
           ] })
         ] }),
-        /* @__PURE__ */ r($, { children: [
-          i ? /* @__PURE__ */ r(S2, { children: [
+        /* @__PURE__ */ i($, { children: [
+          r ? /* @__PURE__ */ i(S2, { children: [
             /* @__PURE__ */ t(
               Pl,
               {
@@ -6029,13 +6029,13 @@ function Tl({
                 loginSize: "lg",
                 className: "w-full",
                 onClick: () => {
-                  window.location.href = i;
+                  window.location.href = r;
                 }
               }
             ),
             /* @__PURE__ */ t(_l, { lang: e })
           ] }) : null,
-          /* @__PURE__ */ r("form", { onSubmit: w, className: "space-y-4", children: [
+          /* @__PURE__ */ i("form", { onSubmit: w, className: "space-y-4", children: [
             /* @__PURE__ */ t(
               e2,
               {
@@ -6068,7 +6068,7 @@ function Tl({
             {
               type: "button",
               onClick: s,
-              className: "text-sm text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded",
+              className: "cursor-pointer rounded text-sm text-blue-600 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600",
               children: b(O.forgotPassword, e)
             }
           ) })
@@ -6082,7 +6082,7 @@ function Rl({
   onLocaleChange: a,
   onLogin: l,
   error: s,
-  loading: i,
+  loading: r,
   logoSrc: n = "/alocare-ai.svg",
   className: c
 }) {
@@ -6093,7 +6093,7 @@ function Rl({
       accent: "blue",
       className: c,
       sidePanel: /* @__PURE__ */ t(Al, { lang: e, logoSrc: n }),
-      children: /* @__PURE__ */ t(u0, { className: "shadow-xl", children: /* @__PURE__ */ r(qe, { children: [
+      children: /* @__PURE__ */ t(u0, { className: "shadow-xl", children: /* @__PURE__ */ i(qe, { children: [
         /* @__PURE__ */ t(p0, { variant: "admin", lang: e }),
         /* @__PURE__ */ t(
           b0,
@@ -6103,7 +6103,7 @@ function Rl({
             showPasswordToggle: !0,
             onSubmit: l,
             error: s,
-            loading: i
+            loading: r
           }
         ),
         /* @__PURE__ */ t(
@@ -6124,10 +6124,10 @@ function jl({
   onLocaleChange: a,
   onLogin: l,
   error: s,
-  loading: i,
+  loading: r,
   className: n
 }) {
-  return /* @__PURE__ */ t(h0, { variant: "gradient", accent: "emerald", className: n, children: /* @__PURE__ */ r(u0, { children: [
+  return /* @__PURE__ */ t(h0, { variant: "gradient", accent: "emerald", className: n, children: /* @__PURE__ */ i(u0, { children: [
     /* @__PURE__ */ t(p0, { variant: "hr", lang: e }),
     /* @__PURE__ */ t(
       b0,
@@ -6137,7 +6137,7 @@ function jl({
         showPasswordToggle: !0,
         onSubmit: l,
         error: s,
-        loading: i
+        loading: r
       }
     ),
     /* @__PURE__ */ t(f0, { lang: e, onLocaleChange: a, showForgotPassword: !0 })
@@ -6148,14 +6148,14 @@ function Je({
   onLogin: a,
   error: l,
   loading: s,
-  className: i
+  className: r
 }) {
   const n = (c) => {
     a == null || a({ username: c.identifier, password: c.password });
   };
-  return /* @__PURE__ */ t(h0, { variant: "gradient", accent: "teal", className: i, children: /* @__PURE__ */ r(u0, { loginSize: "md", className: u("p-8"), children: [
+  return /* @__PURE__ */ t(h0, { variant: "gradient", accent: "teal", className: r, children: /* @__PURE__ */ i(u0, { loginSize: "md", className: u("p-8"), children: [
     /* @__PURE__ */ t(p0, { variant: "emr", layout: "inline", lang: e, loginSize: "md" }),
-    /* @__PURE__ */ r(qe, { loginSize: "md", className: "px-0 pb-0 pt-4", children: [
+    /* @__PURE__ */ i(qe, { loginSize: "md", className: "px-0 pb-0 pt-4", children: [
       /* @__PURE__ */ t(
         b0,
         {
@@ -6256,11 +6256,11 @@ function Ze({
   lang: a = "en",
   pendingCount: l = 0,
   onRetry: s,
-  className: i
+  className: r
 }) {
   if (e === "online") return null;
   const n = e === "syncing" ? Zt : e === "offline" ? yt : wa;
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       role: "status",
@@ -6270,10 +6270,10 @@ function Ze({
         e === "offline" && "bg-amber-50 text-amber-900",
         e === "syncing" && "bg-blue-50 text-blue-900",
         e === "retry" && "bg-red-50 text-red-900",
-        i
+        r
       ),
       children: [
-        /* @__PURE__ */ r("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ i("div", { className: "flex items-center gap-3", children: [
           /* @__PURE__ */ t(
             n,
             {
@@ -6281,12 +6281,12 @@ function Ze({
               "aria-hidden": !0
             }
           ),
-          /* @__PURE__ */ r("div", { children: [
+          /* @__PURE__ */ i("div", { children: [
             /* @__PURE__ */ t("p", { className: "text-sm font-semibold", children: b(
               e === "syncing" ? f2.syncing : e === "offline" ? f2.offline : f2.retry,
               a
             ) }),
-            l > 0 ? /* @__PURE__ */ r("p", { className: "text-xs opacity-80", children: [
+            l > 0 ? /* @__PURE__ */ i("p", { className: "text-xs opacity-80", children: [
               l,
               " ",
               b(f2.pending, a)
@@ -6303,21 +6303,21 @@ function Ye({
   role: a = "Clinical Doctor",
   autoLockMinutes: l = 5,
   masked: s = !0,
-  className: i
+  className: r
 }) {
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       className: u(
         "flex min-h-10 flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-600",
-        i
+        r
       ),
       children: [
-        /* @__PURE__ */ r("span", { className: "flex items-center gap-1.5", children: [
+        /* @__PURE__ */ i("span", { className: "flex items-center gap-1.5", children: [
           /* @__PURE__ */ t(l0, { className: "h-3.5 w-3.5 text-blue-600", "aria-hidden": !0 }),
           a
         ] }),
-        /* @__PURE__ */ r("span", { className: "flex items-center gap-1.5", children: [
+        /* @__PURE__ */ i("span", { className: "flex items-center gap-1.5", children: [
           /* @__PURE__ */ t(ye, { className: "h-3.5 w-3.5", "aria-hidden": !0 }),
           e === "id" ? `Kunci otomatis ${l} mnt` : `Auto-lock ${l} min`
         ] }),
@@ -6356,7 +6356,7 @@ function g2({
   lang: a = "en",
   activeNav: l = "worklist",
   onNavChange: s,
-  doctorName: i = "Dr. Ananya Putri",
+  doctorName: r = "Dr. Ananya Putri",
   specialty: n,
   unitLabel: c = "Ward B · Outpatient",
   dateLabel: o,
@@ -6372,12 +6372,12 @@ function g2({
     month: "short",
     year: "numeric"
   });
-  return /* @__PURE__ */ r("div", { className: u("flex min-h-screen flex-col bg-slate-100", w), children: [
-    /* @__PURE__ */ t("header", { className: "sticky top-0 z-20 border-b border-slate-200 bg-white px-4 py-3 md:px-6", children: /* @__PURE__ */ r("div", { className: "flex items-center justify-between gap-4", children: [
-      /* @__PURE__ */ r("div", { children: [
+  return /* @__PURE__ */ i("div", { className: u("flex min-h-screen flex-col bg-slate-100", w), children: [
+    /* @__PURE__ */ t("header", { className: "sticky top-0 z-20 border-b border-slate-200 bg-white px-4 py-3 md:px-6", children: /* @__PURE__ */ i("div", { className: "flex items-center justify-between gap-4", children: [
+      /* @__PURE__ */ i("div", { children: [
         /* @__PURE__ */ t("p", { className: "text-lg font-bold text-slate-900", children: M }),
-        /* @__PURE__ */ r("p", { className: "text-sm text-slate-600", children: [
-          i,
+        /* @__PURE__ */ i("p", { className: "text-sm text-slate-600", children: [
+          r,
           " | ",
           z,
           " | ",
@@ -6385,15 +6385,15 @@ function g2({
         ] }),
         /* @__PURE__ */ t("p", { className: "text-xs font-medium text-blue-600", children: c })
       ] }),
-      /* @__PURE__ */ r("div", { className: "flex items-center gap-2", children: [
+      /* @__PURE__ */ i("div", { className: "flex items-center gap-2", children: [
         /* @__PURE__ */ t(Ve, { fallback: "AP", size: "md" }),
         m ? /* @__PURE__ */ t(u2, { locale: a, onChange: m }) : null,
         /* @__PURE__ */ t(P, { variant: "ghost", size: "md", className: "relative min-w-12", "aria-label": "Notifications", children: /* @__PURE__ */ t(fe, { className: "h-5 w-5", "aria-hidden": !0 }) }),
         /* @__PURE__ */ t(P, { variant: "ghost", size: "md", onClick: h, "aria-label": "Logout", children: /* @__PURE__ */ t(we, { className: "h-5 w-5", "aria-hidden": !0 }) })
       ] })
     ] }) }),
-    /* @__PURE__ */ r("div", { className: "flex flex-1 overflow-hidden", children: [
-      /* @__PURE__ */ r(
+    /* @__PURE__ */ i("div", { className: "flex flex-1 overflow-hidden", children: [
+      /* @__PURE__ */ i(
         "nav",
         {
           className: u(
@@ -6404,13 +6404,13 @@ function g2({
           children: [
             /* @__PURE__ */ t("ul", { className: "space-y-1", children: $l.map((A) => {
               const L = Vl[A.id], G = l === A.id;
-              return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
+              return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ i(
                 "button",
                 {
                   type: "button",
                   onClick: () => s == null ? void 0 : s(A.id),
                   className: u(
-                    "flex w-full min-h-12 touch-manipulation items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-colors",
+                    "flex w-full min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-semibold transition-colors",
                     G ? "bg-teal-50 text-teal-800" : "text-slate-700 hover:bg-slate-50"
                   ),
                   "aria-current": G ? "page" : void 0,
@@ -6426,7 +6426,7 @@ function g2({
           ]
         }
       ),
-      /* @__PURE__ */ r("main", { className: "min-w-0 flex-1 overflow-auto p-4 md:p-6", children: [
+      /* @__PURE__ */ i("main", { className: "min-w-0 flex-1 overflow-auto p-4 md:p-6", children: [
         /* @__PURE__ */ t(
           Ye,
           {
@@ -6481,9 +6481,9 @@ function Hl({
   onCallPatient: l,
   ...s
 }) {
-  return /* @__PURE__ */ r(g2, { lang: e, activeNav: "worklist", ...s, children: [
-    /* @__PURE__ */ r("div", { className: "mb-4 flex flex-col gap-3 sm:flex-row sm:items-end", children: [
-      /* @__PURE__ */ r("div", { className: "relative flex-1", children: [
+  return /* @__PURE__ */ i(g2, { lang: e, activeNav: "worklist", ...s, children: [
+    /* @__PURE__ */ i("div", { className: "mb-4 flex flex-col gap-3 sm:flex-row sm:items-end", children: [
+      /* @__PURE__ */ i("div", { className: "relative flex-1", children: [
         /* @__PURE__ */ t(
           ea,
           {
@@ -6501,42 +6501,42 @@ function Hl({
           }
         )
       ] }),
-      /* @__PURE__ */ r(P, { variant: "secondary", className: "min-h-12 shrink-0 gap-2", children: [
+      /* @__PURE__ */ i(P, { variant: "secondary", className: "min-h-12 shrink-0 gap-2", children: [
         /* @__PURE__ */ t(be, { className: "h-5 w-5", "aria-hidden": !0 }),
         b(d("Filter date", "Filter tanggal"), e)
       ] })
     ] }),
-    /* @__PURE__ */ t("ul", { className: "space-y-3", role: "list", children: a.map((i) => /* @__PURE__ */ r(
+    /* @__PURE__ */ t("ul", { className: "space-y-3", role: "list", children: a.map((r) => /* @__PURE__ */ i(
       "li",
       {
         className: "rounded-2xl border border-slate-200 bg-white p-4 shadow-sm",
         children: [
-          /* @__PURE__ */ r("div", { className: "flex flex-wrap items-center justify-between gap-4", children: [
-            /* @__PURE__ */ r("div", { children: [
-              /* @__PURE__ */ t("p", { className: "text-lg font-bold text-slate-900", children: i.fullName }),
-              /* @__PURE__ */ r("p", { className: "text-sm text-slate-600", children: [
-                i.admissionNo,
+          /* @__PURE__ */ i("div", { className: "flex flex-wrap items-center justify-between gap-4", children: [
+            /* @__PURE__ */ i("div", { children: [
+              /* @__PURE__ */ t("p", { className: "text-lg font-bold text-slate-900", children: r.fullName }),
+              /* @__PURE__ */ i("p", { className: "text-sm text-slate-600", children: [
+                r.admissionNo,
                 " · ",
-                i.mrn,
+                r.mrn,
                 " · ",
-                i.insurance
+                r.insurance
               ] })
             ] }),
-            /* @__PURE__ */ t(Y, { variant: Fl[i.status], children: b(Bl[i.status], e) })
+            /* @__PURE__ */ t(Y, { variant: Fl[r.status], children: b(Bl[r.status], e) })
           ] }),
           /* @__PURE__ */ t(
             P,
             {
               className: "mt-4 min-h-12",
               fullWidth: !0,
-              disabled: i.status === "completed",
-              onClick: () => l == null ? void 0 : l(i),
+              disabled: r.status === "completed",
+              onClick: () => l == null ? void 0 : l(r),
               children: b(d("Call →", "Panggil →"), e)
             }
           )
         ]
       },
-      i.id
+      r.id
     )) }),
     /* @__PURE__ */ t("p", { className: "mt-4 text-xs text-slate-400", children: n2.worklist.list })
   ] });
@@ -6546,11 +6546,11 @@ function j2({
   name: a,
   admissionNo: l,
   mrn: s,
-  insurance: i,
+  insurance: r,
   allergies: n,
   className: c
 }) {
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       className: u(
@@ -6559,18 +6559,18 @@ function j2({
         c
       ),
       children: [
-        /* @__PURE__ */ r("div", { className: "flex flex-wrap items-start justify-between gap-3", children: [
-          /* @__PURE__ */ r("div", { children: [
+        /* @__PURE__ */ i("div", { className: "flex flex-wrap items-start justify-between gap-3", children: [
+          /* @__PURE__ */ i("div", { children: [
             /* @__PURE__ */ t("h2", { className: "text-xl font-bold text-slate-900", children: a }),
-            /* @__PURE__ */ r("p", { className: "mt-1 text-sm text-slate-600", children: [
+            /* @__PURE__ */ i("p", { className: "mt-1 text-sm text-slate-600", children: [
               l,
               " · ",
               s
             ] })
           ] }),
-          /* @__PURE__ */ t(Y, { variant: "info", children: i })
+          /* @__PURE__ */ t(Y, { variant: "info", children: r })
         ] }),
-        n ? /* @__PURE__ */ r("p", { className: "mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900", children: [
+        n ? /* @__PURE__ */ i("p", { className: "mt-3 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900", children: [
           /* @__PURE__ */ t(Q2, { className: "h-5 w-5 shrink-0", "aria-hidden": !0 }),
           e === "id" ? "ALERGI" : "ALLERGIES",
           ": ",
@@ -6606,7 +6606,7 @@ function Wl({
   soap: a,
   onSaveSoap: l,
   onSubmit: s,
-  ...i
+  ...r
 }) {
   const [n, c] = _("subjective"), [o, m] = _({
     subjective: (a == null ? void 0 : a.subjective) ?? "",
@@ -6615,7 +6615,7 @@ function Wl({
     plan: (a == null ? void 0 : a.plan) ?? "",
     icd10Code: (a == null ? void 0 : a.icd10Code) ?? "R79.89"
   });
-  return /* @__PURE__ */ r(g2, { lang: e, activeNav: "consultation", ...i, children: [
+  return /* @__PURE__ */ i(g2, { lang: e, activeNav: "consultation", ...r, children: [
     /* @__PURE__ */ t(
       j2,
       {
@@ -6628,13 +6628,13 @@ function Wl({
         className: "mb-4"
       }
     ),
-    /* @__PURE__ */ t("div", { className: "mb-4 grid grid-cols-4 gap-2", children: ["subjective", "objective", "assessment", "plan"].map((f) => /* @__PURE__ */ r(
+    /* @__PURE__ */ t("div", { className: "mb-4 grid grid-cols-4 gap-2", children: ["subjective", "objective", "assessment", "plan"].map((f) => /* @__PURE__ */ i(
       "button",
       {
         type: "button",
         onClick: () => c(f),
         className: u(
-          "min-h-14 touch-manipulation rounded-xl border-2 px-2 py-3 text-center transition-colors",
+          "min-h-14 cursor-pointer touch-manipulation rounded-xl border-2 px-2 py-3 text-center transition-colors",
           n === f ? "border-teal-600 bg-teal-50" : "border-slate-200 bg-white hover:bg-slate-50"
         ),
         children: [
@@ -6652,7 +6652,7 @@ function Wl({
       },
       f
     )) }),
-    /* @__PURE__ */ r("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
+    /* @__PURE__ */ i("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
       /* @__PURE__ */ t("p", { className: "mb-2 text-xs text-slate-500", children: b(W0[n].hint, e) }),
       /* @__PURE__ */ t(
         t2,
@@ -6667,7 +6667,7 @@ function Wl({
           className: "text-base"
         }
       ),
-      n === "assessment" ? /* @__PURE__ */ r("div", { className: "mt-3", children: [
+      n === "assessment" ? /* @__PURE__ */ i("div", { className: "mt-3", children: [
         /* @__PURE__ */ t("label", { className: "text-sm font-medium text-slate-700", children: "ICD-10" }),
         /* @__PURE__ */ t(
           "input",
@@ -6680,7 +6680,7 @@ function Wl({
         )
       ] }) : null
     ] }),
-    /* @__PURE__ */ r("div", { className: "mt-4 flex flex-wrap gap-3", children: [
+    /* @__PURE__ */ i("div", { className: "mt-4 flex flex-wrap gap-3", children: [
       /* @__PURE__ */ t(P, { variant: "secondary", className: "min-h-12", children: b(d("AI Voice fill", "Isi suara AI"), e) }),
       /* @__PURE__ */ t(P, { className: "min-h-12 flex-1", onClick: s, children: b(d("Submit record", "Simpan rekam medis"), e) })
     ] }),
@@ -6701,7 +6701,7 @@ function Kl({
   medications: a = Ul,
   ...l
 }) {
-  return /* @__PURE__ */ r(g2, { lang: e, activeNav: "medications", ...l, children: [
+  return /* @__PURE__ */ i(g2, { lang: e, activeNav: "medications", ...l, children: [
     /* @__PURE__ */ t(
       j2,
       {
@@ -6714,16 +6714,16 @@ function Kl({
         className: "mb-4"
       }
     ),
-    /* @__PURE__ */ r("div", { className: "mb-4 flex items-center gap-2", children: [
+    /* @__PURE__ */ i("div", { className: "mb-4 flex items-center gap-2", children: [
       /* @__PURE__ */ t(Me, { className: "h-6 w-6 text-teal-600", "aria-hidden": !0 }),
       /* @__PURE__ */ t("h2", { className: "text-lg font-bold text-slate-900", children: b(d("Medication Orders", "Order Obat"), e) })
     ] }),
-    /* @__PURE__ */ t("ul", { className: "space-y-3", children: a.map((s) => /* @__PURE__ */ r(
+    /* @__PURE__ */ t("ul", { className: "space-y-3", children: a.map((s) => /* @__PURE__ */ i(
       "li",
       {
         className: "flex min-h-14 items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white px-4 py-3",
         children: [
-          /* @__PURE__ */ r("div", { children: [
+          /* @__PURE__ */ i("div", { children: [
             /* @__PURE__ */ t("p", { className: "font-semibold text-slate-900", children: s.name }),
             /* @__PURE__ */ t("p", { className: "text-sm text-slate-600", children: s.dose })
           ] }),
@@ -6732,20 +6732,20 @@ function Kl({
       },
       s.id
     )) }),
-    /* @__PURE__ */ r(P, { variant: "secondary", fullWidth: !0, className: "mt-4 min-h-12 gap-2", children: [
+    /* @__PURE__ */ i(P, { variant: "secondary", fullWidth: !0, className: "mt-4 min-h-12 gap-2", children: [
       /* @__PURE__ */ t(ze, { className: "h-5 w-5", "aria-hidden": !0 }),
       b(d("Add medication", "Tambah obat"), e)
     ] }),
-    /* @__PURE__ */ r("ul", { className: "mt-6 space-y-2 text-sm text-slate-600", children: [
-      /* @__PURE__ */ r("li", { children: [
+    /* @__PURE__ */ i("ul", { className: "mt-6 space-y-2 text-sm text-slate-600", children: [
+      /* @__PURE__ */ i("li", { children: [
         "• ",
         e === "id" ? "Terhubung Pharmacy API" : "Connects to Pharmacy API"
       ] }),
-      /* @__PURE__ */ r("li", { children: [
+      /* @__PURE__ */ i("li", { children: [
         "• ",
         e === "id" ? "Filter formulary asuransi" : "Insurance formulary filter"
       ] }),
-      /* @__PURE__ */ r("li", { children: [
+      /* @__PURE__ */ i("li", { children: [
         "• ",
         e === "id" ? "Peringatan alergi otomatis" : "Auto allergy warnings"
       ] })
@@ -6763,7 +6763,7 @@ function Zl({
   orders: a = Jl,
   ...l
 }) {
-  return /* @__PURE__ */ r(g2, { lang: e, activeNav: "labrad", ...l, children: [
+  return /* @__PURE__ */ i(g2, { lang: e, activeNav: "labrad", ...l, children: [
     /* @__PURE__ */ t(
       j2,
       {
@@ -6775,7 +6775,7 @@ function Zl({
         className: "mb-4"
       }
     ),
-    /* @__PURE__ */ r("div", { className: "mb-4 flex items-center gap-2", children: [
+    /* @__PURE__ */ i("div", { className: "mb-4 flex items-center gap-2", children: [
       /* @__PURE__ */ t(ge, { className: "h-6 w-6 text-violet-600", "aria-hidden": !0 }),
       /* @__PURE__ */ t("h2", { className: "text-lg font-bold text-slate-900", children: b(d("Lab / Radiology Orders", "Order Lab / Radiologi"), e) })
     ] }),
@@ -6783,8 +6783,8 @@ function Zl({
       "li",
       {
         className: "rounded-xl border border-slate-200 bg-white px-4 py-4",
-        children: /* @__PURE__ */ t("div", { className: "flex items-start justify-between gap-3", children: /* @__PURE__ */ r("div", { children: [
-          /* @__PURE__ */ r("div", { className: "flex items-center gap-2", children: [
+        children: /* @__PURE__ */ t("div", { className: "flex items-start justify-between gap-3", children: /* @__PURE__ */ i("div", { children: [
+          /* @__PURE__ */ i("div", { className: "flex items-center gap-2", children: [
             /* @__PURE__ */ t(Y, { variant: s.category === "LAB" ? "info" : "ai", children: s.category }),
             /* @__PURE__ */ t("p", { className: "font-semibold text-slate-900", children: s.name })
           ] }),
@@ -6793,7 +6793,7 @@ function Zl({
       },
       s.id
     )) }),
-    /* @__PURE__ */ r(P, { variant: "secondary", fullWidth: !0, className: "mt-4 min-h-12 gap-2", children: [
+    /* @__PURE__ */ i(P, { variant: "secondary", fullWidth: !0, className: "mt-4 min-h-12 gap-2", children: [
       /* @__PURE__ */ t(ze, { className: "h-5 w-5", "aria-hidden": !0 }),
       b(d("Add lab / radiology", "Tambah lab / radiologi"), e)
     ] }),
@@ -6812,8 +6812,8 @@ function Ql({
   orientation: a = "landscape",
   ...l
 }) {
-  const [s, i] = _("review"), n = e === "id" ? "Pasien mengeluh batuk kering dua hari. Tidak sesak. Demam subfebril." : "Patient reports dry cough for two days. No shortness of breath. Low-grade fever.";
-  return /* @__PURE__ */ r(g2, { lang: e, activeNav: "ai-voice", orientation: a, ...l, children: [
+  const [s, r] = _("review"), n = e === "id" ? "Pasien mengeluh batuk kering dua hari. Tidak sesak. Demam subfebril." : "Patient reports dry cough for two days. No shortness of breath. Low-grade fever.";
+  return /* @__PURE__ */ i(g2, { lang: e, activeNav: "ai-voice", orientation: a, ...l, children: [
     /* @__PURE__ */ t(
       j2,
       {
@@ -6826,7 +6826,7 @@ function Ql({
         className: "mb-4"
       }
     ),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         className: u(
@@ -6834,14 +6834,14 @@ function Ql({
           a === "landscape" ? "lg:grid-cols-2" : "grid-cols-1"
         ),
         children: [
-          /* @__PURE__ */ r("div", { className: "space-y-4", children: [
-            /* @__PURE__ */ r("div", { className: "flex flex-wrap gap-3", children: [
-              /* @__PURE__ */ r(
+          /* @__PURE__ */ i("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ i("div", { className: "flex flex-wrap gap-3", children: [
+              /* @__PURE__ */ i(
                 P,
                 {
                   variant: "success",
                   className: "min-h-14 min-w-32",
-                  onClick: () => i("listening"),
+                  onClick: () => r("listening"),
                   disabled: s === "listening",
                   children: [
                     /* @__PURE__ */ t(R2, { className: "h-5 w-5", "aria-hidden": !0 }),
@@ -6849,12 +6849,12 @@ function Ql({
                   ]
                 }
               ),
-              /* @__PURE__ */ r(
+              /* @__PURE__ */ i(
                 P,
                 {
                   variant: "danger",
                   className: "min-h-14",
-                  onClick: () => i("processing"),
+                  onClick: () => r("processing"),
                   children: [
                     /* @__PURE__ */ t(da, { className: "h-5 w-5", "aria-hidden": !0 }),
                     b(d("Stop", "Berhenti"), e)
@@ -6862,8 +6862,8 @@ function Ql({
                 }
               )
             ] }),
-            s === "listening" ? /* @__PURE__ */ r("div", { className: "flex items-center gap-3 rounded-xl bg-red-50 px-4 py-3", children: [
-              /* @__PURE__ */ r("span", { className: "relative flex h-3 w-3", children: [
+            s === "listening" ? /* @__PURE__ */ i("div", { className: "flex items-center gap-3 rounded-xl bg-red-50 px-4 py-3", children: [
+              /* @__PURE__ */ i("span", { className: "relative flex h-3 w-3", children: [
                 /* @__PURE__ */ t("span", { className: "absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75" }),
                 /* @__PURE__ */ t("span", { className: "relative inline-flex h-3 w-3 rounded-full bg-red-600" })
               ] }),
@@ -6879,16 +6879,16 @@ function Ql({
                 readOnly: !0
               }
             ),
-            /* @__PURE__ */ t("ol", { className: "space-y-2 text-sm text-slate-600", children: Yl.map((c, o) => /* @__PURE__ */ r("li", { className: "flex gap-2", children: [
-              /* @__PURE__ */ r("span", { className: "font-bold text-teal-600", children: [
+            /* @__PURE__ */ t("ol", { className: "space-y-2 text-sm text-slate-600", children: Yl.map((c, o) => /* @__PURE__ */ i("li", { className: "flex gap-2", children: [
+              /* @__PURE__ */ i("span", { className: "font-bold text-teal-600", children: [
                 o + 1,
                 "."
               ] }),
               e === "id" ? c.id : c.en
             ] }, c.key)) })
           ] }),
-          /* @__PURE__ */ r("div", { className: "rounded-2xl border border-violet-200 bg-violet-50/50 p-4", children: [
-            /* @__PURE__ */ r("div", { className: "mb-3 flex items-center gap-2", children: [
+          /* @__PURE__ */ i("div", { className: "rounded-2xl border border-violet-200 bg-violet-50/50 p-4", children: [
+            /* @__PURE__ */ i("div", { className: "mb-3 flex items-center gap-2", children: [
               /* @__PURE__ */ t(Ee, { className: "h-5 w-5 text-violet-600", "aria-hidden": !0 }),
               /* @__PURE__ */ t("h3", { className: "font-bold text-slate-900", children: b(d("AI-generated SOAP", "SOAP dari AI"), e) })
             ] }),
@@ -6912,7 +6912,7 @@ P: Symptomatic care, review 3 days`,
         ]
       }
     ),
-    /* @__PURE__ */ r("p", { className: "mt-4 text-xs text-slate-400", children: [
+    /* @__PURE__ */ i("p", { className: "mt-4 text-xs text-slate-400", children: [
       n2.ai.analyze,
       " · ",
       n2.consultations.submit
@@ -6921,9 +6921,9 @@ P: Symptomatic care, review 3 days`,
 }
 const Xl = {
   "layout-dashboard": jt,
-  upload: i0,
+  upload: r0,
   users: _2,
-  brain: it,
+  brain: rt,
   stethoscope: s0,
   "message-circle": ke,
   history: Lt,
@@ -6934,7 +6934,7 @@ function s2({
   lang: a = "en",
   activeNav: l = "dashboard",
   onNavChange: s,
-  doctorName: i = "Dr. Sarah Chen",
+  doctorName: r = "Dr. Sarah Chen",
   role: n,
   locale: c,
   onLocaleChange: o,
@@ -6947,7 +6947,7 @@ function s2({
   className: M
 }) {
   const z = c ?? a, S = n ?? (a === "id" ? "Dokter Klinis" : "Clinical Doctor");
-  return /* @__PURE__ */ r(
+  return /* @__PURE__ */ i(
     "div",
     {
       className: u(
@@ -6956,7 +6956,7 @@ function s2({
         M
       ),
       children: [
-        /* @__PURE__ */ r("header", { className: "sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-2 md:px-6", children: [
+        /* @__PURE__ */ i("header", { className: "sticky top-0 z-20 flex min-h-14 shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-2 md:px-6", children: [
           /* @__PURE__ */ t("div", { className: "flex items-center gap-3", children: /* @__PURE__ */ t(
             "img",
             {
@@ -6967,16 +6967,16 @@ function s2({
               className: "h-8 w-auto object-contain"
             }
           ) }),
-          /* @__PURE__ */ r("div", { className: "flex flex-1 items-center justify-end gap-3", children: [
-            /* @__PURE__ */ r("div", { className: "hidden items-center gap-2 md:flex", children: [
+          /* @__PURE__ */ i("div", { className: "flex flex-1 items-center justify-end gap-3", children: [
+            /* @__PURE__ */ i("div", { className: "hidden items-center gap-2 md:flex", children: [
               /* @__PURE__ */ t(Ve, { fallback: "SC", size: "md" }),
-              /* @__PURE__ */ r("div", { className: "text-right", children: [
-                /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: i }),
+              /* @__PURE__ */ i("div", { className: "text-right", children: [
+                /* @__PURE__ */ t("p", { className: "text-sm font-semibold text-slate-900", children: r }),
                 /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: S })
               ] })
             ] }),
             o ? /* @__PURE__ */ t(u2, { locale: z, onChange: o }) : null,
-            /* @__PURE__ */ r(
+            /* @__PURE__ */ i(
               P,
               {
                 variant: "ghost",
@@ -7001,7 +7001,7 @@ function s2({
             )
           ] })
         ] }),
-        /* @__PURE__ */ r("div", { className: "flex flex-1 overflow-hidden", children: [
+        /* @__PURE__ */ i("div", { className: "flex flex-1 overflow-hidden", children: [
           /* @__PURE__ */ t(
             "nav",
             {
@@ -7012,13 +7012,13 @@ function s2({
               "aria-label": a === "id" ? "Menu utama" : "Main menu",
               children: /* @__PURE__ */ t("ul", { className: "space-y-1", children: Dl.map((A) => {
                 const L = Xl[A.icon], G = l === A.id;
-                return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
+                return /* @__PURE__ */ t("li", { children: /* @__PURE__ */ i(
                   "button",
                   {
                     type: "button",
                     onClick: () => s == null ? void 0 : s(A.id),
                     className: u(
-                      "flex w-full min-h-12 touch-manipulation items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
+                      "flex w-full min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors",
                       G ? "bg-blue-50 text-blue-700" : "text-slate-700 hover:bg-slate-50"
                     ),
                     "aria-current": G ? "page" : void 0,
@@ -7031,7 +7031,7 @@ function s2({
               }) })
             }
           ),
-          /* @__PURE__ */ r("main", { className: "flex min-w-0 flex-1 flex-col overflow-auto p-4 md:p-6", children: [
+          /* @__PURE__ */ i("main", { className: "flex min-w-0 flex-1 flex-col overflow-auto p-4 md:p-6", children: [
             w ? /* @__PURE__ */ t(Ye, { lang: a, role: S, className: "mb-4" }) : null,
             f !== "online" ? /* @__PURE__ */ t(
               Ze,
@@ -7074,7 +7074,7 @@ function Qe({
   orientation: a = "landscape",
   ...l
 }) {
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "analysis", orientation: a, ...l, children: [
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "analysis", orientation: a, ...l, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7084,7 +7084,7 @@ function Qe({
         className: "mb-4 text-2xl"
       }
     ),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         className: u(
@@ -7092,14 +7092,14 @@ function Qe({
           a === "landscape" ? "lg:grid-cols-3" : "grid-cols-1"
         ),
         children: [
-          /* @__PURE__ */ r(
+          /* @__PURE__ */ i(
             "section",
             {
               className: "space-y-3",
               "aria-label": e === "id" ? "Pratinjau laporan" : "Report preview",
               children: [
                 /* @__PURE__ */ t("h2", { className: "text-sm font-semibold uppercase tracking-wide text-slate-500", children: e === "id" ? "Laporan" : "Report" }),
-                /* @__PURE__ */ r("div", { className: "flex aspect-[3/4] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 shadow-sm", children: [
+                /* @__PURE__ */ i("div", { className: "flex aspect-[3/4] flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-6 shadow-sm", children: [
                   /* @__PURE__ */ t(m2, { className: "h-20 w-20 text-red-400", "aria-hidden": !0 }),
                   /* @__PURE__ */ t("p", { className: "mt-4 text-center text-sm font-semibold text-slate-900", children: "Blood Test Report.pdf" }),
                   /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: "2.4 MB · PDF" })
@@ -7107,7 +7107,7 @@ function Qe({
               ]
             }
           ),
-          /* @__PURE__ */ r(
+          /* @__PURE__ */ i(
             "section",
             {
               className: "space-y-4",
@@ -7116,7 +7116,7 @@ function Qe({
                 /* @__PURE__ */ t("h2", { className: "text-sm font-semibold uppercase tracking-wide text-slate-500", children: e === "id" ? "Hasil AI" : "AI Results" }),
                 /* @__PURE__ */ t(x2, { summary: es, lang: e, dualLanguageTitle: !0 }),
                 /* @__PURE__ */ t(m0, { findings: ts, lang: e, dualLanguageTitle: !0 }),
-                /* @__PURE__ */ r("div", { className: "flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4", children: [
+                /* @__PURE__ */ i("div", { className: "flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4", children: [
                   /* @__PURE__ */ t(xl, { level: "medium", lang: e }),
                   /* @__PURE__ */ t("p", { className: "text-lg font-bold text-blue-600", children: "96%" })
                 ] }),
@@ -7124,7 +7124,7 @@ function Qe({
               ]
             }
           ),
-          /* @__PURE__ */ r(
+          /* @__PURE__ */ i(
             "section",
             {
               className: "space-y-4",
@@ -7141,7 +7141,7 @@ function Qe({
                     rows: 4
                   }
                 ),
-                /* @__PURE__ */ r("div", { className: "grid grid-cols-2 gap-3", children: [
+                /* @__PURE__ */ i("div", { className: "grid grid-cols-2 gap-3", children: [
                   /* @__PURE__ */ t(P, { variant: "success", fullWidth: !0, children: e === "id" ? "Setujui" : "Approve" }),
                   /* @__PURE__ */ t(P, { variant: "secondary", fullWidth: !0, children: e === "id" ? "Validasi" : "Validate" })
                 ] }),
@@ -7162,13 +7162,13 @@ function Xs({
   orientation: a = "landscape",
   startScreen: l = "worklist"
 }) {
-  const [s, i] = _(l !== "login"), [n, c] = _("worklist");
+  const [s, r] = _(l !== "login"), [n, c] = _("worklist");
   if (!s)
     return /* @__PURE__ */ t(
       Je,
       {
         lang: e,
-        onLogin: () => i(!0)
+        onLogin: () => r(!0)
       }
     );
   const o = { lang: e, orientation: a, onNavChange: c, activeNav: n };
@@ -7200,26 +7200,26 @@ const A2 = {
   alerts: d("AI Alerts", "Peringatan AI"),
   quick: d("Quick Actions", "Aksi Cepat")
 }, ss = [
-  { id: "upload", icon: i0, label: d("Upload Report", "Unggah Laporan") },
+  { id: "upload", icon: r0, label: d("Upload Report", "Unggah Laporan") },
   { id: "consult", icon: Ce, label: d("Start Consultation", "Mulai Konsultasi") },
   { id: "ai", icon: ke, label: d("Ask AI", "Tanya AI") },
   { id: "history", icon: gt, label: d("View History", "Lihat Riwayat") }
-], is = [
+], rs = [
   { id: "1", message: d("Low platelet", "Trombosit rendah"), severity: "warning" },
   { id: "2", message: d("High glucose", "Glukosa tinggi"), severity: "warning" },
   { id: "3", message: d("Follow-up needed", "Perlu tindak lanjut"), severity: "info" }
 ];
-function rs({
+function is({
   lang: e = "en",
   todayPatients: a = 8,
   pendingReview: l = 2,
   urgent: s = 1,
-  recentUploads: i = 5,
-  aiAlerts: n = is,
+  recentUploads: r = 5,
+  aiAlerts: n = rs,
   ...c
 }) {
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "dashboard", ...c, children: [
-    /* @__PURE__ */ r("div", { className: "mb-6", children: [
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "dashboard", ...c, children: [
+    /* @__PURE__ */ i("div", { className: "mb-6", children: [
       /* @__PURE__ */ t(
         j,
         {
@@ -7232,20 +7232,20 @@ function rs({
       ),
       /* @__PURE__ */ t("p", { className: "mt-1 text-slate-600", children: e === "id" ? "Ringkasan klinik hari ini" : "Your clinic summary for today" })
     ] }),
-    /* @__PURE__ */ r("div", { className: "grid gap-4 md:grid-cols-2", children: [
-      /* @__PURE__ */ t(D, { children: /* @__PURE__ */ t($, { className: "py-5", children: /* @__PURE__ */ r("div", { className: "flex items-start justify-between", children: [
-        /* @__PURE__ */ r("div", { children: [
+    /* @__PURE__ */ i("div", { className: "grid gap-4 md:grid-cols-2", children: [
+      /* @__PURE__ */ t(D, { children: /* @__PURE__ */ t($, { className: "py-5", children: /* @__PURE__ */ i("div", { className: "flex items-start justify-between", children: [
+        /* @__PURE__ */ i("div", { children: [
           /* @__PURE__ */ t(j, { label: A2.today, lang: e, as: "h2" }),
           /* @__PURE__ */ t("p", { className: "mt-3 text-4xl font-bold text-slate-900", children: a }),
           /* @__PURE__ */ t("p", { className: "mt-2 text-sm text-slate-600", children: e === "id" ? "pasien hari ini" : "patients today" }),
-          /* @__PURE__ */ r("ul", { className: "mt-4 space-y-2 text-sm", children: [
-            /* @__PURE__ */ r("li", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ i("ul", { className: "mt-4 space-y-2 text-sm", children: [
+            /* @__PURE__ */ i("li", { className: "flex items-center gap-2", children: [
               /* @__PURE__ */ t(_2, { className: "h-4 w-4 text-blue-600", "aria-hidden": !0 }),
               l,
               " ",
               e === "id" ? "menunggu tinjauan" : "pending review"
             ] }),
-            /* @__PURE__ */ r("li", { className: "flex items-center gap-2 text-amber-700", children: [
+            /* @__PURE__ */ i("li", { className: "flex items-center gap-2 text-amber-700", children: [
               /* @__PURE__ */ t(Q2, { className: "h-4 w-4", "aria-hidden": !0 }),
               s,
               " ",
@@ -7255,14 +7255,14 @@ function rs({
         ] }),
         /* @__PURE__ */ t("div", { className: "flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50", children: /* @__PURE__ */ t(_2, { className: "h-6 w-6 text-blue-600", "aria-hidden": !0 }) })
       ] }) }) }),
-      /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { className: "py-5", children: [
+      /* @__PURE__ */ t(D, { children: /* @__PURE__ */ i($, { className: "py-5", children: [
         /* @__PURE__ */ t(j, { label: A2.uploads, lang: e, as: "h2" }),
-        /* @__PURE__ */ t("p", { className: "mt-3 text-4xl font-bold text-slate-900", children: i }),
+        /* @__PURE__ */ t("p", { className: "mt-3 text-4xl font-bold text-slate-900", children: r }),
         /* @__PURE__ */ t("p", { className: "mt-2 text-sm text-slate-600", children: e === "id" ? "laporan terbaru" : "recent reports" })
       ] }) }),
-      /* @__PURE__ */ t(D, { className: "md:col-span-2", children: /* @__PURE__ */ r($, { className: "py-5", children: [
+      /* @__PURE__ */ t(D, { className: "md:col-span-2", children: /* @__PURE__ */ i($, { className: "py-5", children: [
         /* @__PURE__ */ t(j, { label: A2.alerts, lang: e, as: "h2" }),
-        /* @__PURE__ */ t("ul", { className: "mt-4 space-y-3", children: n.map((o) => /* @__PURE__ */ r(
+        /* @__PURE__ */ t("ul", { className: "mt-4 space-y-3", children: n.map((o) => /* @__PURE__ */ i(
           "li",
           {
             className: u(
@@ -7286,11 +7286,11 @@ function rs({
           o.id
         )) })
       ] }) }),
-      /* @__PURE__ */ t(D, { className: "md:col-span-2", children: /* @__PURE__ */ r($, { className: "py-5", children: [
+      /* @__PURE__ */ t(D, { className: "md:col-span-2", children: /* @__PURE__ */ i($, { className: "py-5", children: [
         /* @__PURE__ */ t(j, { label: A2.quick, lang: e, as: "h2" }),
         /* @__PURE__ */ t("div", { className: "mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4", children: ss.map((o) => {
           const m = o.icon;
-          return /* @__PURE__ */ r(
+          return /* @__PURE__ */ i(
             P,
             {
               variant: "secondary",
@@ -7319,12 +7319,12 @@ function os({
   pipelineStatus: a = "analyzing",
   progress: l = 65,
   fileName: s = "Blood Test Report.pdf",
-  ...i
+  ...r
 }) {
   const [n, c] = _(
     a !== "idle" ? "success" : "empty"
   );
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "upload", ...i, children: [
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "upload", ...r, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7335,8 +7335,8 @@ function os({
       }
     ),
     /* @__PURE__ */ t("p", { className: "mb-6 text-slate-600", children: e === "id" ? "Unggah PDF, gambar, atau rekam suara — dioptimalkan untuk sentuhan." : "Upload PDF, image, or voice — optimized for touch." }),
-    /* @__PURE__ */ r("div", { className: "grid gap-6 lg:grid-cols-2", children: [
-      /* @__PURE__ */ r("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ i("div", { className: "grid gap-6 lg:grid-cols-2", children: [
+      /* @__PURE__ */ i("div", { className: "space-y-4", children: [
         /* @__PURE__ */ t(
           Ge,
           {
@@ -7348,7 +7348,7 @@ function os({
         ),
         /* @__PURE__ */ t("div", { className: "grid grid-cols-2 gap-3 sm:grid-cols-4", children: ns.map((o) => {
           const m = o.icon;
-          return /* @__PURE__ */ r(
+          return /* @__PURE__ */ i(
             P,
             {
               variant: "secondary",
@@ -7364,16 +7364,16 @@ function os({
           );
         }) })
       ] }),
-      /* @__PURE__ */ t("div", { className: "space-y-4", children: a !== "idle" ? /* @__PURE__ */ r(S2, { children: [
+      /* @__PURE__ */ t("div", { className: "space-y-4", children: a !== "idle" ? /* @__PURE__ */ i(S2, { children: [
         /* @__PURE__ */ t(Fe, { fileName: s, lang: e, uploaded: !0 }),
-        /* @__PURE__ */ r("div", { className: "overflow-hidden rounded-xl border border-slate-200 bg-white p-4", children: [
+        /* @__PURE__ */ i("div", { className: "overflow-hidden rounded-xl border border-slate-200 bg-white p-4", children: [
           /* @__PURE__ */ t("div", { className: "mb-3 flex aspect-[4/3] items-center justify-center rounded-lg bg-slate-100", children: /* @__PURE__ */ t(m2, { className: "h-16 w-16 text-red-400", "aria-hidden": !0 }) }),
           /* @__PURE__ */ t("p", { className: "truncate text-sm font-semibold", children: s }),
           a === "ocr" || a === "analyzing" ? /* @__PURE__ */ t(Te, { value: l, className: "mt-3", showLabel: !0 }) : null
         ] }),
         /* @__PURE__ */ t("ol", { className: "space-y-2", children: U0.map((o, m) => {
           const h = Math.max(0, U0.indexOf(a)), f = m < h || a === "completed", p = a === o;
-          return /* @__PURE__ */ r(
+          return /* @__PURE__ */ i(
             "li",
             {
               className: u(
@@ -7419,17 +7419,17 @@ function ms({
   name: a,
   mrn: l,
   age: s = 45,
-  gender: i,
+  gender: r,
   embedded: n = !1,
   className: c
 }) {
-  const o = i ?? (e === "id" ? "Laki-laki" : "Male"), m = d(
+  const o = r ?? (e === "id" ? "Laki-laki" : "Male"), m = d(
     "Stable overall. Mild thrombocytopenia noted on latest labs.",
     "Secara umum stabil. Trombositopenia ringan pada lab terbaru."
-  ), h = /* @__PURE__ */ r("div", { className: u("space-y-4", c), children: [
-    /* @__PURE__ */ r("div", { children: [
+  ), h = /* @__PURE__ */ i("div", { className: u("space-y-4", c), children: [
+    /* @__PURE__ */ i("div", { children: [
       /* @__PURE__ */ t("h2", { className: "text-xl font-bold text-slate-900", children: a }),
-      /* @__PURE__ */ r("p", { className: "text-sm text-slate-500", children: [
+      /* @__PURE__ */ i("p", { className: "text-sm text-slate-500", children: [
         l,
         " · ",
         s,
@@ -7437,13 +7437,13 @@ function ms({
         o
       ] })
     ] }),
-    /* @__PURE__ */ t("div", { className: "grid grid-cols-3 gap-2", children: ds.map((f) => /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { className: "py-3 text-center", children: [
+    /* @__PURE__ */ t("div", { className: "grid grid-cols-3 gap-2", children: ds.map((f) => /* @__PURE__ */ t(D, { children: /* @__PURE__ */ i($, { className: "py-3 text-center", children: [
       /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: f.label }),
       /* @__PURE__ */ t("p", { className: "text-sm font-bold", children: f.value })
     ] }) }, f.label)) }),
     /* @__PURE__ */ t(x2, { summary: m, lang: e }),
-    /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { children: [
-      /* @__PURE__ */ r("div", { className: "mb-3 flex items-center gap-2", children: [
+    /* @__PURE__ */ t(D, { children: /* @__PURE__ */ i($, { children: [
+      /* @__PURE__ */ i("div", { className: "mb-3 flex items-center gap-2", children: [
         /* @__PURE__ */ t(s0, { className: "h-5 w-5 text-teal-600", "aria-hidden": !0 }),
         /* @__PURE__ */ t(
           j,
@@ -7456,8 +7456,8 @@ function ms({
       ] }),
       /* @__PURE__ */ t("p", { className: "text-sm text-slate-700", children: e === "id" ? "Pantau trombosit. Kontrol ulang dalam 3 bulan." : "Monitor platelets. Repeat CBC in 3 months." })
     ] }) }),
-    /* @__PURE__ */ t(D, { children: /* @__PURE__ */ r($, { children: [
-      /* @__PURE__ */ r("div", { className: "mb-3 flex items-center gap-2", children: [
+    /* @__PURE__ */ t(D, { children: /* @__PURE__ */ i($, { children: [
+      /* @__PURE__ */ i("div", { className: "mb-3 flex items-center gap-2", children: [
         /* @__PURE__ */ t(pe, { className: "h-5 w-5 text-violet-600", "aria-hidden": !0 }),
         /* @__PURE__ */ t(
           j,
@@ -7468,15 +7468,15 @@ function ms({
           }
         )
       ] }),
-      /* @__PURE__ */ t("ul", { className: "space-y-3", children: cs.map((f) => /* @__PURE__ */ r("li", { className: "flex gap-3 text-sm", children: [
+      /* @__PURE__ */ t("ul", { className: "space-y-3", children: cs.map((f) => /* @__PURE__ */ i("li", { className: "flex gap-3 text-sm", children: [
         /* @__PURE__ */ t(m2, { className: "mt-0.5 h-4 w-4 shrink-0 text-slate-400", "aria-hidden": !0 }),
-        /* @__PURE__ */ r("div", { children: [
+        /* @__PURE__ */ i("div", { children: [
           /* @__PURE__ */ t("p", { className: "font-medium text-slate-900", children: b(f.event, e) }),
           /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: f.date })
         ] })
       ] }, f.date)) })
     ] }) }),
-    /* @__PURE__ */ r("div", { className: "flex flex-wrap gap-2", children: [
+    /* @__PURE__ */ i("div", { className: "flex flex-wrap gap-2", children: [
       /* @__PURE__ */ t(Y, { variant: "low", children: e === "id" ? "Trombosit rendah" : "Low platelet" }),
       /* @__PURE__ */ t(Y, { variant: "normal", children: e === "id" ? "Stabil" : "Stable" })
     ] })
@@ -7517,8 +7517,8 @@ function ps({
   ...s
 }) {
   var o;
-  const [i, n] = _((o = a[0]) == null ? void 0 : o.id), c = a.find((m) => m.id === i);
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "queue", orientation: l, ...s, children: [
+  const [r, n] = _((o = a[0]) == null ? void 0 : o.id), c = a.find((m) => m.id === r);
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "queue", orientation: l, ...s, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7537,7 +7537,7 @@ function ps({
         className: "mb-4 max-w-xl"
       }
     ),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         className: u(
@@ -7554,19 +7554,19 @@ function ps({
               ),
               role: "listbox",
               "aria-label": e === "id" ? "Daftar pasien" : "Patient list",
-              children: a.map((m) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
+              children: a.map((m) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ i(
                 "button",
                 {
                   type: "button",
                   role: "option",
-                  "aria-selected": i === m.id,
+                  "aria-selected": r === m.id,
                   onClick: () => n(m.id),
                   className: u(
-                    "flex w-full min-h-14 touch-manipulation items-center justify-between gap-3 px-4 py-4 text-left transition-colors",
-                    i === m.id ? "bg-blue-50" : "hover:bg-slate-50"
+                    "flex w-full min-h-14 cursor-pointer touch-manipulation items-center justify-between gap-3 px-4 py-4 text-left transition-colors",
+                    r === m.id ? "bg-blue-50" : "hover:bg-slate-50"
                   ),
                   children: [
-                    /* @__PURE__ */ r("div", { children: [
+                    /* @__PURE__ */ i("div", { children: [
                       /* @__PURE__ */ t("p", { className: "font-semibold text-slate-900", children: m.name }),
                       /* @__PURE__ */ t("p", { className: "text-xs text-slate-500", children: m.mrn })
                     ] }),
@@ -7606,12 +7606,12 @@ function Xe({
   onSubmit: a,
   ...l
 }) {
-  const [s, i] = _("approve"), [n, c] = _(""), [o, m] = _(
+  const [s, r] = _("approve"), [n, c] = _(""), [o, m] = _(
     e === "id" ? `Ulang CBC
 Pantau 3 bulan` : `Repeat CBC
 Monitor 3 months`
   );
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "review", ...l, children: [
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "review", ...l, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7621,13 +7621,13 @@ Monitor 3 months`
         className: "mb-4 text-2xl"
       }
     ),
-    /* @__PURE__ */ r("div", { className: "grid gap-6 lg:grid-cols-2", children: [
-      /* @__PURE__ */ r("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ i("div", { className: "grid gap-6 lg:grid-cols-2", children: [
+      /* @__PURE__ */ i("div", { className: "space-y-4", children: [
         /* @__PURE__ */ t(x2, { summary: fs, lang: e, dualLanguageTitle: !0 }),
         /* @__PURE__ */ t(m0, { findings: bs, lang: e, dualLanguageTitle: !0 }),
         /* @__PURE__ */ t(d0, { score: 96, lang: e, dualLanguageTitle: !0 })
       ] }),
-      /* @__PURE__ */ r("div", { className: "space-y-4 rounded-2xl border border-slate-200 bg-white p-6", children: [
+      /* @__PURE__ */ i("div", { className: "space-y-4 rounded-2xl border border-slate-200 bg-white p-6", children: [
         /* @__PURE__ */ t(
           t2,
           {
@@ -7649,17 +7649,17 @@ Monitor 3 months`
             rows: 3
           }
         ),
-        /* @__PURE__ */ r("fieldset", { children: [
+        /* @__PURE__ */ i("fieldset", { children: [
           /* @__PURE__ */ t("legend", { className: "mb-3 text-sm font-semibold text-slate-900", children: e === "id" ? "Keputusan" : "Decision" }),
           /* @__PURE__ */ t("div", { className: "grid gap-3 sm:grid-cols-3", children: xs.map((h) => {
             const f = h.icon;
-            return /* @__PURE__ */ r(
+            return /* @__PURE__ */ i(
               P,
               {
                 variant: s === h.value ? h.variant : "secondary",
                 fullWidth: !0,
                 className: "min-h-14",
-                onClick: () => i(h.value),
+                onClick: () => r(h.value),
                 "aria-pressed": s === h.value,
                 children: [
                   /* @__PURE__ */ t(f, { className: "h-5 w-5", "aria-hidden": !0 }),
@@ -7712,8 +7712,8 @@ function ks({
   orientation: a = "landscape",
   ...l
 }) {
-  const [s, i] = _(ws), [n, c] = _("1");
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "chat", orientation: a, ...l, children: [
+  const [s, r] = _(ws), [n, c] = _("1");
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "chat", orientation: a, ...l, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7723,7 +7723,7 @@ function ks({
         className: "mb-4 text-2xl"
       }
     ),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         className: u(
@@ -7731,7 +7731,7 @@ function ks({
           a === "portrait" ? "flex-col" : "flex-row"
         ),
         children: [
-          /* @__PURE__ */ r(
+          /* @__PURE__ */ i(
             "aside",
             {
               className: u(
@@ -7740,13 +7740,13 @@ function ks({
               ),
               children: [
                 /* @__PURE__ */ t("p", { className: "mb-2 px-2 text-xs font-semibold uppercase text-slate-500", children: e === "id" ? "Riwayat" : "History" }),
-                /* @__PURE__ */ t("ul", { className: "space-y-1", children: ys.map((o) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ r(
+                /* @__PURE__ */ t("ul", { className: "space-y-1", children: ys.map((o) => /* @__PURE__ */ t("li", { children: /* @__PURE__ */ i(
                   "button",
                   {
                     type: "button",
                     onClick: () => c(o.id),
                     className: u(
-                      "flex w-full min-h-12 touch-manipulation flex-col rounded-xl px-3 py-3 text-left text-sm",
+                      "flex w-full min-h-12 cursor-pointer touch-manipulation flex-col rounded-xl px-3 py-3 text-left text-sm",
                       n === o.id ? "bg-blue-100 font-semibold text-blue-800" : "hover:bg-white"
                     ),
                     children: [
@@ -7758,9 +7758,9 @@ function ks({
               ]
             }
           ),
-          /* @__PURE__ */ r("div", { className: "flex min-w-0 flex-1 flex-col", children: [
+          /* @__PURE__ */ i("div", { className: "flex min-w-0 flex-1 flex-col", children: [
             /* @__PURE__ */ t("div", { className: "flex-1 space-y-4 overflow-y-auto p-4", children: s.map((o, m) => /* @__PURE__ */ t(We, { role: o.role, content: o.content }, m)) }),
-            /* @__PURE__ */ r("div", { className: "border-t border-slate-100 p-4", children: [
+            /* @__PURE__ */ i("div", { className: "border-t border-slate-100 p-4", children: [
               /* @__PURE__ */ t("p", { className: "mb-2 text-xs font-semibold text-slate-500", children: e === "id" ? "Saran pertanyaan" : "Suggested prompts" }),
               /* @__PURE__ */ t("div", { className: "mb-3 flex flex-wrap gap-2", children: gs.map((o, m) => /* @__PURE__ */ t(
                 P,
@@ -7768,7 +7768,7 @@ function ks({
                   variant: "secondary",
                   size: "md",
                   className: "h-auto min-h-12 whitespace-normal py-2 text-left text-xs",
-                  onClick: () => i((h) => [
+                  onClick: () => r((h) => [
                     ...h,
                     { role: "user", content: b(o, e) }
                   ]),
@@ -7781,7 +7781,7 @@ function ks({
                 Nl,
                 {
                   lang: e,
-                  onSend: (o) => i((m) => [...m, { role: "user", content: o }])
+                  onSend: (o) => r((m) => [...m, { role: "user", content: o }])
                 }
               )
             ] })
@@ -7804,7 +7804,7 @@ function zs({
   orientation: a = "landscape",
   ...l
 }) {
-  return /* @__PURE__ */ r(s2, { lang: e, activeNav: "dashboard", ...l, children: [
+  return /* @__PURE__ */ i(s2, { lang: e, activeNav: "dashboard", ...l, children: [
     /* @__PURE__ */ t(
       j,
       {
@@ -7814,7 +7814,7 @@ function zs({
         className: "mb-4 text-2xl"
       }
     ),
-    /* @__PURE__ */ r(
+    /* @__PURE__ */ i(
       "div",
       {
         className: u(
@@ -7822,14 +7822,14 @@ function zs({
           a === "landscape" ? "lg:grid-cols-[1fr_280px]" : "grid-cols-1"
         ),
         children: [
-          /* @__PURE__ */ r("div", { className: "space-y-4", children: [
-            /* @__PURE__ */ r("div", { className: "relative aspect-video overflow-hidden rounded-2xl bg-slate-900", children: [
-              /* @__PURE__ */ r("div", { className: "absolute inset-0 flex items-center justify-center text-white/60", children: [
+          /* @__PURE__ */ i("div", { className: "space-y-4", children: [
+            /* @__PURE__ */ i("div", { className: "relative aspect-video overflow-hidden rounded-2xl bg-slate-900", children: [
+              /* @__PURE__ */ i("div", { className: "absolute inset-0 flex items-center justify-center text-white/60", children: [
                 /* @__PURE__ */ t(Ce, { className: "h-16 w-16", "aria-hidden": !0 }),
                 /* @__PURE__ */ t("span", { className: "sr-only", children: e === "id" ? "Video pasien" : "Patient video" })
               ] }),
               /* @__PURE__ */ t("div", { className: "absolute bottom-4 left-4 h-24 w-32 overflow-hidden rounded-lg border-2 border-white/30 bg-slate-800", children: /* @__PURE__ */ t("div", { className: "flex h-full items-center justify-center text-xs text-white/50", children: e === "id" ? "Dokter" : "Doctor" }) }),
-              /* @__PURE__ */ r("div", { className: "absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3 rounded-full bg-slate-900/80 px-4 py-3", children: [
+              /* @__PURE__ */ i("div", { className: "absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3 rounded-full bg-slate-900/80 px-4 py-3", children: [
                 /* @__PURE__ */ t(
                   P,
                   {
@@ -7859,12 +7859,12 @@ function zs({
                 )
               ] })
             ] }),
-            /* @__PURE__ */ r("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
+            /* @__PURE__ */ i("div", { className: "rounded-2xl border border-slate-200 bg-white p-4", children: [
               /* @__PURE__ */ t("p", { className: "mb-3 text-sm font-semibold text-slate-900", children: e === "id" ? "Transkrip langsung" : "Live transcript" }),
-              /* @__PURE__ */ t("div", { className: "max-h-40 space-y-2 overflow-y-auto", children: Ms.map((s, i) => /* @__PURE__ */ t(We, { role: s.role, content: s.content }, i)) })
+              /* @__PURE__ */ t("div", { className: "max-h-40 space-y-2 overflow-y-auto", children: Ms.map((s, r) => /* @__PURE__ */ t(We, { role: s.role, content: s.content }, r)) })
             ] })
           ] }),
-          /* @__PURE__ */ r("aside", { className: "space-y-4", children: [
+          /* @__PURE__ */ i("aside", { className: "space-y-4", children: [
             /* @__PURE__ */ t(x2, { summary: Ns, lang: e }),
             /* @__PURE__ */ t(P, { fullWidth: !0, variant: "success", className: "min-h-14", children: e === "id" ? "Simpan ringkasan" : "Save summary" })
           ] })
@@ -7873,7 +7873,7 @@ function zs({
     )
   ] });
 }
-const ei = {
+const er = {
   tabletLandscape: {
     name: "Android Tablet Landscape",
     styles: { width: "1280px", height: "800px" },
@@ -7909,21 +7909,21 @@ const ei = {
   { en: "AI Analysis", id: "Analisis AI", color: "bg-teal-500" },
   { en: "Doctor Summary", id: "Ringkasan Dokter", color: "bg-blue-600" }
 ];
-function ti({
+function tr({
   lang: e = "en",
   step: a = 2
 }) {
-  return /* @__PURE__ */ t("div", { className: "min-h-screen bg-slate-50 p-6", children: /* @__PURE__ */ r("div", { className: "mx-auto max-w-6xl", children: [
-    /* @__PURE__ */ r("div", { className: "mb-8 flex items-center justify-between", children: [
-      /* @__PURE__ */ r("div", { children: [
+  return /* @__PURE__ */ t("div", { className: "min-h-screen bg-slate-50 p-6", children: /* @__PURE__ */ i("div", { className: "mx-auto max-w-6xl", children: [
+    /* @__PURE__ */ i("div", { className: "mb-8 flex items-center justify-between", children: [
+      /* @__PURE__ */ i("div", { children: [
         /* @__PURE__ */ t("h1", { className: "font-heading text-2xl font-bold text-slate-900", children: e === "id" ? "Analisis Laporan Medis" : "Medical Report Analysis" }),
         /* @__PURE__ */ t("p", { className: "mt-1 text-sm text-slate-600", children: e === "id" ? "Alur kerja AI untuk laporan medis" : "AI-powered medical report workflow" })
       ] }),
       /* @__PURE__ */ t("span", { className: "text-sm font-semibold text-blue-600", children: "alocare.ai" })
     ] }),
-    /* @__PURE__ */ r("div", { className: "relative mb-10 flex justify-between px-4", children: [
+    /* @__PURE__ */ i("div", { className: "relative mb-10 flex justify-between px-4", children: [
       /* @__PURE__ */ t("div", { className: "absolute left-8 right-8 top-4 h-0.5 bg-slate-200", "aria-hidden": !0 }),
-      Ss.map((l, s) => /* @__PURE__ */ r("div", { className: "relative z-10 flex flex-col items-center gap-2", children: [
+      Ss.map((l, s) => /* @__PURE__ */ i("div", { className: "relative z-10 flex flex-col items-center gap-2", children: [
         /* @__PURE__ */ t(
           "div",
           {
@@ -7935,8 +7935,8 @@ function ti({
         /* @__PURE__ */ t("span", { className: "text-center text-xs text-blue-600", children: e === "id" ? l.en : l.id })
       ] }, l.en))
     ] }),
-    /* @__PURE__ */ r("div", { className: "grid gap-6 lg:grid-cols-3", children: [
-      /* @__PURE__ */ r("section", { className: "space-y-4", "aria-label": e === "id" ? "Unggah" : "Upload", children: [
+    /* @__PURE__ */ i("div", { className: "grid gap-6 lg:grid-cols-3", children: [
+      /* @__PURE__ */ i("section", { className: "space-y-4", "aria-label": e === "id" ? "Unggah" : "Upload", children: [
         /* @__PURE__ */ t(Ge, { lang: e, state: a >= 1 ? "success" : "empty" }),
         /* @__PURE__ */ t(
           Fe,
@@ -7948,7 +7948,7 @@ function ti({
         ),
         /* @__PURE__ */ t(cl, { lang: e, status: a >= 1 ? "complete" : "pending" })
       ] }),
-      /* @__PURE__ */ r("section", { className: "space-y-4", "aria-label": e === "id" ? "Analisis AI" : "AI Analysis", children: [
+      /* @__PURE__ */ i("section", { className: "space-y-4", "aria-label": e === "id" ? "Analisis AI" : "AI Analysis", children: [
         /* @__PURE__ */ t(x2, { summary: Es, lang: e, loading: a < 2 }),
         /* @__PURE__ */ t(m0, { findings: Cs, lang: e }),
         /* @__PURE__ */ t(d0, { score: 96, lang: e })
@@ -7957,35 +7957,35 @@ function ti({
     ] })
   ] }) });
 }
-function ai({
+function ar({
   children: e,
   sidebar: a,
   locale: l = "en",
   onLocaleChange: s,
-  className: i
+  className: r
 }) {
-  return /* @__PURE__ */ r("div", { className: u("min-h-screen bg-slate-50", i), children: [
+  return /* @__PURE__ */ i("div", { className: u("min-h-screen bg-slate-50", r), children: [
     /* @__PURE__ */ t(nl, { locale: l, onLocaleChange: s }),
-    /* @__PURE__ */ r("div", { className: "mx-auto flex max-w-7xl gap-6 px-6 py-6", children: [
+    /* @__PURE__ */ i("div", { className: "mx-auto flex max-w-7xl gap-6 px-6 py-6", children: [
       a ? /* @__PURE__ */ t("aside", { className: "hidden w-56 shrink-0 lg:block", "aria-label": "Sidebar", children: a }) : null,
       /* @__PURE__ */ t("main", { className: "min-w-0 flex-1", children: e })
     ] }),
-    /* @__PURE__ */ t("footer", { className: "mx-auto max-w-7xl px-6 pb-8", children: /* @__PURE__ */ r("div", { className: "grid gap-3 sm:grid-cols-2", children: [
+    /* @__PURE__ */ t("footer", { className: "mx-auto max-w-7xl px-6 pb-8", children: /* @__PURE__ */ i("div", { className: "grid gap-3 sm:grid-cols-2", children: [
       /* @__PURE__ */ t(F0, { variant: "privacy" }),
       /* @__PURE__ */ t(F0, { variant: "encryption" })
     ] }) })
   ] });
 }
-function li({
+function lr({
   lang: e = "en",
   orientation: a = "landscape",
   initialNav: l = "dashboard"
 }) {
-  const [s, i] = _(l), n = {
+  const [s, r] = _(l), n = {
     lang: e,
     orientation: a,
     activeNav: s,
-    onNavChange: i
+    onNavChange: r
   };
   switch (s) {
     case "upload":
@@ -7999,16 +7999,16 @@ function li({
     case "chat":
       return /* @__PURE__ */ t(ks, { ...n, activeNav: "chat" });
     default:
-      return /* @__PURE__ */ t(rs, { ...n, activeNav: "dashboard" });
+      return /* @__PURE__ */ t(is, { ...n, activeNav: "dashboard" });
   }
 }
-function si({
+function sr({
   lang: e = "en",
   orientation: a = "landscape"
 }) {
   return /* @__PURE__ */ t(Xe, { lang: e, orientation: a, activeNav: "review" });
 }
-function ii({
+function rr({
   lang: e = "en",
   orientation: a = "landscape"
 }) {
@@ -8035,13 +8035,13 @@ export {
   Hs as CardTitle,
   Nl as ChatInput,
   We as ChatMessage,
-  li as ClinicWorkflowTablet,
+  lr as ClinicWorkflowTablet,
   x2 as ClinicalSummaryCard,
   d0 as ConfidenceScore,
-  ii as ConsultationTablet,
-  ai as DashboardLayout,
+  rr as ConsultationTablet,
+  ar as DashboardLayout,
   qs as DoctorReviewPanel,
-  si as DoctorReviewTablet,
+  sr as DoctorReviewTablet,
   Ql as EMRAIVoiceConsultation,
   Wl as EMRConsultationSOAP,
   Zl as EMRLabRadOrders,
@@ -8059,7 +8059,7 @@ export {
   e2 as Input,
   m0 as KeyFindingCard,
   u2 as LanguageSwitcher,
-  i1 as LocaleProvider,
+  r1 as LocaleProvider,
   p0 as LoginBrand,
   Al as LoginBrandPanel,
   u0 as LoginCard,
@@ -8073,17 +8073,17 @@ export {
   h0 as LoginLayout,
   Zs as LoginMenuBar,
   Il as LoginPasswordField,
-  ti as MedicalReportAnalysis,
+  tr as MedicalReportAnalysis,
   cl as OCRStatusCard,
   Tl as PortalLogin,
   Te as Progress,
   He as RecommendationList,
   xl as RiskIndicator,
-  r0 as Spinner,
+  i0 as Spinner,
   F0 as SystemHealthBadge,
   Qe as TabletAnalysisView,
   ks as TabletChat,
-  rs as TabletDashboard,
+  is as TabletDashboard,
   Xe as TabletDoctorReview,
   Qs as TabletNav,
   ms as TabletPatientDetail,
@@ -8107,7 +8107,7 @@ export {
   $s as shadows,
   js as spacing,
   b as t,
-  ei as tabletViewports,
+  er as tabletViewports,
   Ds as typography,
   Gs as useLocale,
   Bs as zIndex
