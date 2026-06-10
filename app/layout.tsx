@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   description:
     "Secure browser access for doctors, clinicians, hospitals, and patients.",
   icons: {
-    icon: [{ url: "/alocare-ai.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/alocare-ai.svg", type: "image/svg+xml" }],
+    icon: [{ url: "/logo-alocare.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/logo-alocare.svg", type: "image/svg+xml" }],
   },
 };
 
