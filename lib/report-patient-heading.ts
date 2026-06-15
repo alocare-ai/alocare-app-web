@@ -81,13 +81,19 @@ const INVALID_PATIENT_NAMES = new Set([
   "female",
   "name",
   "nama",
+  "mandaya",
+  "royal",
+  "hospital",
 ]);
 
 function isValidPatientName(name: string | null | undefined): boolean {
   if (!name?.trim()) return false;
   const normalized = name.trim().toLowerCase();
   if (INVALID_PATIENT_NAMES.has(normalized)) return false;
-  if (normalized.length < 2) return false;
+  const words = name.trim().split(/\s+/);
+  if (words.length < 2) return false;
+  if (words.some((word) => INVALID_PATIENT_NAMES.has(word.toLowerCase()))) return false;
+  if (normalized.length < 4) return false;
   return true;
 }
 
