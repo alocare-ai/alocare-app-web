@@ -31,7 +31,7 @@ import {
 import type { Report, ReportResult } from "@/lib/types/api";
 
 /** Matches design-system UploadDropzone default. */
-const REPORT_FILE_ACCEPT = ".pdf,.jpg,.jpeg,.png,.heic,.heif,.webp";
+import { REPORT_FILE_ACCEPT } from "@/lib/report-file-accept";
 
 type ReportAddFilesButtonProps = {
   reportId: string;

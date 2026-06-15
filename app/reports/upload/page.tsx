@@ -38,6 +38,7 @@ import {
   getReportFiles,
   uploadReportFiles,
 } from "@/lib/api/reports";
+import { REPORT_FILE_ACCEPT } from "@/lib/report-file-accept";
 import type { Report, ReportResult, ReportUploadedFile } from "@/lib/types/api";
 
 type PipelineStep = "idle" | ReportPipelineStep;
@@ -326,6 +327,7 @@ export default function UploadReportPage() {
           lang={locale}
           state={isUploading ? "uploading" : dropState}
           multiple
+          accept={REPORT_FILE_ACCEPT}
           onFilesSelected={handleFiles}
           hideHeader
           className="[&>span]:hidden [&>h2]:hidden [&>p]:hidden"
