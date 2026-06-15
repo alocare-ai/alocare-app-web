@@ -373,6 +373,10 @@ export function OcrProcessModal({
     Boolean(error) ||
     ocrEvent?.step === "error" ||
     Boolean(ocrFilesProgress?.files.some((f) => f.status === "error"));
+  const errorMessage =
+    error ??
+    (ocrEvent?.step === "error" ? ocrEvent.message : undefined) ??
+    (hasError ? ocrFilesProgress?.detail : undefined);
   const progress = overallProgress(step, ocrFilesProgress, ocrEvent, aiProgress);
   const isFinished = step === "completed" && !hasError;
   const showAiSubsteps =
@@ -472,7 +476,7 @@ export function OcrProcessModal({
                             role="status"
                             aria-live="polite"
                           >
-                            {error ??
+                            {errorMessage ??
                               activeDetail(
                                 locale,
                                 key,

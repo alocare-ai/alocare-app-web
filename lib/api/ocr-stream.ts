@@ -76,7 +76,9 @@ export function streamReportOcr(
 
   source.onerror = () => {
     if (source.readyState !== EventSource.CLOSED) {
-      handlers.onError("OCR stream connection lost");
+      handlers.onError(
+        "OCR stream connection lost — the server may be unavailable or the scan timed out. Try again with fewer or smaller photos.",
+      );
       source.close();
     }
   };

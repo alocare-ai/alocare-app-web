@@ -285,6 +285,12 @@ export function applyOcrStreamEvent(
         status: "error",
         detail: event.message ?? (locale === "id" ? "Gagal" : "Failed"),
       };
+    } else if (files.length === 1) {
+      files[0] = {
+        ...files[0],
+        status: "error",
+        detail: event.message ?? (locale === "id" ? "Gagal" : "Failed"),
+      };
     }
     return {
       ...state,
