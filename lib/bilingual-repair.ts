@@ -16,6 +16,7 @@ import {
   buildClinicalFromPatientIdentity,
   buildHospitalLabNarrative,
   isGenericDoctorSummaryPlaceholder,
+  isGenericHospitalClinicalOverview,
   isHospitalLabReport,
   isWeakDoctorSummary,
 } from "@/lib/hospital-lab-narrative";
@@ -89,7 +90,7 @@ function rebuildClinicalForLocale(
     return buildHospitalLabNarrative(document, locale, identity);
   }
   if (document.trim()) {
-    return buildClinicalNarrativeFromDocument(document, locale, fileCount);
+    return buildClinicalNarrativeFromDocument(document, locale, fileCount, identity);
   }
   if (identity?.name?.trim()) {
     return buildClinicalFromPatientIdentity(identity, locale) ?? "";
@@ -138,7 +139,8 @@ export function repairClinicalSummary(
     !en ||
     looksIndonesian(en) ||
     needsMultiRebuild ||
-    isPlaceholderClinicalSummary(en)
+    isPlaceholderClinicalSummary(en) ||
+    isGenericHospitalClinicalOverview(en)
   ) {
     en = rebuildClinicalForLocale("en", document, fileCount, result);
   }
@@ -147,7 +149,8 @@ export function repairClinicalSummary(
     shouldUseEnClinicalForId(en, id) &&
     looksEnglish(en) &&
     !isPlaceholderClinicalSummary(en) &&
-    !needsMultiRebuild
+    !needsMultiRebuild &&
+    !isGenericHospitalClinicalOverview(en)
   ) {
     id = localizeClinicalEnToId(en);
   } else if (
@@ -155,7 +158,8 @@ export function repairClinicalSummary(
     looksEnglish(id) ||
     (en && id === en) ||
     needsMultiRebuild ||
-    isPlaceholderClinicalSummary(id)
+    isPlaceholderClinicalSummary(id) ||
+    isGenericHospitalClinicalOverview(id)
   ) {
     id = rebuildClinicalForLocale("id", document, fileCount, result);
   }
@@ -167,6 +171,13 @@ export function repairClinicalSummary(
   if (isPlaceholderClinicalSummary(id) && result?.patient_identity?.name) {
     id =
       buildClinicalFromPatientIdentity(result.patient_identity, "id") ?? id;
+  }
+
+  if (isGenericHospitalClinicalOverview(en) && document.trim()) {
+    en = rebuildClinicalForLocale("en", document, fileCount, result);
+  }
+  if (isGenericHospitalClinicalOverview(id) && document.trim()) {
+    id = rebuildClinicalForLocale("id", document, fileCount, result);
   }
 
   return bilingual(en, id);

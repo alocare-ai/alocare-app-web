@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n";
+import type { ReportPatientIdentity } from "@/lib/types/api";
 import { isPlaceholderClinicalSummary } from "@/lib/clinical-summary";
 import { splitDocumentSections } from "@/lib/document-sections";
 import {
@@ -134,9 +135,10 @@ function buildSectionNarrative(
   document: string,
   locale: Locale,
   filename?: string,
+  identity?: ReportPatientIdentity | null,
 ): string {
   if (isHospitalLabReport(document)) {
-    return buildHospitalLabNarrative(document, locale);
+    return buildHospitalLabNarrative(document, locale, identity);
   }
   if (isLabSection(document)) {
     return buildLabNarrative(document, locale, filename);
@@ -164,6 +166,7 @@ export function buildClinicalNarrativeFromDocument(
   document: string,
   locale: Locale,
   fileCount = 1,
+  identity?: ReportPatientIdentity | null,
 ): string {
   const sections = splitDocumentSections(document);
   if (sections.length > 1) {
@@ -173,7 +176,7 @@ export function buildClinicalNarrativeFromDocument(
         : `Combined summary across ${sections.length} uploaded files (labs, wellness, and other documents).\n\n`;
     const parts = sections.map(
       (section) =>
-        `**${section.filename}**\n${buildSectionNarrative(section.text, locale, section.filename)}`,
+        `**${section.filename}**\n${buildSectionNarrative(section.text, locale, section.filename, identity)}`,
     );
     return intro + parts.join("\n\n");
   }
@@ -190,7 +193,7 @@ export function buildClinicalNarrativeFromDocument(
     return `${intro}**Labs**\n${labPart}\n\n**Wellness / stress**\n${stressPart}`;
   }
 
-  return buildSectionNarrative(document, locale);
+  return buildSectionNarrative(document, locale, undefined, identity);
 }
 
 function buildSectionDoctorSummary(

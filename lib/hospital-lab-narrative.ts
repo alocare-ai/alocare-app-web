@@ -271,6 +271,67 @@ export function isWeakDoctorSummary(text: string): boolean {
   return false;
 }
 
+/** True when clinical overview is the metadata-only hospital lab boilerplate. */
+export function isGenericHospitalClinicalOverview(text: string): boolean {
+  const t = text.trim();
+  if (!t) return true;
+  if (
+    /laboratory report for/i.test(t) &&
+    /complete values should be interpreted with medical history/i.test(t) &&
+    !/;\s/.test(t)
+  ) {
+    return true;
+  }
+  if (
+    /laporan laboratorium untuk/i.test(t) &&
+    /nilai lengkap perlu ditafsirkan/i.test(t) &&
+    !/;\s/.test(t)
+  ) {
+    return true;
+  }
+  if (/discuss results with the patient and plan appropriate follow-up/i.test(t) && !/;\s/.test(t)) {
+    return true;
+  }
+  return false;
+}
+
+function buildHospitalFindingsBlock(text: string, locale: Locale): string {
+  const metrics = extractHospitalLabMetrics(text);
+  if (metrics.length === 0) return "";
+
+  const abnormal = metrics.filter(
+    (m) => m.status === "low" || m.status === "high" || m.status === "abnormal",
+  );
+  const valueText = metrics
+    .slice(0, 10)
+    .map((m) => formatHospitalMetric(m, locale))
+    .join("; ");
+
+  if (locale === "id") {
+    let block = `Hasil utama: ${valueText}.`;
+    if (abnormal.length > 0) {
+      block += ` Perlu perhatian: ${abnormal
+        .slice(0, 4)
+        .map((m) => formatHospitalMetric(m, locale))
+        .join(", ")}.`;
+    } else {
+      block += " Nilai yang tercantum umumnya dalam rentang normal.";
+    }
+    return block;
+  }
+
+  let block = `Key results: ${valueText}.`;
+  if (abnormal.length > 0) {
+    block += ` Notable: ${abnormal
+      .slice(0, 4)
+      .map((m) => formatHospitalMetric(m, locale))
+      .join(", ")}.`;
+  } else {
+    block += " Listed values are generally within reference ranges.";
+  }
+  return block;
+}
+
 export function isHospitalLabReport(text: string): boolean {
   const normalized = text.replace(/\s+/g, " ");
   if (
@@ -374,13 +435,13 @@ export function buildHospitalLabNarrative(
 ): string {
   const ctx = mergeHospitalContext(extractHospitalLabContext(text), identity);
   const patient =
-    ctx.patientName || (locale === "id" ? "pasien" : "the patient");
+    cleanPatientName(ctx.patientName) ||
+    identity?.name?.trim() ||
+    (locale === "id" ? "pasien" : "the patient");
 
   const patientDetails: string[] = [];
   if (ctx.gender) {
-    patientDetails.push(
-      locale === "id" ? ctx.gender.toLowerCase() : ctx.gender.toLowerCase(),
-    );
+    patientDetails.push(ctx.gender.toLowerCase());
   }
   if (ctx.dateOfBirth) {
     patientDetails.push(
@@ -402,20 +463,19 @@ export function buildHospitalLabNarrative(
       : patient;
 
   const facility = [ctx.hospital, ctx.department].filter(Boolean).join(", ");
+  const findings = buildHospitalFindingsBlock(text, locale);
 
   if (locale === "id") {
     const parts = [`Laporan laboratorium untuk ${patientDesc}.`];
     if (facility) parts.push(`Fasilitas: ${facility}.`);
     if (ctx.orderDate) parts.push(`Pesanan pada ${ctx.orderDate.trim()}.`);
-    if (ctx.doctor) parts.push(`Dokter penanggung jawab: ${ctx.doctor}.`);
     if (ctx.labNumber) parts.push(`No. lab: ${ctx.labNumber}.`);
-    if (ctx.medicalRecordNumber) parts.push(`No. RM: ${ctx.medicalRecordNumber}.`);
-    if (ctx.validator) parts.push(`Validator: ${ctx.validator}.`);
-    parts.push(
-      "Nilai lengkap perlu ditafsirkan dokter bersama riwayat medis dan gejala pasien.",
-    );
+    const header = parts.join(" ");
+    const body =
+      findings ||
+      "Nilai lengkap perlu ditafsirkan dokter bersama riwayat medis dan gejala pasien.";
     return (
-      `${parts.join(" ")}\n\n` +
+      `${header}\n\n${body}\n\n` +
       "Diskusikan hasil dengan pasien dan rencanakan tindak lanjut sesuai pedoman klinis."
     );
   }
@@ -423,15 +483,13 @@ export function buildHospitalLabNarrative(
   const parts = [`Laboratory report for ${patientDesc}.`];
   if (facility) parts.push(`Facility: ${facility}.`);
   if (ctx.orderDate) parts.push(`Ordered on ${ctx.orderDate.trim()}.`);
-  if (ctx.doctor) parts.push(`Ordering physician: ${ctx.doctor}.`);
   if (ctx.labNumber) parts.push(`Lab no. ${ctx.labNumber}.`);
-  if (ctx.medicalRecordNumber) parts.push(`MRN ${ctx.medicalRecordNumber}.`);
-  if (ctx.validator) parts.push(`Validated by ${ctx.validator}.`);
-  parts.push(
-    "Complete values should be interpreted with medical history, symptoms, and treatment goals.",
-  );
+  const header = parts.join(" ");
+  const body =
+    findings ||
+    "Complete values should be interpreted with medical history, symptoms, and treatment goals.";
   return (
-    `${parts.join(" ")}\n\n` +
+    `${header}\n\n${body}\n\n` +
     "Discuss results with the patient and plan appropriate follow-up."
   );
 }
