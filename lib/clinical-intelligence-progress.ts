@@ -47,7 +47,7 @@ export function applyCiStreamEvent(
       } else {
         next.files[index] = {
           ...current,
-          status: "processing",
+          status: "active",
           progress: event.progress ?? current.progress,
           detail: event.message ?? current.detail,
         };
