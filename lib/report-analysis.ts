@@ -11,7 +11,7 @@ import type { ReportResult } from "@/lib/types/api";
 export type StoredKeyFinding = {
   name: string;
   value: string;
-  status: string;
+  status: "normal" | "low" | "high" | "critical";
   referenceRange?: string | null;
 };
 

@@ -3,6 +3,7 @@
 import {
   AIStatusBadge,
   RecommendationList,
+  RiskIndicator,
   Spinner,
 } from "@alocare/design-system";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -29,6 +30,10 @@ import {
   parseReportResult,
   pickLocaleText,
 } from "@/lib/report-analysis";
+import {
+  resolveReportKeyFindings,
+  resolveReportRiskIndicator,
+} from "@/lib/report-key-findings";
 import {
   patientIdentityDisplayFields,
   patientIdentityPageHeading,
@@ -228,6 +233,23 @@ export function ReportDetailClient({
     [report, result, documentText],
   );
 
+  const resolvedKeyFindings = useMemo(
+    () => resolveReportKeyFindings(result ?? null, documentText),
+    [result, documentText],
+  );
+  const resolvedRisk = useMemo(
+    () =>
+      resolveReportRiskIndicator(
+        result?.risk_indicator ?? analysis?.riskIndicator ?? null,
+        resolvedKeyFindings,
+      ),
+    [result?.risk_indicator, analysis?.riskIndicator, resolvedKeyFindings],
+  );
+  const findings = useMemo(
+    () => mapKeyFindings(resolvedKeyFindings),
+    [resolvedKeyFindings],
+  );
+
   const persistedIdentity = useMemo(
     () => resolvePatientIdentity(result),
     [result],
@@ -270,7 +292,6 @@ export function ReportDetailClient({
 
   const nextActions =
     analysis?.nextActions?.[locale] ?? analysis?.nextActions?.en ?? [];
-  const findings = mapKeyFindings(analysis?.keyFindings ?? []);
   const isImageReport = /\.(jpe?g|png|gif|webp|heic|bmp)$/i.test(
     report.file_reference ?? report.title ?? "",
   );
@@ -306,6 +327,17 @@ export function ReportDetailClient({
           </div>
           <div className="flex shrink-0 flex-col items-end gap-2">
             <div className="flex flex-wrap items-center justify-end gap-2">
+              {resolvedRisk && hasSummary && !limitedAnalysis ? (
+                <RiskIndicator
+                  level={resolvedRisk}
+                  lang={locale}
+                  percentage={
+                    analysis?.confidenceScore != null
+                      ? Math.round(analysis.confidenceScore * 100)
+                      : undefined
+                  }
+                />
+              ) : null}
               <ReportAnalysisEngineBadge
                 engine={analysisEngine}
                 locale={locale}

@@ -1,5 +1,6 @@
 "use client";
 
+import { KeyFindingCard } from "@alocare/design-system";
 import type { Locale } from "@/lib/i18n";
 import {
   IMPACT_BENCHMARKS,
@@ -148,9 +149,11 @@ export function ReportHeaderInsights({
 }: ReportHeaderInsightsProps) {
   const pillars = PLATFORM_PILLARS[locale];
   const highlights = MARKET_HIGHLIGHTS[locale];
-  const hasKeyFindingsChart = keyFindings.some(
+  const scoredFindings = keyFindings.filter(
     (f) => parseScore0to100(f.value) != null,
   );
+  const hasKeyFindingsChart = scoredFindings.length > 0;
+  const hasLabFindings = keyFindings.length > 0 && !hasKeyFindingsChart;
 
   return (
     <section
@@ -197,7 +200,7 @@ export function ReportHeaderInsights({
 
       <div
         className={`grid gap-4 p-4 ${
-          hasKeyFindingsChart
+          hasKeyFindingsChart || hasLabFindings
             ? "md:grid-cols-2 lg:grid-cols-3"
             : "md:grid-cols-2"
         }`}
@@ -205,7 +208,9 @@ export function ReportHeaderInsights({
         <PatientIdentityPanel locale={locale} fields={patientFields} />
         <ImpactBenchmarksChart locale={locale} />
         {hasKeyFindingsChart ? (
-          <KeyFindingsChart locale={locale} findings={keyFindings} />
+          <KeyFindingsChart locale={locale} findings={scoredFindings} />
+        ) : hasLabFindings ? (
+          <KeyFindingCard findings={keyFindings} lang={locale} />
         ) : null}
       </div>
     </section>
