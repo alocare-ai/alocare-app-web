@@ -157,7 +157,6 @@ export function ReportDetailClient({
     isAnalyzing: aiAnalysisRunning,
     isRunning: aiSummaryGenerating,
     error: aiAnalysisError,
-    aiSummary,
     retry: retryAiAnalysis,
   } = useReportAiAnalysis({
     reportId,
@@ -184,9 +183,7 @@ export function ReportDetailClient({
       "Analisis sedang berlangsung…",
     );
     let base: typeof inProgress;
-    if (aiSummary) {
-      base = aiSummary;
-    } else if (hasSummary && analysis?.summary) {
+    if (hasSummary && analysis?.summary) {
       base = analysis.summary;
     } else if (isAnalyzing) {
       base = inProgress;
@@ -195,7 +192,7 @@ export function ReportDetailClient({
     }
     if (!result) return base;
     return repairClinicalSummary(base, documentText, result);
-  }, [aiSummary, analysis?.summary, documentText, hasSummary, isAnalyzing, result]);
+  }, [analysis?.summary, documentText, hasSummary, isAnalyzing, result]);
 
   const uploadedFiles = useMemo((): ReportUploadedFile[] => {
     if (!report) return [];
@@ -319,8 +316,11 @@ export function ReportDetailClient({
     report.file_reference ?? report.title ?? "",
   );
   const limitedAnalysis =
-    analysis?.limitedAnalysis ??
-    (isImageReport && findings.length === 0 && hasSummary);
+    !clinicalIntelligence &&
+    (analysis?.limitedAnalysis ??
+      (isImageReport && findings.length === 0 && hasSummary));
+
+  const showLegacySummaries = !clinicalIntelligence;
 
   const recommendations = nextActions.map((action, i) => {
     const enriched = enrichRecommendation(action, locale);
@@ -414,7 +414,9 @@ export function ReportDetailClient({
           </div>
         ) : null}
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div
+          className={`grid gap-6 ${showLegacySummaries ? "lg:grid-cols-3" : "lg:grid-cols-2"}`}
+        >
           <section className="space-y-4">
             <ReportFilesSection
               report={report}
@@ -425,42 +427,55 @@ export function ReportDetailClient({
             />
           </section>
 
-          <section className="space-y-4">
-            {limitedAnalysis ? (
-              <div
-                className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
-                role="status"
-              >
-                {locale === "id"
-                  ? "Unggahan gambar tidak menghasilkan nilai lab terstruktur. Gunakan PDF/teks untuk analisis lengkap."
-                  : "Image uploads cannot produce structured lab values yet. Use a text-based PDF or .txt for full analysis."}
-              </div>
-            ) : null}
-            <ClinicalSummarySection
-              summary={summary}
-              locale={locale}
-              loading={
-                !hasSummary && (isAnalyzing || aiSummaryGenerating)
-              }
-              fileAnalyses={fileAnalyses}
-              patientFields={clinicalSummaryPatientFields}
-            />
-            {hasSummary && !limitedAnalysis && findings.length === 0 ? (
-              <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
-                {locale === "id"
-                  ? "Tidak ada temuan terstruktur pada dokumen ini."
-                  : "No structured findings were detected in this document."}
-              </div>
-            ) : null}
-          </section>
+          {showLegacySummaries ? (
+            <>
+              <section className="space-y-4">
+                {limitedAnalysis ? (
+                  <div
+                    className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                    role="status"
+                  >
+                    {locale === "id"
+                      ? "Unggahan gambar tidak menghasilkan nilai lab terstruktur. Gunakan PDF/teks untuk analisis lengkap."
+                      : "Image uploads cannot produce structured lab values yet. Use a text-based PDF or .txt for full analysis."}
+                  </div>
+                ) : null}
+                <ClinicalSummarySection
+                  summary={summary}
+                  locale={locale}
+                  loading={
+                    !hasSummary && (isAnalyzing || aiSummaryGenerating)
+                  }
+                  fileAnalyses={fileAnalyses}
+                  patientFields={clinicalSummaryPatientFields}
+                />
+                {hasSummary && !limitedAnalysis && findings.length === 0 ? (
+                  <div className="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-600">
+                    {locale === "id"
+                      ? "Tidak ada temuan terstruktur pada dokumen ini."
+                      : "No structured findings were detected in this document."}
+                  </div>
+                ) : null}
+              </section>
+
+              <section className="space-y-4">
+                {doctorText ? (
+                  <DoctorSummaryCard text={doctorText} locale={locale} />
+                ) : null}
+                {recommendations.length > 0 ? (
+                  <RecommendationList items={recommendations} lang={locale} />
+                ) : null}
+              </section>
+            </>
+          ) : (
+            <section className="space-y-4">
+              {recommendations.length > 0 ? (
+                <RecommendationList items={recommendations} lang={locale} />
+              ) : null}
+            </section>
+          )}
 
           <section className="space-y-4">
-            {doctorText ? (
-              <DoctorSummaryCard text={doctorText} locale={locale} />
-            ) : null}
-            {recommendations.length > 0 ? (
-              <RecommendationList items={recommendations} lang={locale} />
-            ) : null}
             {isClinician && report.status === "completed" && (requiresReview || clinicalIntelligence) ? (
               <ReportDoctorReview reportId={reportId} locale={locale} />
             ) : null}

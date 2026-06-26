@@ -8,26 +8,14 @@ import {
   type ReportPipelineStep,
 } from "@/components/ocr-process-modal";
 import type { Locale } from "@/hooks/use-locale";
+import { runClinicalIntelligenceStream } from "@/lib/api/clinical-intelligence-stream";
 import {
-  pipelineStepFromAiProgress,
-  type AiAnalysisProgressState,
-} from "@/lib/ai-analysis-progress";
-import {
-  hasAcceptableClinicalSummary,
-  mergeAnalyzeResponseIntoResult,
-} from "@/lib/clinical-summary";
-import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
-import { runOcrStream } from "@/lib/api/ocr-stream";
-import {
-  applyOcrStreamEvent,
-  createOcrFilesProgress,
-  type OcrFilesProgressState,
-} from "@/lib/ocr-file-progress";
-import {
-  getReportFiles,
-  getReportResult,
-  uploadReportFiles,
-} from "@/lib/api/reports";
+  applyCiStreamEvent,
+  createCiFilesProgress,
+  pipelineStepFromCiEvent,
+} from "@/lib/clinical-intelligence-progress";
+import type { OcrFilesProgressState } from "@/lib/ocr-file-progress";
+import { getReportFiles, uploadReportFiles } from "@/lib/api/reports";
 import type { Report, ReportResult } from "@/lib/types/api";
 
 /** Matches design-system UploadDropzone default. */
@@ -44,7 +32,6 @@ type ReportAddFilesButtonProps = {
 export function ReportAddFilesButton({
   reportId,
   report,
-  result,
   locale,
   disabled = false,
 }: ReportAddFilesButtonProps) {
@@ -57,11 +44,8 @@ export function ReportAddFilesButton({
   const [step, setStep] = useState<ReportPipelineStep>("uploaded");
   const [error, setError] = useState<string | null>(null);
   const [fileLabel, setFileLabel] = useState<string | null>(null);
-  const [ocrFilesProgress, setOcrFilesProgress] =
+  const [ciFilesProgress, setCiFilesProgress] =
     useState<OcrFilesProgressState | null>(null);
-  const [aiProgress, setAiProgress] = useState<AiAnalysisProgressState | null>(
-    null,
-  );
 
   const busy = uploading || analyzing;
 
@@ -102,8 +86,7 @@ export function ReportAddFilesButton({
 
     setAnalyzing(true);
     setError(null);
-    setAiProgress(null);
-    setOcrFilesProgress(null);
+    setCiFilesProgress(null);
     setStep("uploaded");
     setModalOpen(true);
 
@@ -125,74 +108,31 @@ export function ReportAddFilesButton({
             : `${allFiles.length} files`,
       );
 
-      setStep("ocr");
-
-      const initialOcr = createOcrFilesProgress(
-        allFiles.map((f) => f.filename),
-      );
-      setOcrFilesProgress(initialOcr);
-
-      const ocrText = await runOcrStream(reportId, (event) => {
-        if (event.step === "identity") {
-          setStep("identity");
-        }
-        setOcrFilesProgress((prev) =>
-          applyOcrStreamEvent(prev ?? initialOcr, event, locale),
-        );
-      });
-
-      const documentText = ocrText.trim();
-      if (!documentText) {
-        throw new Error(
-          locale === "id"
-            ? "Tidak ada teks yang diekstrak dari berkas."
-            : "No text could be extracted from the files.",
-        );
-      }
-
       setStep("analyzing");
 
-      const workingResult = result ?? (await getReportResult(reportId));
-      const resultForAnalysis: ReportResult = {
-        ...workingResult,
-        doctor_summary: documentText,
-      };
+      const initialProgress = createCiFilesProgress(
+        allFiles.map((f) => f.filename),
+      );
+      setCiFilesProgress(initialProgress);
 
-      const fileCount = allFiles.length;
-
-      const handleAiProgress = (state: AiAnalysisProgressState) => {
-        setAiProgress(state);
-        setStep(pipelineStepFromAiProgress(state));
-      };
-
-      const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
-        report,
-        result: resultForAnalysis,
+      await runClinicalIntelligenceStream(
         reportId,
         locale,
-        documentText,
-        fileCount,
-        onProgress: handleAiProgress,
-      });
-
-      const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {
-        summaryBilingual: summary,
-        doctorSummary: analyzeExtras?.doctorSummary,
-        nextActions: analyzeExtras?.nextActions,
-      });
-
-      if (!hasAcceptableClinicalSummary(merged)) {
-        throw new Error(
-          locale === "id"
-            ? "Ringkasan klinis tidak dapat dibuat dari berkas ini."
-            : "Could not build a clinical summary from these files.",
-        );
-      }
-
-      queryClient.setQueryData(["report-result", reportId], merged);
+        (event) => {
+          setStep(pipelineStepFromCiEvent(event));
+          setCiFilesProgress((prev) =>
+            applyCiStreamEvent(prev ?? initialProgress, event, locale),
+          );
+        },
+      );
 
       setPendingAnalysis(false);
       setStep("completed");
+
+      await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
+      await queryClient.invalidateQueries({
+        queryKey: ["report-result", reportId],
+      });
     } catch (err) {
       const message =
         err instanceof Error
@@ -204,7 +144,7 @@ export function ReportAddFilesButton({
     } finally {
       setAnalyzing(false);
     }
-  }, [busy, locale, queryClient, report, reportId, result]);
+  }, [busy, locale, queryClient, reportId]);
 
   const onInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -227,8 +167,7 @@ export function ReportAddFilesButton({
         locale={locale}
         fileName={fileLabel}
         step={step}
-        ocrFilesProgress={ocrFilesProgress}
-        aiProgress={aiProgress}
+        ocrFilesProgress={ciFilesProgress}
         error={error}
       />
       <input

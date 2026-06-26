@@ -15,23 +15,14 @@ import {
   type ReportPipelineStep,
 } from "@/components/ocr-process-modal";
 import { useLocale } from "@/hooks/use-locale";
-import {
-  AI_SAVING_PHASES,
-  type AiAnalysisProgressState,
-} from "@/lib/ai-analysis-progress";
-import { generateClinicalSummaryFromAI } from "@/lib/clinical-summary-ai";
-import {
-  hasAcceptableClinicalSummary,
-  mergeAnalyzeResponseIntoResult,
-} from "@/lib/clinical-summary";
-import { pipelineStepFromAiProgress } from "@/lib/ai-analysis-progress";
 import { ApiError } from "@/lib/api/client";
-import { runOcrStream } from "@/lib/api/ocr-stream";
+import { runClinicalIntelligenceStream } from "@/lib/api/clinical-intelligence-stream";
 import {
-  applyOcrStreamEvent,
-  createOcrFilesProgress,
-  type OcrFilesProgressState,
-} from "@/lib/ocr-file-progress";
+  applyCiStreamEvent,
+  createCiFilesProgress,
+  pipelineStepFromCiEvent,
+} from "@/lib/clinical-intelligence-progress";
+import type { OcrFilesProgressState } from "@/lib/ocr-file-progress";
 import {
   createReport,
   deleteReportFile,
@@ -39,7 +30,7 @@ import {
   uploadReportFiles,
 } from "@/lib/api/reports";
 import { REPORT_FILE_ACCEPT } from "@/lib/report-file-accept";
-import type { Report, ReportResult, ReportUploadedFile } from "@/lib/types/api";
+import type { Report, ReportUploadedFile } from "@/lib/types/api";
 
 type PipelineStep = "idle" | ReportPipelineStep;
 
@@ -77,9 +68,6 @@ export default function UploadReportPage() {
   const [processModalOpen, setProcessModalOpen] = useState(false);
   const [ocrFilesProgress, setOcrFilesProgress] =
     useState<OcrFilesProgressState | null>(null);
-  const [aiProgress, setAiProgress] = useState<AiAnalysisProgressState | null>(
-    null,
-  );
 
   const reportId = report?.id ?? null;
   const canSubmit = Boolean(reportId && uploadedFiles.length > 0 && !isUploading);
@@ -162,113 +150,34 @@ export default function UploadReportPage() {
     setError(null);
     setIsSubmitting(true);
     setOcrFilesProgress(null);
-    setAiProgress(null);
     setStep("uploaded");
     setProcessModalOpen(true);
 
     const fileNames = uploadedFiles.map((f) => f.filename);
-    const fileCount = uploadedFiles.length;
 
     try {
-      setStep("ocr");
+      setStep("analyzing");
 
-      const initialOcr = createOcrFilesProgress(fileNames);
-      setOcrFilesProgress(initialOcr);
+      const initialProgress = createCiFilesProgress(fileNames);
+      setOcrFilesProgress(initialProgress);
 
-      const ocrText = await runOcrStream(reportId, (event) => {
-        if (event.step === "identity") {
-          setStep("identity");
-        }
-        setOcrFilesProgress((prev) =>
-          applyOcrStreamEvent(prev ?? initialOcr, event, locale),
-        );
-      });
+      await runClinicalIntelligenceStream(
+        reportId,
+        locale,
+        (event) => {
+          setStep(pipelineStepFromCiEvent(event));
+          setOcrFilesProgress((prev) =>
+            applyCiStreamEvent(prev ?? initialProgress, event, locale),
+          );
+        },
+      );
 
       await queryClient.invalidateQueries({
         queryKey: ["report-result", reportId],
       });
-
-      const fileContent = ocrText.trim();
-      if (!fileContent) {
-        throw new Error(
-          locale === "id"
-            ? "Tidak ada teks yang diekstrak dari berkas. Coba berkas PDF berbasis teks."
-            : "No text could be extracted from the files. Try text-based PDFs.",
-        );
-      }
-
-      setStep("analyzing");
-
-      const handleAiProgress = (state: AiAnalysisProgressState) => {
-        setAiProgress(state);
-        setStep(pipelineStepFromAiProgress(state));
-      };
-
-      const resultForAnalysis: ReportResult = {
-        id: report.id,
-        status: report.status,
-        summary: null,
-        doctor_summary: fileContent,
-        next_actions: [],
-      };
-
-      try {
-        const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
-          report,
-          reportId,
-          locale,
-          documentText: fileContent,
-          fileCount,
-          onProgress: handleAiProgress,
-          result: resultForAnalysis,
-        });
-
-        const merged = mergeAnalyzeResponseIntoResult(resultForAnalysis, {
-          summaryBilingual: summary,
-          doctorSummary: analyzeExtras?.doctorSummary,
-          nextActions: analyzeExtras?.nextActions,
-        });
-
-        if (!hasAcceptableClinicalSummary(merged)) {
-          throw new Error(
-            locale === "id"
-              ? "Ringkasan klinis tidak dapat dibuat dari laporan ini."
-              : "Could not build a clinical summary from this report.",
-          );
-        }
-
-        queryClient.setQueryData(["report-result", reportId], merged);
-        queryClient.setQueryData(["report", reportId], {
-          ...report,
-          status: "completed",
-        });
-        await queryClient.invalidateQueries({
-          queryKey: ["report-result", reportId],
-        });
-        await queryClient.invalidateQueries({
-          queryKey: ["report", reportId],
-        });
-
-        handleAiProgress({
-          stage: "saving",
-          phaseIndex: AI_SAVING_PHASES.length - 1,
-          phases: AI_SAVING_PHASES,
-          detail:
-            locale === "id"
-              ? "Ringkasan klinis siap"
-              : "Clinical summary ready",
-          progress: 98,
-        });
-      } catch (analysisErr) {
-        const message =
-          analysisErr instanceof Error
-            ? analysisErr.message
-            : locale === "id"
-              ? "Analisis AI gagal"
-              : "AI analysis failed";
-        setError(message);
-        return;
-      }
+      await queryClient.invalidateQueries({
+        queryKey: ["report", reportId],
+      });
 
       setStep("completed");
       router.push(`/reports/${reportId}`);
@@ -307,7 +216,6 @@ export default function UploadReportPage() {
         }
         step={pipelineStep}
         ocrFilesProgress={ocrFilesProgress}
-        aiProgress={aiProgress}
         error={error}
       />
 
@@ -381,8 +289,8 @@ export default function UploadReportPage() {
                 ? "Unggah minimal satu berkas untuk melanjutkan."
                 : "Upload at least one file to continue."
               : locale === "id"
-                ? "Semua berkas sudah di server. Mulai OCR dan analisis AI saat siap."
-                : "All files are on the server. Start OCR and AI analysis when ready."}
+                ? "Semua berkas sudah di server. Mulai analisis klinis AI saat siap."
+                : "All files are on the server. Start AI clinical intelligence when ready."}
           </p>
           <Button
             type="button"

@@ -216,12 +216,25 @@ export interface ClinicalIntelligenceRecommendations {
   patientAdvice?: string[];
 }
 
+export interface ClinicalIntelligenceNormalizedResult {
+  test: string;
+  value?: string | number | null;
+  unit?: string | null;
+  reference_range?: string | null;
+  referenceRange?: string | null;
+  status?: string;
+  clinical_meaning?: string | null;
+  clinicalMeaning?: string | null;
+}
+
 export interface ClinicalIntelligenceResult {
   patient_summary?: ClinicalIntelligencePatientSummary;
   patientSummary?: ClinicalIntelligencePatientSummary;
   clinical_summary?: ClinicalIntelligenceClinicalSummary;
   clinicalSummary?: ClinicalIntelligenceClinicalSummary;
   findings?: ClinicalIntelligenceFindings;
+  normalized_results?: ClinicalIntelligenceNormalizedResult[];
+  normalizedResults?: ClinicalIntelligenceNormalizedResult[];
   diagnosis_support?: ClinicalIntelligenceDiagnosisSupport;
   diagnosisSupport?: ClinicalIntelligenceDiagnosisSupport;
   risk_assessment?: ClinicalIntelligenceRiskAssessment;

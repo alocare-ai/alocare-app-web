@@ -83,11 +83,28 @@ function sortFindings(findings: StoredKeyFinding[]): StoredKeyFinding[] {
   );
 }
 
-/** Stored key findings, per-file findings, or hospital-lab OCR extraction. */
+/** Stored key findings, clinical intelligence labs, per-file findings, or OCR extraction. */
 export function resolveReportKeyFindings(
   result: ReportResult | null | undefined,
   documentText: string,
 ): StoredKeyFinding[] {
+  const ci = result?.clinical_intelligence ?? result?.clinicalIntelligence;
+  const fromCi = (ci?.normalized_results ?? ci?.normalizedResults ?? [])
+    .map((row) =>
+      normalizeStoredFinding({
+        name: row.test,
+        value:
+          row.value == null || row.value === ""
+            ? undefined
+            : row.unit
+              ? `${row.value} ${row.unit}`
+              : String(row.value),
+        status: row.status,
+        reference_range: row.reference_range ?? row.referenceRange,
+      }),
+    )
+    .filter((f): f is StoredKeyFinding => f != null);
+
   const stored = (result?.key_findings ?? [])
     .map((f) => normalizeStoredFinding(f))
     .filter((f): f is StoredKeyFinding => f != null);
@@ -105,10 +122,9 @@ export function resolveReportKeyFindings(
   }
   const fromOcr = findingsFromHospitalOcr(ocrParts.filter(Boolean).join("\n\n"));
 
-  return sortFindings(mergeFindings(mergeFindings(stored, fromFiles), fromOcr)).slice(
-    0,
-    8,
-  );
+  return sortFindings(
+    mergeFindings(mergeFindings(mergeFindings(fromCi, stored), fromFiles), fromOcr),
+  ).slice(0, 8);
 }
 
 export function resolveReportRiskIndicator(

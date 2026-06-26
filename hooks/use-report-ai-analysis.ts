@@ -1,20 +1,18 @@
 "use client";
 
-import type { BilingualText } from "@/lib/i18n";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {
-  hasMeaningfulClinicalSummary,
-  mergeAnalyzeResponseIntoResult,
-} from "@/lib/clinical-summary";
-import {
-  buildFullDocumentForSummary,
-  generateClinicalSummaryFromAI,
-} from "@/lib/clinical-summary-ai";
-import { runOcrStream } from "@/lib/api/ocr-stream";
 import type { Locale } from "@/hooks/use-locale";
+import { runClinicalIntelligenceStream } from "@/lib/api/clinical-intelligence-stream";
+import {
+  applyCiStreamEvent,
+  createCiFilesProgress,
+  pipelineStepFromCiEvent,
+} from "@/lib/clinical-intelligence-progress";
+import type { OcrFilesProgressState } from "@/lib/ocr-file-progress";
 import { reportNeedsAiClinicalSummary } from "@/lib/report-result-utils";
 import type { Report, ReportResult } from "@/lib/types/api";
+import type { ReportPipelineStep } from "@/lib/report-pipeline";
 
 type UseReportAiAnalysisOptions = {
   reportId: string;
@@ -34,7 +32,9 @@ export function useReportAiAnalysis({
   const queryClient = useQueryClient();
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [aiSummary, setAiSummary] = useState<BilingualText | null>(null);
+  const [pipelineStep, setPipelineStep] = useState<ReportPipelineStep>("analyzing");
+  const [ciFilesProgress, setCiFilesProgress] =
+    useState<OcrFilesProgressState | null>(null);
   const runIdRef = useRef(0);
   const runningRef = useRef(false);
 
@@ -42,88 +42,58 @@ export function useReportAiAnalysis({
     enabled && reportNeedsAiClinicalSummary(report, result);
 
   const runAnalysis = useCallback(async (force = false) => {
-    if (!report || !result || runningRef.current) return;
+    if (!report || runningRef.current) return;
     if (!force && !reportNeedsAiClinicalSummary(report, result)) return;
 
     const runId = ++runIdRef.current;
     runningRef.current = true;
     setIsRunning(true);
     setError(null);
+    setPipelineStep("analyzing");
+
+    const filenames =
+      result?.uploaded_files?.map((f) => f.filename) ??
+      (report.file_reference?.includes(",")
+        ? report.file_reference.split(",").map((s) => s.trim())
+        : [report.file_reference || report.title || "document"]);
+
+    const initialProgress = createCiFilesProgress(
+      filenames.filter(Boolean),
+    );
+    setCiFilesProgress(initialProgress);
 
     try {
-      let workingResult = result;
-
-      let ocrDocument = "";
-      if (
-        !(workingResult.doctor_summary?.trim() ||
-          workingResult.doctor_summary_bilingual?.en?.trim()) &&
-        (workingResult.key_findings?.length ?? 0) === 0
-      ) {
-        ocrDocument = (await runOcrStream(reportId, () => {})).trim();
-        await queryClient.invalidateQueries({
-          queryKey: ["report-result", reportId],
-        });
-      }
-
-      const documentText =
-        ocrDocument ||
-        buildFullDocumentForSummary(workingResult, locale);
-
-      const fileCount = Math.max(
-        workingResult.uploaded_files?.length ?? 0,
-        report.file_reference?.includes(",")
-          ? report.file_reference.split(",").length
-          : 0,
-        1,
-      );
-
-      const { summary, analyzeExtras } = await generateClinicalSummaryFromAI({
-        report,
-        result: workingResult,
+      await runClinicalIntelligenceStream(
         reportId,
         locale,
-        documentText: documentText || undefined,
-        fileCount,
-      });
+        (event) => {
+          if (runId !== runIdRef.current) return;
+          setPipelineStep(pipelineStepFromCiEvent(event));
+          setCiFilesProgress((prev) =>
+            applyCiStreamEvent(prev ?? initialProgress, event, locale),
+          );
+        },
+      );
 
       if (runId !== runIdRef.current) return;
-
-      setAiSummary(summary);
-
-      const merged = mergeAnalyzeResponseIntoResult(workingResult, {
-        summaryBilingual: summary,
-        doctorSummary: analyzeExtras?.doctorSummary,
-        nextActions: analyzeExtras?.nextActions,
-        analysisEngine: "ai",
-      });
-
-      queryClient.setQueryData(["report-result", reportId], merged);
 
       await queryClient.invalidateQueries({ queryKey: ["report", reportId] });
       await queryClient.invalidateQueries({
         queryKey: ["report-result", reportId],
       });
-
-      const fresh = queryClient.getQueryData<ReportResult>([
-        "report-result",
-        reportId,
-      ]);
-      if (fresh && !hasMeaningfulClinicalSummary(fresh)) {
-        queryClient.setQueryData(["report-result", reportId], merged);
-      }
+      setPipelineStep("completed");
     } catch (err) {
       if (runId !== runIdRef.current) return;
       const message =
-        err instanceof Error ? err.message : "AI analysis failed";
+        err instanceof Error ? err.message : "Clinical intelligence failed";
       setError(message);
-      setAiSummary(null);
     } finally {
       if (runId === runIdRef.current) {
         runningRef.current = false;
         setIsRunning(false);
       }
     }
-  }, [report, reportId, result, locale, queryClient]);
+  }, [locale, queryClient, report, reportId, result]);
 
   const autoRunRef = useRef(false);
 
@@ -155,7 +125,8 @@ export function useReportAiAnalysis({
     isAnalyzing,
     isRunning,
     error,
-    aiSummary,
     retry,
+    pipelineStep,
+    ciFilesProgress,
   };
 }

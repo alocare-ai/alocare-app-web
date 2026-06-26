@@ -131,8 +131,28 @@ export function reportNeedsAiClinicalSummary(
 ): boolean {
   if (!report || report.status === "failed") return false;
 
+  const ci = result?.clinical_intelligence ?? result?.clinicalIntelligence;
+  if (ci) {
+    const hasCiLabs = (ci.normalized_results ?? ci.normalizedResults ?? []).length > 0;
+    const hasCiSummary =
+      Boolean(
+        ci.clinical_summary?.executive_summary ??
+          ci.clinicalSummary?.executiveSummary ??
+          ci.clinical_summary?.short_summary ??
+          ci.clinicalSummary?.shortSummary,
+      );
+    if (hasCiLabs || hasCiSummary) return false;
+  }
+
   const stored = result?.analysis_engine ?? result?.analysisEngine;
-  if (stored === "ai") return false;
+  if (stored === "ai" && ci) return false;
+  if (
+    stored === "ai" &&
+    !ci &&
+    (report.status === "completed" || report.status === "validated")
+  ) {
+    return true;
+  }
 
   if (
     (report.status === "completed" || report.status === "validated") &&
