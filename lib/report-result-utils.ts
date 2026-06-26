@@ -3,6 +3,7 @@ import {
   hasMeaningfulClinicalSummary,
 } from "@/lib/clinical-summary";
 import { isGenericHospitalClinicalOverview } from "@/lib/hospital-lab-narrative";
+import { hasStructuredLabSummary } from "@/lib/format-lab-summary";
 
 export { hasMeaningfulClinicalSummary };
 import type { Locale } from "@/lib/i18n";
@@ -104,8 +105,24 @@ export function resolveAnalysisEngine(
   const stored = result.analysis_engine ?? result.analysisEngine;
   if (stored === "ai" || stored === "rule_based") return stored;
   if (isRuleBasedAnalysis(result)) return "rule_based";
+  if (isHospitalLabRuleBasedResult(result)) return "rule_based";
   if (hasMeaningfulClinicalSummary(result)) return "ai";
   return null;
+}
+
+function isHospitalLabRuleBasedResult(result: ReportResult): boolean {
+  const doctor =
+    result.doctor_summary_bilingual?.en?.trim() ||
+    result.doctor_summary?.trim() ||
+    "";
+  const clinical =
+    result.summary_bilingual?.en?.trim() || result.summary?.trim() || "";
+  return (
+    hasStructuredLabSummary(doctor) ||
+    hasStructuredLabSummary(clinical) ||
+    /\blaboratory report for\b/i.test(doctor) ||
+    /\blaporan laboratorium untuk\b/i.test(doctor)
+  );
 }
 
 export function reportNeedsAiClinicalSummary(
@@ -113,6 +130,17 @@ export function reportNeedsAiClinicalSummary(
   result: ReportResult | null | undefined,
 ): boolean {
   if (!report || report.status === "failed") return false;
+
+  const stored = result?.analysis_engine ?? result?.analysisEngine;
+  if (stored === "ai") return false;
+
+  if (
+    (report.status === "completed" || report.status === "validated") &&
+    hasAcceptableClinicalSummary(result)
+  ) {
+    return false;
+  }
+
   if (isRuleBasedAnalysis(result)) return true;
   if (hasAcceptableClinicalSummary(result)) return false;
   if (report.status === "completed" || report.status === "validated") {

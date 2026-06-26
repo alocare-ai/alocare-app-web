@@ -41,9 +41,9 @@ export function useReportAiAnalysis({
   const needsAnalysis =
     enabled && reportNeedsAiClinicalSummary(report, result);
 
-  const runAnalysis = useCallback(async () => {
+  const runAnalysis = useCallback(async (force = false) => {
     if (!report || !result || runningRef.current) return;
-    if (!reportNeedsAiClinicalSummary(report, result)) return;
+    if (!force && !reportNeedsAiClinicalSummary(report, result)) return;
 
     const runId = ++runIdRef.current;
     runningRef.current = true;
@@ -147,7 +147,7 @@ export function useReportAiAnalysis({
 
   const retry = useCallback(() => {
     autoRunRef.current = true;
-    void runAnalysis();
+    void runAnalysis(true);
   }, [runAnalysis]);
 
   return {

@@ -2,11 +2,13 @@
 
 import { Stethoscope } from "lucide-react";
 import { useMemo } from "react";
+import { LabSummaryDisplay } from "@/components/lab-summary-display";
 import type { Locale } from "@/hooks/use-locale";
 import {
   formatDoctorSummaryPlain,
   parseDoctorSummary,
 } from "@/lib/format-doctor-summary";
+import { parseLabSummary } from "@/lib/format-lab-summary";
 
 type DoctorSummaryCardProps = {
   text: string;
@@ -14,7 +16,11 @@ type DoctorSummaryCardProps = {
 };
 
 export function DoctorSummaryCard({ text, locale }: DoctorSummaryCardProps) {
-  const parsed = useMemo(() => parseDoctorSummary(text), [text]);
+  const labSummary = useMemo(() => parseLabSummary(text), [text]);
+  const parsed = useMemo(
+    () => (labSummary ? null : parseDoctorSummary(text)),
+    [text, labSummary],
+  );
   const plainFormatted = useMemo(() => formatDoctorSummaryPlain(text), [text]);
 
   const heading = locale === "id" ? "Ringkasan dokter" : "Doctor summary";
@@ -30,6 +36,17 @@ export function DoctorSummaryCard({ text, locale }: DoctorSummaryCardProps) {
       <h3 className="text-sm font-semibold text-slate-900">{heading}</h3>
     </div>
   );
+
+  if (labSummary) {
+    return (
+      <div className="rounded-xl border border-slate-200 bg-white p-4">
+        {titleRow}
+        <div className="mt-3">
+          <LabSummaryDisplay summary={labSummary} locale={locale} compact />
+        </div>
+      </div>
+    );
+  }
 
   if (!parsed) {
     return (

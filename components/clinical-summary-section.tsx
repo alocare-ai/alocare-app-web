@@ -5,11 +5,13 @@ import { ChevronDown, ClipboardList, User } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { BilingualText } from "@alocare/design-system";
 import type { Locale } from "@/hooks/use-locale";
+import { LabSummaryDisplay } from "@/components/lab-summary-display";
 import { pickLocaleText } from "@/lib/report-analysis";
 import {
   buildClinicalSummaryDisplay,
   shouldShowClinicalFileDetails,
 } from "@/lib/clinical-summary-display";
+import { parseLabSummary } from "@/lib/format-lab-summary";
 import type { PatientDisplayField } from "@/lib/report-patient-identity";
 import type { ReportFileAnalysis } from "@/lib/types/api";
 
@@ -46,6 +48,10 @@ export function ClinicalSummarySection({
   const display = useMemo(
     () => buildClinicalSummaryDisplay(summaryText, fileAnalyses, locale),
     [summaryText, fileAnalyses, locale],
+  );
+  const labOverview = useMemo(
+    () => parseLabSummary(display.overview),
+    [display.overview],
   );
 
   const showFileDetails = shouldShowClinicalFileDetails(display);
@@ -110,9 +116,19 @@ export function ClinicalSummarySection({
               <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
                 {locale === "id" ? "Ringkasan klinis" : "Clinical overview"}
               </p>
-              <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-                {display.overview}
-              </p>
+              {labOverview ? (
+                <div className="mt-2">
+                  <LabSummaryDisplay
+                    summary={labOverview}
+                    locale={locale}
+                    compact
+                  />
+                </div>
+              ) : (
+                <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
+                  {display.overview}
+                </p>
+              )}
             </>
           ) : null}
         </div>

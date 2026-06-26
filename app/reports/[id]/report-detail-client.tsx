@@ -164,6 +164,9 @@ export function ReportDetailClient({
         report?.status === "processing" ||
         initialAnalyzing));
 
+  const engineBadgeLoading =
+    (isAnalyzing || aiSummaryGenerating) && !analysisEngine;
+
   const summary = useMemo(() => {
     const inProgress = bilingual(
       "Analysis in progress…",
@@ -300,7 +303,7 @@ export function ReportDetailClient({
               <ReportAnalysisEngineBadge
                 engine={analysisEngine}
                 locale={locale}
-                loading={isAnalyzing || aiSummaryGenerating}
+                loading={engineBadgeLoading}
               />
               <AIStatusBadge
                 status={

@@ -286,7 +286,7 @@ export function buildUnifiedHospitalDoctorSummary(
         ? "Nilai tercantum umumnya dalam rentang normal. Tafsirkan bersama konteks klinis."
         : "Values are generally within reference ranges. Interpret with clinical context.";
 
-  return `${header}\n${panelLines.join("\n")}\n\n${footer}`;
+  return `${header}\n\n${panelLines.join("\n\n")}\n\n${footer}`;
 }
 
 /** Patient-facing clinical overview across multiple hospital lab uploads. */
@@ -351,7 +351,7 @@ export function buildUnifiedHospitalClinicalOverview(
     const header = headerParts.join(" ");
     const body =
       panelBlocks.length > 0
-        ? `Hasil dari ${sections.length} panel:\n${panelBlocks.join("\n")}${
+        ? `Hasil dari ${sections.length} panel:\n\n${panelBlocks.join("\n\n")}${
             uniqueAbnormal.length > 0
               ? `\n\nPerlu perhatian: ${uniqueAbnormal
                   .slice(0, 4)
@@ -371,7 +371,7 @@ export function buildUnifiedHospitalClinicalOverview(
   const header = headerParts.join(" ");
   const body =
     panelBlocks.length > 0
-      ? `Results from ${sections.length} panels:\n${panelBlocks.join("\n")}${
+      ? `Results from ${sections.length} panels:\n\n${panelBlocks.join("\n\n")}${
           uniqueAbnormal.length > 0
             ? `\n\nNotable: ${uniqueAbnormal
                 .slice(0, 4)
