@@ -1,4 +1,4 @@
-import type { ReportResult } from "@/lib/types/api";
+import type { ReportFileAnalysis, ReportResult } from "@/lib/types/api";
 
 /** True when text looks like raw OCR / lab printout, not a short AI summary. */
 export function isRawOcrDump(text: string | null | undefined): boolean {
@@ -28,15 +28,28 @@ export function isNearDuplicateSummary(a: string, b: string): boolean {
   return na.length > 80 && (na.includes(nb.slice(0, 120)) || nb.includes(na.slice(0, 120)));
 }
 
+export function fileAnalysisOcrText(entry: ReportFileAnalysis): string {
+  return entry.ocr_text?.trim() || entry.extract_preview?.trim() || "";
+}
+
 function documentTextFromFileAnalyses(result: ReportResult): string {
   const parts = (result.file_analyses ?? [])
     .map((entry) => {
-      const preview = entry.extract_preview?.trim();
-      if (!preview) return "";
-      return `--- ${entry.filename} ---\n${preview}`;
+      const text = fileAnalysisOcrText(entry);
+      if (!text) return "";
+      return `--- ${entry.filename} ---\n${text}`;
     })
     .filter(Boolean);
   return parts.join("\n\n");
+}
+
+/** True when stored per-file OCR is shorter than the recorded char_count. */
+export function fileAnalysesNeedFullOcr(result: ReportResult | null | undefined): boolean {
+  if (!result?.file_analyses?.length) return false;
+  return result.file_analyses.some((entry) => {
+    const stored = fileAnalysisOcrText(entry).length;
+    return entry.char_count > 0 && entry.char_count > stored + 100;
+  });
 }
 
 /** Prefer OCR / lab printout from file previews or doctor_summary fields. */

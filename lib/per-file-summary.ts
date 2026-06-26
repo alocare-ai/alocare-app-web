@@ -57,6 +57,7 @@ export async function generatePerFileSummaries(params: {
       size_bytes: params.sizeByFilename.get(section.filename) ?? 0,
       char_count: section.text.length,
       extract_preview: section.text.slice(0, 500),
+      ocr_text: section.text.slice(0, 24_000),
       summary: { en: summary.en, id: summary.id },
       key_findings: [],
     };

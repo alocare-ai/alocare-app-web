@@ -16,16 +16,15 @@ import { ReportAddFilesButton } from "@/components/report-add-files-button";
 import { ReportAiChatFab } from "@/components/report-ai-chat-fab";
 import { useLocale } from "@/hooks/use-locale";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
+import { useReportFullDocumentText } from "@/hooks/use-report-full-document-text";
 import { getReport, getReportResult } from "@/lib/api/reports";
 import { hasDisplayableClinicalSummary } from "@/lib/report-result-utils";
 import { bilingual } from "@/lib/i18n";
-import { repairClinicalSummary } from "@/lib/bilingual-repair";
+import { repairClinicalSummary, repairDoctorSummary } from "@/lib/bilingual-repair";
 import { enrichRecommendation } from "@/lib/recommendation-details";
-import { extractDocumentText } from "@/lib/report-document";
 import {
   mapKeyFindings,
   parseReportResult,
-  resolveDoctorSummaryForLocale,
   pickLocaleText,
 } from "@/lib/report-analysis";
 import {
@@ -122,6 +121,20 @@ export function ReportDetailClient({
     [result],
   );
 
+  const documentText = useReportFullDocumentText(reportId, report, result);
+
+  const analysisRepaired = useMemo(() => {
+    if (!result || !analysis) return null;
+    const doctor = repairDoctorSummary(
+      analysis.doctorSummary,
+      analysis.summary,
+      documentText,
+      result,
+    );
+    const summary = repairClinicalSummary(analysis.summary, documentText, result);
+    return { ...analysis, doctorSummary: doctor, summary };
+  }, [analysis, documentText, result]);
+
   const {
     isAnalyzing: aiAnalysisRunning,
     isRunning: aiSummaryGenerating,
@@ -160,8 +173,8 @@ export function ReportDetailClient({
       base = bilingual("", "");
     }
     if (!result) return base;
-    return repairClinicalSummary(base, extractDocumentText(result), result);
-  }, [aiSummary, analysis?.summary, hasSummary, isAnalyzing, result]);
+    return repairClinicalSummary(base, documentText, result);
+  }, [aiSummary, analysis?.summary, documentText, hasSummary, isAnalyzing, result]);
 
   const uploadedFiles = useMemo((): ReportUploadedFile[] => {
     if (!report) return [];
@@ -187,12 +200,9 @@ export function ReportDetailClient({
   );
 
   const doctorText = useMemo(() => {
-    if (!analysis) return "";
-    return resolveDoctorSummaryForLocale(analysis.doctorSummary, locale, {
-      documentText: result ? extractDocumentText(result) : "",
-      fileCount: uploadedFiles.length,
-    });
-  }, [analysis, locale, result, uploadedFiles.length]);
+    if (!analysisRepaired) return "";
+    return pickLocaleText(analysisRepaired.doctorSummary, locale);
+  }, [analysisRepaired, locale]);
 
   const chatMetaResolved = useMemo(
     () =>

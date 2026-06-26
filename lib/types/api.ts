@@ -109,6 +109,8 @@ export interface ReportFileAnalysis {
   size_bytes: number;
   char_count: number;
   extract_preview: string;
+  /** Full per-file OCR for doctor-summary repair (may exceed extract_preview). */
+  ocr_text?: string;
   summary: BilingualStrings;
   key_findings?: ReportKeyFinding[];
 }

@@ -17,6 +17,7 @@ import {
   buildHospitalLabNarrative,
   isGenericDoctorSummaryPlaceholder,
   isHospitalLabReport,
+  isWeakDoctorSummary,
 } from "@/lib/hospital-lab-narrative";
 import {
   buildClinicalNarrativeFromDocument,
@@ -197,6 +198,8 @@ export function repairDoctorSummary(
     !en ||
     isRawOcrDump(en) ||
     isGenericDoctorSummaryPlaceholder(en) ||
+    isWeakDoctorSummary(en) ||
+    (document.trim() && isHospitalLabReport(document)) ||
     (clinical.en?.trim() && isNearDuplicateSummary(en, clinical.en.trim()))
   ) {
     en = buildDoctorSummaryFromDocument(document, "en", fileCount);

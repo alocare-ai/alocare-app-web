@@ -262,6 +262,15 @@ export function isGenericDoctorSummaryPlaceholder(text: string): boolean {
   );
 }
 
+export function isWeakDoctorSummary(text: string): boolean {
+  const t = text.trim();
+  if (!t) return true;
+  if (isGenericDoctorSummaryPlaceholder(t)) return true;
+  if (/review full values in the chart/i.test(t)) return true;
+  if (/\.jpe?g:/i.test(t) && !/;\s/.test(t)) return true;
+  return false;
+}
+
 export function isHospitalLabReport(text: string): boolean {
   const normalized = text.replace(/\s+/g, " ");
   if (
