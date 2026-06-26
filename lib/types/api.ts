@@ -145,6 +145,122 @@ export interface ReportPatientIdentity {
 
 export type AnalysisEngine = "ai" | "rule_based";
 
+export interface ClinicalIntelligencePatientSummary {
+  name?: string | null;
+  age?: number | string | null;
+  sex?: string | null;
+  chief_complaint?: string[];
+  chiefComplaint?: string[];
+  source_documents?: string[];
+  sourceDocuments?: string[];
+}
+
+export interface ClinicalIntelligenceClinicalSummary {
+  short_summary?: string;
+  shortSummary?: string;
+  executive_summary?: string;
+  executiveSummary?: string;
+  risk_level?: string;
+  riskLevel?: string;
+  requires_doctor_review?: boolean;
+  requiresDoctorReview?: boolean;
+}
+
+export interface ClinicalIntelligenceFindingItem {
+  label: string;
+  status: string;
+  detail?: string;
+  category?: string;
+}
+
+export interface ClinicalIntelligenceFindingCategory {
+  category: string;
+  items: ClinicalIntelligenceFindingItem[];
+}
+
+export interface ClinicalIntelligenceFindings {
+  laboratory?: ClinicalIntelligenceFindingCategory[];
+  endoscopy?: string[];
+  radiology?: string[];
+  other?: string[];
+  abnormal?: ClinicalIntelligenceFindingItem[];
+  normal?: ClinicalIntelligenceFindingItem[];
+}
+
+export interface ClinicalIntelligenceDiagnosisSupport {
+  primary_impression?: string[];
+  primaryImpression?: string[];
+  differential_diagnosis?: string[];
+  differentialDiagnosis?: string[];
+  supporting_evidence?: string[];
+  supportingEvidence?: string[];
+  pending_results?: string[];
+  pendingResults?: string[];
+  clinical_interpretation?: string;
+  clinicalInterpretation?: string;
+}
+
+export interface ClinicalIntelligenceRiskAssessment {
+  level?: string;
+  summary?: string;
+  red_flags?: string[];
+  redFlags?: string[];
+  alarm_symptoms?: string[];
+  alarmSymptoms?: string[];
+}
+
+export interface ClinicalIntelligenceRecommendations {
+  doctor_actions?: string[];
+  doctorActions?: string[];
+  patient_advice?: string[];
+  patientAdvice?: string[];
+}
+
+export interface ClinicalIntelligenceResult {
+  patient_summary?: ClinicalIntelligencePatientSummary;
+  patientSummary?: ClinicalIntelligencePatientSummary;
+  clinical_summary?: ClinicalIntelligenceClinicalSummary;
+  clinicalSummary?: ClinicalIntelligenceClinicalSummary;
+  findings?: ClinicalIntelligenceFindings;
+  diagnosis_support?: ClinicalIntelligenceDiagnosisSupport;
+  diagnosisSupport?: ClinicalIntelligenceDiagnosisSupport;
+  risk_assessment?: ClinicalIntelligenceRiskAssessment;
+  riskAssessment?: ClinicalIntelligenceRiskAssessment;
+  recommendations?: ClinicalIntelligenceRecommendations;
+  patient_friendly?: { summary?: string; key_points?: string[]; keyPoints?: string[] };
+  patientFriendly?: { summary?: string; key_points?: string[]; keyPoints?: string[] };
+  safety_note?: string;
+  safetyNote?: string;
+  confidence_score?: number | null;
+  confidenceScore?: number | null;
+}
+
+export interface ClinicalDocumentUploadResponse {
+  document_id: string;
+  documentId?: string;
+  job_id: string;
+  jobId?: string;
+  status: string;
+  poll_url: string;
+  pollUrl?: string;
+}
+
+export interface ClinicalIntelligenceJobResponse {
+  job_id: string;
+  jobId?: string;
+  document_id: string;
+  documentId?: string;
+  patient_id: string;
+  patientId?: string;
+  status: string;
+  progress: number;
+  step?: string | null;
+  message?: string | null;
+  result?: ClinicalIntelligenceResult | null;
+  error?: string | null;
+  approved?: boolean;
+}
+
 export interface ReportResult {
   id: string;
   status: ReportStatus;
@@ -163,6 +279,10 @@ export interface ReportResult {
   patientIdentity?: ReportPatientIdentity | null;
   analysis_engine?: AnalysisEngine | null;
   analysisEngine?: AnalysisEngine | null;
+  requires_clinical_review?: boolean | null;
+  requiresClinicalReview?: boolean | null;
+  clinical_intelligence?: ClinicalIntelligenceResult | null;
+  clinicalIntelligence?: ClinicalIntelligenceResult | null;
 }
 
 export interface WorklistItem {

@@ -11,11 +11,14 @@ import { useMemo, type ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { DoctorSummaryCard } from "@/components/doctor-summary-card";
 import { ClinicalSummarySection } from "@/components/clinical-summary-section";
+import { ClinicalIntelligencePanel } from "@/components/clinical-intelligence-panel";
+import { ReportDoctorReview } from "@/components/report-doctor-review";
 import { ReportFilesSection } from "@/components/report-files-section";
 import { ReportHeaderInsights } from "@/components/report-header-insights";
 import { ReportAddFilesButton } from "@/components/report-add-files-button";
 import { ReportAiChatFab } from "@/components/report-ai-chat-fab";
 import { useLocale } from "@/hooks/use-locale";
+import { useAuth } from "@/hooks/use-auth";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
 import { useReportFullDocumentText } from "@/hooks/use-report-full-document-text";
 import { getReport, getReportResult } from "@/lib/api/reports";
@@ -45,6 +48,7 @@ import {
   type ReportChatMeta,
 } from "@/lib/report-chat-context";
 import type {
+  ClinicalIntelligenceResult,
   Report,
   ReportResult,
   ReportUploadedFile,
@@ -75,6 +79,7 @@ export function ReportDetailClient({
   analyzingBanner = null,
 }: ReportDetailClientProps) {
   const { locale } = useLocale();
+  const { data: user } = useAuth();
   const queryClient = useQueryClient();
 
   const cachedResult = queryClient.getQueryData<ReportResult>([
@@ -270,6 +275,24 @@ export function ReportDetailClient({
     [persistedIdentity, locale],
   );
 
+  const clinicalIntelligence = useMemo((): ClinicalIntelligenceResult | null => {
+    if (!result) return null;
+    return result.clinical_intelligence ?? result.clinicalIntelligence ?? null;
+  }, [result]);
+
+  const isClinician =
+    user?.role === "DOCTOR" ||
+    user?.role === "CLINICIAN" ||
+    user?.role === "TENANT_ADMIN" ||
+    user?.role === "SUPER_ADMIN";
+
+  const requiresReview =
+    result?.requires_clinical_review ??
+    result?.requiresClinicalReview ??
+    clinicalIntelligence?.clinical_summary?.requires_doctor_review ??
+    clinicalIntelligence?.clinicalSummary?.requiresDoctorReview ??
+    false;
+
   if ((reportLoading || resultLoading) && !report) {
     return (
       <AppShell>
@@ -366,6 +389,10 @@ export function ReportDetailClient({
 
         {isAnalyzing ? analyzingBanner : null}
 
+        {clinicalIntelligence ? (
+          <ClinicalIntelligencePanel data={clinicalIntelligence} locale={locale} />
+        ) : null}
+
         {aiAnalysisError ? (
           <div
             className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900"
@@ -433,6 +460,12 @@ export function ReportDetailClient({
             ) : null}
             {recommendations.length > 0 ? (
               <RecommendationList items={recommendations} lang={locale} />
+            ) : null}
+            {isClinician && report.status === "completed" && (requiresReview || clinicalIntelligence) ? (
+              <ReportDoctorReview reportId={reportId} locale={locale} />
+            ) : null}
+            {isClinician && report.status === "validated" ? (
+              <ReportDoctorReview reportId={reportId} locale={locale} disabled />
             ) : null}
           </section>
         </div>
