@@ -73,7 +73,7 @@ const INVALID_LAB_TOKENS = new Set([
 ]);
 
 const LAB_ROW_RE =
-  /^(?:[\s|]*)?(?<test>[A-Za-z][A-Za-z0-9 \-/()]{2,35}?)\s+(?:\*\s*)?(?<value>[\d.,\s]+)\s*(?:(?<unit>[A-Za-z/%\^°0-9/]{1,15})\s+)?(?:(?<ref>[\d.]+\s*[-–]\s*[\d.]+|<\s*[\d.]+))?\s*(?<flag>[HL*])?\s*$/i;
+  /^(?:[\s|]*)?([A-Za-z][A-Za-z0-9 \-/()]{2,35}?)\s+(?:\*\s*)?([\d.,\s]+)\s*(?:([A-Za-z/%\^°0-9/]{1,15})\s+)?(?:([\d.]+\s*[-–]\s*[\d.]+|<\s*[\d.]+))?\s*([HL*])?\s*$/i;
 
 function normalizeOcrLine(line: string): string {
   let cleaned = line
@@ -97,9 +97,9 @@ function cleanTestAndFlag(
   test: string,
   flag?: string,
 ): { test: string; flag?: string } {
-  const embedded = test.match(/^(?<name>.+?)\s+(?:t)?(?<flag>[HL])$/i);
-  if (embedded?.groups) {
-    return { test: embedded.groups.name.trim(), flag: embedded.groups.flag.toUpperCase() };
+  const embedded = test.match(/^(.+?)\s+(?:t)?([HL])$/i);
+  if (embedded) {
+    return { test: embedded[1].trim(), flag: embedded[2].toUpperCase() };
   }
   return { test: test.replace(/\s+[a-z]$/i, "").trim(), flag };
 }
@@ -150,12 +150,12 @@ export function extractHospitalLabMetrics(text: string): HospitalLabMetric[] {
       )?.[1] ?? rawLine.replace(/^[^A-Za-z|]*/g, "");
     const line = normalizeOcrLine(fragment);
     const match = line.match(LAB_ROW_RE);
-    if (!match?.groups) continue;
+    if (!match) continue;
 
-    let test = (match.groups.test ?? "").replace(/^[ |:-]+|[ |:-]+$/g, "");
-    const cleaned = cleanTestAndFlag(test, match.groups.flag);
+    let test = (match[1] ?? "").replace(/^[ |:-]+|[ |:-]+$/g, "");
+    const cleaned = cleanTestAndFlag(test, match[5]);
     test = cleaned.test;
-    const value = normalizeLabValue(match.groups.value ?? "");
+    const value = normalizeLabValue(match[2] ?? "");
     if (!test || !value || !/^\d+(\.\d+)?$/.test(value)) continue;
     if (!isValidLabTest(test)) continue;
 
@@ -166,8 +166,8 @@ export function extractHospitalLabMetrics(text: string): HospitalLabMetric[] {
     results.push({
       name: test,
       value,
-      unit: fixOcrUnit(match.groups.unit),
-      referenceRange: match.groups.ref?.trim() || undefined,
+      unit: fixOcrUnit(match[3]),
+      referenceRange: match[4]?.trim() || undefined,
       status: statusFromFlag(cleaned.flag),
     });
   }
