@@ -2,6 +2,7 @@ import {
   hasAcceptableClinicalSummary,
   hasMeaningfulClinicalSummary,
 } from "@/lib/clinical-summary";
+import { isGenericHospitalClinicalOverview } from "@/lib/hospital-lab-narrative";
 
 export { hasMeaningfulClinicalSummary };
 import type { Locale } from "@/lib/i18n";
@@ -67,11 +68,52 @@ export function reportInputType(
   return "pdf";
 }
 
+export type AnalysisEngine = "ai" | "rule_based";
+
+export function isRuleBasedAnalysis(
+  result: ReportResult | null | undefined,
+): boolean {
+  if (!result) return false;
+  const stored = result.analysis_engine ?? result.analysisEngine;
+  if (stored === "rule_based") return true;
+  if (stored === "ai") return false;
+
+  const doctor =
+    result.doctor_summary_bilingual?.en?.trim() ||
+    result.doctor_summary?.trim() ||
+    "";
+  if (/\.jpe?g:\s/i.test(doctor) || /WhatsApp Image.*:\s/i.test(doctor)) {
+    return true;
+  }
+  if ((doctor.match(/Review full values in the chart/gi) ?? []).length >= 2) {
+    return true;
+  }
+
+  const en =
+    result.summary_bilingual?.en?.trim() || result.summary?.trim() || "";
+  if (/Combined summary across \d+ uploaded files/i.test(en)) return true;
+  if (isGenericHospitalClinicalOverview(en)) return true;
+
+  return false;
+}
+
+export function resolveAnalysisEngine(
+  result: ReportResult | null | undefined,
+): AnalysisEngine | null {
+  if (!result) return null;
+  const stored = result.analysis_engine ?? result.analysisEngine;
+  if (stored === "ai" || stored === "rule_based") return stored;
+  if (isRuleBasedAnalysis(result)) return "rule_based";
+  if (hasMeaningfulClinicalSummary(result)) return "ai";
+  return null;
+}
+
 export function reportNeedsAiClinicalSummary(
   report: Report | null | undefined,
   result: ReportResult | null | undefined,
 ): boolean {
   if (!report || report.status === "failed") return false;
+  if (isRuleBasedAnalysis(result)) return true;
   if (hasAcceptableClinicalSummary(result)) return false;
   if (report.status === "completed" || report.status === "validated") {
     return !hasAcceptableClinicalSummary(result);

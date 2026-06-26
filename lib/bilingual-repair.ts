@@ -15,11 +15,15 @@ import { resolveDoctorSummaryForLocale } from "@/lib/doctor-summary-locale";
 import {
   buildClinicalFromPatientIdentity,
   buildHospitalLabNarrative,
+  buildUnifiedHospitalClinicalOverview,
+  buildUnifiedHospitalDoctorSummary,
   isGenericDoctorSummaryPlaceholder,
   isGenericHospitalClinicalOverview,
   isHospitalLabReport,
+  isMessyMultiFileDoctorSummary,
   isWeakDoctorSummary,
 } from "@/lib/hospital-lab-narrative";
+import { splitDocumentSections } from "@/lib/document-sections";
 import {
   buildClinicalNarrativeFromDocument,
   buildDoctorSummaryFromDocument,
@@ -82,11 +86,15 @@ function rebuildClinicalForLocale(
   const identity = result?.patient_identity ?? result?.patientIdentity ?? null;
   const fromAnalyses =
     result?.file_analyses?.length &&
-    fileCount > 1
+    fileCount > 1 &&
+    !(document.trim() && isHospitalLabReport(document))
       ? buildClinicalNarrativeFromFileAnalyses(result.file_analyses, locale)
       : null;
   if (fromAnalyses) return fromAnalyses;
   if (document.trim() && isHospitalLabReport(document)) {
+    if (splitDocumentSections(document).length > 1) {
+      return buildUnifiedHospitalClinicalOverview(document, locale, identity);
+    }
     return buildHospitalLabNarrative(document, locale, identity);
   }
   if (document.trim()) {
@@ -195,6 +203,14 @@ export function repairDoctorSummary(
     document,
     result?.uploaded_files?.length ?? 0,
   );
+  const identity = result?.patient_identity ?? result?.patientIdentity ?? null;
+  const storedEngine = result?.analysis_engine ?? result?.analysisEngine;
+  const hasGoodAiDoctor =
+    storedEngine === "ai" &&
+    en &&
+    !isWeakDoctorSummary(en) &&
+    !isGenericDoctorSummaryPlaceholder(en) &&
+    !isMessyMultiFileDoctorSummary(en);
 
   if (!document.trim()) {
     if (en && looksEnglish(en)) {
@@ -205,15 +221,28 @@ export function repairDoctorSummary(
     return bilingual(en || id, id || localizeDoctorEnToId(en));
   }
 
-  if (
+  if (hasGoodAiDoctor) {
+    id = resolveDoctorSummaryForLocale(bilingual(en, id), "id", {
+      documentText: document,
+      fileCount,
+    });
+    return bilingual(en, id);
+  }
+
+  const shouldRebuild =
     !en ||
     isRawOcrDump(en) ||
     isGenericDoctorSummaryPlaceholder(en) ||
     isWeakDoctorSummary(en) ||
-    (document.trim() && isHospitalLabReport(document)) ||
-    (clinical.en?.trim() && isNearDuplicateSummary(en, clinical.en.trim()))
-  ) {
-    en = buildDoctorSummaryFromDocument(document, "en", fileCount);
+    isMessyMultiFileDoctorSummary(en) ||
+    (clinical.en?.trim() && isNearDuplicateSummary(en, clinical.en.trim()));
+
+  if (shouldRebuild) {
+    if (document.trim() && isHospitalLabReport(document)) {
+      en = buildUnifiedHospitalDoctorSummary(document, "en", identity);
+    } else {
+      en = buildDoctorSummaryFromDocument(document, "en", fileCount);
+    }
   }
 
   id = resolveDoctorSummaryForLocale(bilingual(en, id), "id", {

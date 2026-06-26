@@ -94,6 +94,7 @@ export function useReportAiAnalysis({
         summaryBilingual: summary,
         doctorSummary: analyzeExtras?.doctorSummary,
         nextActions: analyzeExtras?.nextActions,
+        analysisEngine: "ai",
       });
 
       queryClient.setQueryData(["report-result", reportId], merged);

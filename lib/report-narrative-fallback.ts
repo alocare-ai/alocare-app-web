@@ -5,6 +5,7 @@ import { splitDocumentSections } from "@/lib/document-sections";
 import {
   buildHospitalDoctorSummary,
   buildHospitalLabNarrative,
+  buildUnifiedHospitalDoctorSummary,
   isHospitalLabReport,
 } from "@/lib/hospital-lab-narrative";
 import { isFramedAsSingleVendorReport } from "@/lib/report-summary-framing";
@@ -255,6 +256,14 @@ export function buildDoctorSummaryFromDocument(
   locale: Locale,
   fileCount = 1,
 ): string {
+  if (isHospitalLabReport(document)) {
+    const sections = splitDocumentSections(document);
+    if (sections.length > 1) {
+      return buildUnifiedHospitalDoctorSummary(document, locale);
+    }
+    return buildHospitalDoctorSummary(document, locale);
+  }
+
   const sections = splitDocumentSections(document);
   if (sections.length > 1) {
     const parts = sections.map((section) => {
@@ -262,10 +271,6 @@ export function buildDoctorSummaryFromDocument(
       return `${section.filename}: ${head}`;
     });
     return parts.join("\n\n");
-  }
-
-  if (isHospitalLabReport(document)) {
-    return buildHospitalDoctorSummary(document, locale);
   }
 
   if (isLabSection(document)) {

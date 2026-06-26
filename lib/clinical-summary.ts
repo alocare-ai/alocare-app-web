@@ -122,6 +122,7 @@ export function mergeAnalyzeResponseIntoResult(
     summaryBilingual?: BilingualText | null;
     doctorSummary?: string | null;
     nextActions?: string[] | null;
+    analysisEngine?: "ai" | "rule_based" | null;
   },
 ): ReportResult {
   const next = { ...result };
@@ -181,6 +182,11 @@ export function mergeAnalyzeResponseIntoResult(
       en: analyze.nextActions,
       id: analyze.nextActions.map((a) => enrichRecommendation(a, "id").title),
     };
+  }
+
+  if (analyze.analysisEngine) {
+    next.analysis_engine = analyze.analysisEngine;
+    next.analysisEngine = analyze.analysisEngine;
   }
 
   return next;

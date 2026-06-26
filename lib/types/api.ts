@@ -143,6 +143,8 @@ export interface ReportPatientIdentity {
   sourceFilename?: string | null;
 }
 
+export type AnalysisEngine = "ai" | "rule_based";
+
 export interface ReportResult {
   id: string;
   status: ReportStatus;
@@ -159,6 +161,8 @@ export interface ReportResult {
   file_analyses?: ReportFileAnalysis[];
   patient_identity?: ReportPatientIdentity | null;
   patientIdentity?: ReportPatientIdentity | null;
+  analysis_engine?: AnalysisEngine | null;
+  analysisEngine?: AnalysisEngine | null;
 }
 
 export interface WorklistItem {

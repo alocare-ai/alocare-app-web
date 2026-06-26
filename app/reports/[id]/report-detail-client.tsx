@@ -21,6 +21,8 @@ import { getReport, getReportResult } from "@/lib/api/reports";
 import { hasDisplayableClinicalSummary } from "@/lib/report-result-utils";
 import { bilingual } from "@/lib/i18n";
 import { repairClinicalSummary, repairDoctorSummary } from "@/lib/bilingual-repair";
+import { ReportAnalysisEngineBadge } from "@/components/report-analysis-engine-badge";
+import { resolveAnalysisEngine } from "@/lib/report-result-utils";
 import { enrichRecommendation } from "@/lib/recommendation-details";
 import {
   mapKeyFindings,
@@ -134,6 +136,11 @@ export function ReportDetailClient({
     const summary = repairClinicalSummary(analysis.summary, documentText, result);
     return { ...analysis, doctorSummary: doctor, summary };
   }, [analysis, documentText, result]);
+
+  const analysisEngine = useMemo(
+    () => resolveAnalysisEngine(result),
+    [result],
+  );
 
   const {
     isAnalyzing: aiAnalysisRunning,
@@ -289,16 +296,23 @@ export function ReportDetailClient({
             <p className="mt-1 text-sm text-slate-600">{pageHeading.subtitle}</p>
           </div>
           <div className="flex shrink-0 flex-col items-end gap-2">
-            <AIStatusBadge
-              status={
-                report.status === "validated"
-                  ? "review"
-                  : report.status === "completed"
-                    ? "complete"
-                    : "processing"
-              }
-              lang={locale}
-            />
+            <div className="flex flex-wrap items-center justify-end gap-2">
+              <ReportAnalysisEngineBadge
+                engine={analysisEngine}
+                locale={locale}
+                loading={isAnalyzing || aiSummaryGenerating}
+              />
+              <AIStatusBadge
+                status={
+                  report.status === "validated"
+                    ? "review"
+                    : report.status === "completed"
+                      ? "complete"
+                      : "processing"
+                }
+                lang={locale}
+              />
+            </div>
             <ReportAddFilesButton
               reportId={reportId}
               report={report}

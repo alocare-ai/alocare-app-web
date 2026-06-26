@@ -1,3 +1,4 @@
+import { splitDocumentSections } from "@/lib/document-sections";
 import type { Locale } from "@/lib/i18n";
 import type { ReportPatientIdentity } from "@/lib/types/api";
 
@@ -189,6 +190,202 @@ function formatHospitalMetric(
   return `${metric.name} ${metric.value}${unit}`;
 }
 
+function formatPanelLabel(ctx: HospitalLabContext, locale: Locale): string {
+  const parts = [
+    ctx.department?.trim(),
+    ctx.orderDate?.trim().split(/\s+/)[0],
+    ctx.labNumber
+      ? locale === "id"
+        ? `no. lab ${ctx.labNumber}`
+        : `lab ${ctx.labNumber}`
+      : undefined,
+  ].filter(Boolean);
+  if (parts.length === 0) {
+    return locale === "id" ? "Panel" : "Panel";
+  }
+  return parts.join(" · ");
+}
+
+function resolvePatientName(
+  text: string,
+  identity: ReportPatientIdentity | null | undefined,
+  locale: Locale,
+): string {
+  return (
+    cleanPatientName(extractHospitalLabContext(text).patientName) ||
+    identity?.name?.trim() ||
+    (locale === "id" ? "pasien" : "the patient")
+  );
+}
+
+/** One readable doctor summary across multiple hospital lab files (no WhatsApp filenames). */
+export function buildUnifiedHospitalDoctorSummary(
+  document: string,
+  locale: Locale,
+  identity?: ReportPatientIdentity | null,
+): string {
+  const sections = splitDocumentSections(document);
+  if (sections.length <= 1) {
+    return buildHospitalDoctorSummary(document, locale);
+  }
+
+  const patient = resolvePatientName(document, identity, locale);
+  const panelLines: string[] = [];
+  const allAbnormal: HospitalLabMetric[] = [];
+
+  for (const section of sections) {
+    const ctx = extractHospitalLabContext(section.text);
+    const metrics = extractHospitalLabMetrics(section.text);
+    const abnormal = metrics.filter(
+      (m) => m.status === "low" || m.status === "high" || m.status === "abnormal",
+    );
+    allAbnormal.push(...abnormal);
+
+    const label = formatPanelLabel(ctx, locale);
+    if (metrics.length > 0) {
+      const values = metrics
+        .slice(0, 12)
+        .map((m) => formatHospitalMetric(m, locale))
+        .join("; ");
+      panelLines.push(`• ${label}: ${values}`);
+    } else if (label !== "Panel") {
+      panelLines.push(
+        `• ${label}: ${
+          locale === "id"
+            ? "nilai lengkap di berkas sumber"
+            : "see full values in source file"
+        }`,
+      );
+    }
+  }
+
+  if (panelLines.length === 0) {
+    return buildHospitalDoctorSummary(document, locale);
+  }
+
+  const header =
+    locale === "id"
+      ? `Laporan laboratorium untuk ${patient} (${sections.length} panel):`
+      : `Laboratory report for ${patient} (${sections.length} panels):`;
+
+  const uniqueAbnormal = [
+    ...new Map(allAbnormal.map((m) => [m.name.toLowerCase(), m])).values(),
+  ];
+  const footer =
+    uniqueAbnormal.length > 0
+      ? locale === "id"
+        ? `Kelainan: ${uniqueAbnormal
+            .slice(0, 5)
+            .map((m) => formatHospitalMetric(m, locale))
+            .join(", ")}. Tafsirkan bersama konteks klinis.`
+        : `Abnormal: ${uniqueAbnormal
+            .slice(0, 5)
+            .map((m) => formatHospitalMetric(m, locale))
+            .join(", ")}. Interpret with clinical context.`
+      : locale === "id"
+        ? "Nilai tercantum umumnya dalam rentang normal. Tafsirkan bersama konteks klinis."
+        : "Values are generally within reference ranges. Interpret with clinical context.";
+
+  return `${header}\n${panelLines.join("\n")}\n\n${footer}`;
+}
+
+/** Patient-facing clinical overview across multiple hospital lab uploads. */
+export function buildUnifiedHospitalClinicalOverview(
+  document: string,
+  locale: Locale,
+  identity?: ReportPatientIdentity | null,
+): string {
+  const sections = splitDocumentSections(document);
+  if (sections.length <= 1) {
+    return buildHospitalLabNarrative(document, locale, identity);
+  }
+
+  const ctx = mergeHospitalContext(
+    extractHospitalLabContext(document),
+    identity,
+  );
+  const patient = resolvePatientName(document, identity, locale);
+  const patientDetails: string[] = [];
+  if (ctx.gender) patientDetails.push(ctx.gender.toLowerCase());
+  if (ctx.dateOfBirth) {
+    patientDetails.push(
+      locale === "id" ? `lahir ${ctx.dateOfBirth}` : `DOB ${ctx.dateOfBirth}`,
+    );
+  } else if (identity?.age?.trim()) {
+    patientDetails.push(
+      locale === "id" ? `${identity.age} tahun` : `${identity.age} years`,
+    );
+  }
+  const patientDesc =
+    patientDetails.length > 0
+      ? `${patient} (${patientDetails.join(", ")})`
+      : patient;
+  const facility = [ctx.hospital, ctx.department].filter(Boolean).join(", ");
+
+  const panelBlocks: string[] = [];
+  const allMetrics: HospitalLabMetric[] = [];
+  for (const section of sections) {
+    const sectionCtx = extractHospitalLabContext(section.text);
+    const metrics = extractHospitalLabMetrics(section.text);
+    allMetrics.push(...metrics);
+    const label = formatPanelLabel(sectionCtx, locale);
+    if (metrics.length > 0) {
+      const values = metrics
+        .slice(0, 10)
+        .map((m) => formatHospitalMetric(m, locale))
+        .join("; ");
+      panelBlocks.push(`• ${label}: ${values}`);
+    }
+  }
+
+  const abnormal = allMetrics.filter(
+    (m) => m.status === "low" || m.status === "high" || m.status === "abnormal",
+  );
+  const uniqueAbnormal = [
+    ...new Map(abnormal.map((m) => [m.name.toLowerCase(), m])).values(),
+  ];
+
+  if (locale === "id") {
+    const headerParts = [`Laporan laboratorium untuk ${patientDesc}.`];
+    if (facility) headerParts.push(`Fasilitas: ${facility}.`);
+    const header = headerParts.join(" ");
+    const body =
+      panelBlocks.length > 0
+        ? `Hasil dari ${sections.length} panel:\n${panelBlocks.join("\n")}${
+            uniqueAbnormal.length > 0
+              ? `\n\nPerlu perhatian: ${uniqueAbnormal
+                  .slice(0, 4)
+                  .map((m) => formatHospitalMetric(m, locale))
+                  .join(", ")}.`
+              : ""
+          }`
+        : "Nilai lengkap perlu ditafsirkan dokter bersama riwayat medis dan gejala pasien.";
+    return (
+      `${header}\n\n${body}\n\n` +
+      "Diskusikan hasil dengan pasien dan rencanakan tindak lanjut sesuai pedoman klinis."
+    );
+  }
+
+  const headerParts = [`Laboratory report for ${patientDesc}.`];
+  if (facility) headerParts.push(`Facility: ${facility}.`);
+  const header = headerParts.join(" ");
+  const body =
+    panelBlocks.length > 0
+      ? `Results from ${sections.length} panels:\n${panelBlocks.join("\n")}${
+          uniqueAbnormal.length > 0
+            ? `\n\nNotable: ${uniqueAbnormal
+                .slice(0, 4)
+                .map((m) => formatHospitalMetric(m, locale))
+                .join(", ")}.`
+            : ""
+        }`
+      : "Complete values should be interpreted with medical history, symptoms, and treatment goals.";
+  return (
+    `${header}\n\n${body}\n\n` +
+    "Discuss results with the patient and plan appropriate follow-up."
+  );
+}
+
 export function buildHospitalDoctorSummary(
   text: string,
   locale: Locale,
@@ -267,7 +464,19 @@ export function isWeakDoctorSummary(text: string): boolean {
   if (!t) return true;
   if (isGenericDoctorSummaryPlaceholder(t)) return true;
   if (/review full values in the chart/i.test(t)) return true;
-  if (/\.jpe?g:/i.test(t) && !/;\s/.test(t)) return true;
+  if (isMessyMultiFileDoctorSummary(t)) return true;
+  return false;
+}
+
+/** Per-file WhatsApp filename prefixes make doctor summaries hard to read. */
+export function isMessyMultiFileDoctorSummary(text: string): boolean {
+  const t = text.trim();
+  if (!t) return false;
+  if (/\.jpe?g:\s/i.test(t) || /\.png:\s/i.test(t)) return true;
+  if (/WhatsApp Image.*:\s/i.test(t)) return true;
+  if ((t.match(/Review full values in the chart/gi) ?? []).length >= 2) {
+    return true;
+  }
   return false;
 }
 
