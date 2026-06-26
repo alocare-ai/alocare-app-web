@@ -36,6 +36,7 @@ import {
 import type { ReportPatientIdentity } from "@/lib/types/api";
 import {
   buildReportChatMeta,
+  hasReportChatContext,
   type ReportChatMeta,
 } from "@/lib/report-chat-context";
 import type {
@@ -222,6 +223,11 @@ export function ReportDetailClient({
     [report, result, locale, chatMeta],
   );
 
+  const chatReady = useMemo(
+    () => hasReportChatContext(report, result, documentText),
+    [report, result, documentText],
+  );
+
   const persistedIdentity = useMemo(
     () => resolvePatientIdentity(result),
     [result],
@@ -405,7 +411,7 @@ export function ReportDetailClient({
         locale={locale}
         sessionId={report.ai_session_id}
         chatMeta={chatMetaResolved}
-        disabled={isAnalyzing || !hasSummary}
+        disabled={!chatReady}
       />
     </AppShell>
   );

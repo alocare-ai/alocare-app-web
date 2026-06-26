@@ -1,6 +1,10 @@
 import type { Locale } from "@/lib/i18n";
 import { extractDocumentText } from "@/lib/report-document";
 import { splitDocumentSections } from "@/lib/document-sections";
+import {
+  hasDisplayableClinicalSummary,
+  hasDoctorSummaryContent,
+} from "@/lib/report-result-utils";
 import type { Report, ReportResult } from "@/lib/types/api";
 
 export type ReportChatMeta = {
@@ -25,6 +29,25 @@ export function countUploadedFiles(
   return 1;
 }
 
+/** True when the report has enough context for AI chat (not only raw API clinical summary). */
+export function hasReportChatContext(
+  report: Report | null | undefined,
+  result: ReportResult | null | undefined,
+  documentText = "",
+): boolean {
+  if (!report) return false;
+  if (hasDisplayableClinicalSummary(result)) return true;
+  if (hasDoctorSummaryContent(result)) return true;
+  if (documentText.trim().length > 200) return true;
+  if (
+    (report.status === "completed" || report.status === "validated") &&
+    countUploadedFiles(report, result ?? null) > 0
+  ) {
+    return true;
+  }
+  return false;
+}
+
 /** SSR metadata shown in the chat panel header. */
 export function buildReportChatMeta(
   report: Report,
@@ -32,7 +55,8 @@ export function buildReportChatMeta(
   locale: Locale,
 ): ReportChatMeta {
   const fileCount = countUploadedFiles(report, result);
-  const hasAnalysis = Boolean(result?.summary?.trim());
+  const hasAnalysis =
+    hasDisplayableClinicalSummary(result) || hasDoctorSummaryContent(result);
   const documentText = result ? extractDocumentText(result) : "";
   const sectionCount = splitDocumentSections(documentText).length;
   const hasDocumentText =
