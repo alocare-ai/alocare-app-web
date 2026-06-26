@@ -2,6 +2,7 @@ import type { Locale } from "@/lib/i18n";
 import { isPlaceholderClinicalSummary } from "@/lib/clinical-summary";
 import { splitDocumentSections } from "@/lib/document-sections";
 import {
+  buildHospitalDoctorSummary,
   buildHospitalLabNarrative,
   isHospitalLabReport,
 } from "@/lib/hospital-lab-narrative";
@@ -192,30 +193,44 @@ export function buildClinicalNarrativeFromDocument(
   return buildSectionNarrative(document, locale);
 }
 
-/** Short clinician-oriented summary — distinct from clinical narrative. */
-export function buildDoctorSummaryFromDocument(
+function buildSectionDoctorSummary(
   document: string,
   locale: Locale,
-  fileCount = 1,
+  filename?: string,
 ): string {
-  const sections = splitDocumentSections(document);
-  if (sections.length > 1) {
-    const parts = sections.map((section) => {
-      const head = buildDoctorSummaryFromDocument(section.text, locale, 1);
-      return `${section.filename}: ${head}`;
-    });
-    return parts.join("\n\n");
+  if (isHospitalLabReport(document)) {
+    return buildHospitalDoctorSummary(document, locale);
   }
+  if (isLabSection(document)) {
+    return buildLabDoctorSummary(document, locale);
+  }
+  if (isStressSection(document, filename)) {
+    return buildStressNarrative(document, locale, filename).split("\n\n")[0] ?? "";
+  }
+  const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
+  const fileBit = filename ? ` (${filename})` : "";
 
+  if (locale === "id") {
+    return (
+      `${patient} memiliki hasil laboratorium pada dokumen ini${fileBit}. ` +
+      "Tinjau nilai lengkap di sistem dan diskusikan interpretasi klinis dengan pasien."
+    );
+  }
+  return (
+    `${patient} has laboratory results on file${fileBit}. ` +
+    "Review full values in the chart and discuss clinical interpretation with the patient."
+  );
+}
+
+function buildLabDoctorSummary(document: string, locale: Locale): string {
   const metrics: string[] = [];
   for (const { label, re, unit } of LAB_PATTERNS) {
     const m = document.match(re);
     if (m) metrics.push(`${label} ${m[1]} ${unit}`);
   }
-  const patient =
-    extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
+  const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
 
-  if (isLabSection(document) && metrics.length > 0) {
+  if (metrics.length > 0) {
     const list = metrics.slice(0, 6).join(", ");
     if (locale === "id") {
       return (
@@ -228,21 +243,37 @@ export function buildDoctorSummaryFromDocument(
       "Cardiovascular risk should be reviewed with history, symptoms, and treatment goals."
     );
   }
+  return buildSectionDoctorSummary(document, locale);
+}
+
+/** Short clinician-oriented summary — distinct from clinical narrative. */
+export function buildDoctorSummaryFromDocument(
+  document: string,
+  locale: Locale,
+  fileCount = 1,
+): string {
+  const sections = splitDocumentSections(document);
+  if (sections.length > 1) {
+    const parts = sections.map((section) => {
+      const head = buildSectionDoctorSummary(section.text, locale, section.filename);
+      return `${section.filename}: ${head}`;
+    });
+    return parts.join("\n\n");
+  }
+
+  if (isHospitalLabReport(document)) {
+    return buildHospitalDoctorSummary(document, locale);
+  }
+
+  if (isLabSection(document)) {
+    return buildLabDoctorSummary(document, locale);
+  }
 
   if (isStressSection(document) && fileCount <= 1) {
     return buildStressNarrative(document, locale).split("\n\n")[0] ?? "";
   }
 
-  if (locale === "id") {
-    return (
-      `${patient} memiliki hasil laboratorium pada dokumen ini. ` +
-      "Tinjau nilai lengkap di sistem dan diskusikan interpretasi klinis dengan pasien."
-    );
-  }
-  return (
-    `${patient} has laboratory results on file. ` +
-    "Review full values in the chart and discuss clinical interpretation with the patient."
-  );
+  return buildSectionDoctorSummary(document, locale);
 }
 
 export function resolveSummaryAfterStream(

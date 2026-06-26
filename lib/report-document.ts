@@ -53,7 +53,7 @@ export function extractDocumentText(result: ReportResult): string {
   if (ocr) return ocr;
 
   const hospitalLab = candidates.find((c) =>
-    /namapasien|no\.?\s*lab\b|no\.?\s*rm\b/i.test(c),
+    /namapasien|mapasien|fma\s*pasien|no\.?\s*lab\b|no\.?\s*rm\b/i.test(c),
   );
   if (hospitalLab) return hospitalLab;
 

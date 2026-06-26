@@ -15,6 +15,7 @@ import { resolveDoctorSummaryForLocale } from "@/lib/doctor-summary-locale";
 import {
   buildClinicalFromPatientIdentity,
   buildHospitalLabNarrative,
+  isGenericDoctorSummaryPlaceholder,
   isHospitalLabReport,
 } from "@/lib/hospital-lab-narrative";
 import {
@@ -195,6 +196,7 @@ export function repairDoctorSummary(
   if (
     !en ||
     isRawOcrDump(en) ||
+    isGenericDoctorSummaryPlaceholder(en) ||
     (clinical.en?.trim() && isNearDuplicateSummary(en, clinical.en.trim()))
   ) {
     en = buildDoctorSummaryFromDocument(document, "en", fileCount);
