@@ -13,6 +13,7 @@ import { DoctorSummaryCard } from "@/components/doctor-summary-card";
 import { ClinicalSummarySection } from "@/components/clinical-summary-section";
 import { ClinicalIntelligencePanel } from "@/components/clinical-intelligence-panel";
 import { ReportDoctorReview } from "@/components/report-doctor-review";
+import { OcrProcessModal } from "@/components/ocr-process-modal";
 import { ReportFilesSection } from "@/components/report-files-section";
 import { ReportHeaderInsights } from "@/components/report-header-insights";
 import { ReportAddFilesButton } from "@/components/report-add-files-button";
@@ -158,6 +159,8 @@ export function ReportDetailClient({
     isRunning: aiSummaryGenerating,
     error: aiAnalysisError,
     retry: retryAiAnalysis,
+    pipelineStep: ciPipelineStep,
+    ciFilesProgress,
   } = useReportAiAnalysis({
     reportId,
     report,
@@ -334,6 +337,14 @@ export function ReportDetailClient({
 
   return (
     <AppShell>
+      <OcrProcessModal
+        open={aiSummaryGenerating}
+        locale={locale}
+        fileName={report.title}
+        step={ciPipelineStep}
+        ocrFilesProgress={ciFilesProgress}
+        error={aiAnalysisError}
+      />
       <div className="space-y-6">
         <ReportHeaderInsights
           locale={locale}
@@ -387,7 +398,7 @@ export function ReportDetailClient({
           </div>
         </div>
 
-        {isAnalyzing ? analyzingBanner : null}
+        {isAnalyzing && !aiSummaryGenerating ? analyzingBanner : null}
 
         {clinicalIntelligence ? (
           <ClinicalIntelligencePanel data={clinicalIntelligence} locale={locale} />

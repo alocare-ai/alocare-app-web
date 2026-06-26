@@ -108,10 +108,11 @@ export function ReportAddFilesButton({
             : `${allFiles.length} files`,
       );
 
-      setStep("analyzing");
+      setStep("ocr");
 
       const initialProgress = createCiFilesProgress(
         allFiles.map((f) => f.filename),
+        locale,
       );
       setCiFilesProgress(initialProgress);
 

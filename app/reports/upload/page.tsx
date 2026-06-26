@@ -156,9 +156,9 @@ export default function UploadReportPage() {
     const fileNames = uploadedFiles.map((f) => f.filename);
 
     try {
-      setStep("analyzing");
+      setStep("ocr");
 
-      const initialProgress = createCiFilesProgress(fileNames);
+      const initialProgress = createCiFilesProgress(fileNames, locale);
       setOcrFilesProgress(initialProgress);
 
       await runClinicalIntelligenceStream(

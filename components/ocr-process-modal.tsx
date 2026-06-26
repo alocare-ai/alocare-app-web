@@ -18,6 +18,10 @@ import {
   getOcrFileStatuses,
   type OcrFilesProgressState,
 } from "@/lib/ocr-file-progress";
+import {
+  getCiPhaseStatuses,
+  isClinicalIntelligenceProgress,
+} from "@/lib/clinical-intelligence-progress";
 import type { Locale } from "@/hooks/use-locale";
 
 const PIPELINE_ORDER = REPORT_PIPELINE_ORDER;
@@ -33,26 +37,50 @@ type OcrProcessModalProps = {
   error?: string | null;
 };
 
-function stepLabels(locale: Locale): Record<
-  ReportPipelineStep,
-  { title: string; done: string }
-> {
+function stepLabels(
+  locale: Locale,
+  ciMode: boolean,
+): Record<ReportPipelineStep, { title: string; done: string }> {
   return {
     uploaded: {
       title: locale === "id" ? "Unggah berkas" : "Upload files",
       done: locale === "id" ? "Berkas terunggah" : "Files uploaded",
     },
     ocr: {
-      title: locale === "id" ? "Pemindaian OCR" : "OCR scanning",
-      done: locale === "id" ? "Teks diekstrak" : "Text extracted",
+      title: ciMode
+        ? locale === "id"
+          ? "Kecerdasan klinis"
+          : "Clinical intelligence"
+        : locale === "id"
+          ? "Pemindaian OCR"
+          : "OCR scanning",
+      done: ciMode
+        ? locale === "id"
+          ? "Dokumen diproses"
+          : "Documents processed"
+        : locale === "id"
+          ? "Teks diekstrak"
+          : "Text extracted",
     },
     identity: {
       title: locale === "id" ? "Identitas pasien" : "Patient identity",
       done: locale === "id" ? "Identitas diekstrak" : "Identity extracted",
     },
     analyzing: {
-      title: locale === "id" ? "Analisis AI" : "AI analysis",
-      done: locale === "id" ? "Ringkasan klinis siap" : "Clinical summary ready",
+      title: ciMode
+        ? locale === "id"
+          ? "Kecerdasan klinis"
+          : "Clinical intelligence"
+        : locale === "id"
+          ? "Analisis AI"
+          : "AI analysis",
+      done: ciMode
+        ? locale === "id"
+          ? "Laporan klinis siap"
+          : "Clinical report ready"
+        : locale === "id"
+          ? "Ringkasan klinis siap"
+          : "Clinical summary ready",
     },
     completed: {
       title: locale === "id" ? "Selesai" : "Complete",
@@ -94,6 +122,7 @@ function activeDetail(
           : "Extracting patient identity from documents…")
       );
     case "analyzing":
+      if (ocrFilesProgress?.detail) return ocrFilesProgress.detail;
       return (
         aiProgress?.detail ??
         (locale === "id"
@@ -124,6 +153,9 @@ function overallProgress(
     return Math.min(62, Math.round(52 + (identityPct / 100) * 10));
   }
   if (step === "analyzing") {
+    if (ocrFilesProgress?.overallProgress && isClinicalIntelligenceProgress(ocrFilesProgress)) {
+      return ocrFilesProgress.overallProgress;
+    }
     return aiProgress?.progress ?? 65;
   }
   if (step === "completed") return 100;
@@ -135,8 +167,13 @@ function stepState(
   key: ReportPipelineStep,
   current: ReportPipelineStep,
   hasError: boolean,
+  ciMode: boolean,
 ): "done" | "active" | "pending" | "error" {
   if (hasError && key === current) return "error";
+  if (ciMode && key === "identity") {
+    const currentIdx = PIPELINE_ORDER.indexOf(current);
+    if (currentIdx >= PIPELINE_ORDER.indexOf("ocr")) return "done";
+  }
   const keyIdx = PIPELINE_ORDER.indexOf(key);
   const currentIdx = PIPELINE_ORDER.indexOf(current);
   if (keyIdx < currentIdx) return "done";
@@ -368,7 +405,8 @@ export function OcrProcessModal({
 }: OcrProcessModalProps) {
   if (!open) return null;
 
-  const labels = stepLabels(locale);
+  const ciMode = isClinicalIntelligenceProgress(ocrFilesProgress);
+  const labels = stepLabels(locale, ciMode);
   const hasError =
     Boolean(error) ||
     ocrEvent?.step === "error" ||
@@ -382,7 +420,16 @@ export function OcrProcessModal({
   const showAiSubsteps =
     step === "analyzing" &&
     aiProgress &&
+    !hasError &&
+    !ciMode;
+  const showCiSubsteps =
+    ciMode &&
+    (step === "ocr" || step === "analyzing") &&
+    Boolean(ocrFilesProgress?.ciPhases?.length) &&
     !hasError;
+  const ciSubsteps = showCiSubsteps
+    ? getCiPhaseStatuses(ocrFilesProgress!.ciPhases!)
+    : null;
   const aiSubsteps = showAiSubsteps
     ? getAiPhaseStatuses(
         aiProgress.phases,
@@ -428,7 +475,8 @@ export function OcrProcessModal({
 
           <ol className="space-y-3" aria-label={locale === "id" ? "Langkah" : "Steps"}>
             {PIPELINE_ORDER.map((key) => {
-              const state = stepState(key, step, hasError);
+              if (ciMode && key === "identity") return null;
+              const state = stepState(key, step, hasError, ciMode);
               const label = labels[key];
               const ocrCollapsed =
                 key === "ocr" &&
@@ -468,7 +516,10 @@ export function OcrProcessModal({
                     </p>
                     {state === "active" ? (
                       <div className="mt-1 space-y-2">
-                        {!showOcrSubsteps && !showIdentitySubsteps && !aiSubsteps ? (
+                        {!showOcrSubsteps &&
+                        !showIdentitySubsteps &&
+                        !aiSubsteps &&
+                        !ciSubsteps ? (
                           <p
                             className={`text-xs ${
                               hasError ? "text-red-600" : "text-slate-600"
@@ -508,6 +559,28 @@ export function OcrProcessModal({
                               ocrFilesProgress={ocrFilesProgress}
                             />
                           </>
+                        ) : null}
+                        {showCiSubsteps && key === step && ciSubsteps ? (
+                          <SubstepList
+                            ariaLabel={
+                              locale === "id"
+                                ? "Langkah kecerdasan klinis"
+                                : "Clinical intelligence steps"
+                            }
+                            items={ciSubsteps.map((sub) => ({
+                              key: sub.label,
+                              label: sub.label,
+                              status:
+                                sub.status === "error"
+                                  ? "error"
+                                  : sub.status === "done"
+                                    ? "done"
+                                    : sub.status === "active"
+                                      ? "active"
+                                      : "pending",
+                              detail: sub.detail,
+                            }))}
+                          />
                         ) : null}
                         {showAiSubsteps &&
                         key === step &&

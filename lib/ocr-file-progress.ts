@@ -29,6 +29,15 @@ export type IdentityPhaseItem = {
   detail?: string;
 };
 
+export type CiPhaseStatus = "pending" | "active" | "done" | "error";
+
+export type CiPhaseItem = {
+  id: string;
+  label: string;
+  status: CiPhaseStatus;
+  detail?: string;
+};
+
 export type OcrFilesProgressState = {
   files: OcrFileItem[];
   overallProgress: number;
@@ -37,6 +46,8 @@ export type OcrFilesProgressState = {
   identityDetail?: string;
   identityFiles?: IdentityFileItem[];
   identityPhases?: IdentityPhaseItem[];
+  /** Populated during clinical-intelligence SSE (replaces legacy aiProgress substeps). */
+  ciPhases?: CiPhaseItem[];
 };
 
 export function createOcrFilesProgress(fileNames: string[]): OcrFilesProgressState {

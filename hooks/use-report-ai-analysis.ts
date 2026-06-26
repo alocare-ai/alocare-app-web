@@ -49,7 +49,7 @@ export function useReportAiAnalysis({
     runningRef.current = true;
     setIsRunning(true);
     setError(null);
-    setPipelineStep("analyzing");
+    setPipelineStep("ocr");
 
     const filenames =
       result?.uploaded_files?.map((f) => f.filename) ??
@@ -59,6 +59,7 @@ export function useReportAiAnalysis({
 
     const initialProgress = createCiFilesProgress(
       filenames.filter(Boolean),
+      locale,
     );
     setCiFilesProgress(initialProgress);
 
