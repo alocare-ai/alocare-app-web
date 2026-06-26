@@ -1,16 +1,10 @@
 import { splitDocumentSections } from "@/lib/document-sections";
 import { extractHospitalLabMetrics } from "@/lib/hospital-lab-narrative";
-import type { StoredKeyFinding } from "@/lib/report-analysis";
+import {
+  normalizeFindingStatus,
+  type StoredKeyFinding,
+} from "@/lib/report-analysis";
 import type { ReportResult } from "@/lib/types/api";
-
-function metricStatus(
-  status: string,
-): StoredKeyFinding["status"] {
-  if (status === "critical") return "critical";
-  if (status === "low") return "low";
-  if (status === "high" || status === "abnormal") return "high";
-  return "normal";
-}
 
 function formatMetricValue(value: string, unit?: string): string {
   const trimmed = value.trim();
@@ -25,9 +19,7 @@ function findingsFromHospitalOcr(text: string): StoredKeyFinding[] {
 
   const sections = splitDocumentSections(text);
   const bodies =
-    Object.keys(sections).length > 0
-      ? Object.values(sections)
-      : [text];
+    sections.length > 0 ? sections.map((section) => section.text) : [text];
 
   for (const body of bodies) {
     for (const metric of extractHospitalLabMetrics(body)) {
@@ -37,7 +29,7 @@ function findingsFromHospitalOcr(text: string): StoredKeyFinding[] {
       merged.push({
         name: metric.name,
         value: formatMetricValue(metric.value, metric.unit),
-        status: metricStatus(metric.status),
+        status: normalizeFindingStatus(metric.status),
         referenceRange: metric.referenceRange ?? null,
       });
     }
@@ -59,7 +51,7 @@ function normalizeStoredFinding(raw: {
   return {
     name,
     value,
-    status: metricStatus(raw.status ?? "normal"),
+    status: normalizeFindingStatus(raw.status ?? "normal"),
     referenceRange: raw.reference_range ?? raw.referenceRange ?? null,
   };
 }

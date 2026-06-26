@@ -32,6 +32,15 @@ function asBilingual(
   return bilingual(en?.trim() || "", id?.trim() || en?.trim() || "");
 }
 
+export function normalizeFindingStatus(
+  status: string,
+): StoredKeyFinding["status"] {
+  if (status === "critical") return "critical";
+  if (status === "low") return "low";
+  if (status === "high" || status === "abnormal") return "high";
+  return "normal";
+}
+
 function normalizeRisk(
   value: string | null | undefined,
 ): "low" | "medium" | "high" | null {
@@ -71,7 +80,7 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
       keyFindings: (result.key_findings ?? []).map((f) => ({
         name: f.name,
         value: f.value,
-        status: f.status,
+        status: normalizeFindingStatus(f.status),
         referenceRange: f.reference_range,
       })),
       confidenceScore:
@@ -103,7 +112,7 @@ export function parseReportResult(result: ReportResult): ParsedReportAnalysis {
     keyFindings: (result.key_findings ?? []).map((f) => ({
       name: f.name,
       value: f.value,
-      status: f.status,
+      status: normalizeFindingStatus(f.status),
       referenceRange: f.reference_range,
     })),
     confidenceScore: hasResolvedText ? 0.75 : null,
