@@ -31,6 +31,12 @@ const HEURISTIC_PATTERNS = [
   /weak below average above average/i,
   /gender[：:]\s*\w+/i,
   /id number[：:]/i,
+  /document summary.*based on extracted text/i,
+  /ringkasan dokumen.*berdasarkan teks yang diekstrak/i,
+  /\bopening text\s*:/i,
+  /\bexcerpt\s*:\s*---/i,
+  /\bcuplikan\s*:\s*---/i,
+  /namapasien\s*[：:]/i,
 ];
 
 /** Lenient check after a successful analyze stream (allow clinical terms from stress/lab reports). */

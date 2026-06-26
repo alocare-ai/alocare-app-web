@@ -1,6 +1,10 @@
 import type { Locale } from "@/lib/i18n";
 import { isPlaceholderClinicalSummary } from "@/lib/clinical-summary";
 import { splitDocumentSections } from "@/lib/document-sections";
+import {
+  buildHospitalLabNarrative,
+  isHospitalLabReport,
+} from "@/lib/hospital-lab-narrative";
 import { isFramedAsSingleVendorReport } from "@/lib/report-summary-framing";
 
 const LAB_PATTERNS: { label: string; re: RegExp; unit: string }[] = [
@@ -16,11 +20,16 @@ const STRESS_PATTERNS: { label: string; re: RegExp }[] = [
 ];
 
 function extractPatient(document: string): string {
+  const indonesian = document
+    .match(/Nama\s*Pasien\s*[：:]\s*([A-Z][A-Za-z\s.'-]{2,48})/i)?.[1]
+    ?.trim();
+  if (indonesian) return indonesian;
   const name = document.match(/Name[：:]\s*([A-Za-z][A-Za-z\s]{0,40})/)?.[1]?.trim();
   return name ?? "";
 }
 
 function isLabSection(document: string): boolean {
+  if (isHospitalLabReport(document)) return true;
   if (/chemistry\s+panel|cholesterol|triglycerides|ldl|hdl/i.test(document)) {
     return true;
   }
@@ -125,6 +134,9 @@ function buildSectionNarrative(
   locale: Locale,
   filename?: string,
 ): string {
+  if (isHospitalLabReport(document)) {
+    return buildHospitalLabNarrative(document, locale);
+  }
   if (isLabSection(document)) {
     return buildLabNarrative(document, locale, filename);
   }
@@ -132,12 +144,18 @@ function buildSectionNarrative(
     return buildStressNarrative(document, locale, filename);
   }
   const patient = extractPatient(document) || (locale === "id" ? "pasien" : "the patient");
-  const excerpt = document.replace(/\s+/g, " ").slice(0, 400);
   const fileBit = filename ? ` (${filename})` : "";
+
   if (locale === "id") {
-    return `Ringkasan dokumen${fileBit} untuk ${patient}. Awalan teks: ${excerpt}…`;
+    return (
+      `${patient} memiliki hasil laboratorium pada dokumen ini${fileBit}. ` +
+      "Tinjau nilai lengkap di sistem dan diskusikan interpretasi klinis dengan pasien."
+    );
   }
-  return `Document summary${fileBit} for ${patient}. Opening text: ${excerpt}…`;
+  return (
+    `${patient} has laboratory results on file${fileBit}. ` +
+    "Review full values in the chart and discuss clinical interpretation with the patient."
+  );
 }
 
 /** Rule-based summary when the analyze stream returns a placeholder. */

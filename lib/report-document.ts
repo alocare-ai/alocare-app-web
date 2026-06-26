@@ -28,9 +28,22 @@ export function isNearDuplicateSummary(a: string, b: string): boolean {
   return na.length > 80 && (na.includes(nb.slice(0, 120)) || nb.includes(na.slice(0, 120)));
 }
 
-/** Prefer full OCR text embedded in doctor_summary fields. */
+function documentTextFromFileAnalyses(result: ReportResult): string {
+  const parts = (result.file_analyses ?? [])
+    .map((entry) => {
+      const preview = entry.extract_preview?.trim();
+      if (!preview) return "";
+      return `--- ${entry.filename} ---\n${preview}`;
+    })
+    .filter(Boolean);
+  return parts.join("\n\n");
+}
+
+/** Prefer OCR / lab printout from file previews or doctor_summary fields. */
 export function extractDocumentText(result: ReportResult): string {
+  const fromFiles = documentTextFromFileAnalyses(result);
   const candidates = [
+    fromFiles,
     result.doctor_summary?.trim(),
     result.doctor_summary_bilingual?.en?.trim(),
     result.doctor_summary_bilingual?.id?.trim(),
@@ -38,6 +51,11 @@ export function extractDocumentText(result: ReportResult): string {
 
   const ocr = candidates.find((c) => isRawOcrDump(c));
   if (ocr) return ocr;
+
+  const hospitalLab = candidates.find((c) =>
+    /namapasien|no\.?\s*lab\b|no\.?\s*rm\b/i.test(c),
+  );
+  if (hospitalLab) return hospitalLab;
 
   return [...candidates].sort((a, b) => b.length - a.length)[0] ?? "";
 }

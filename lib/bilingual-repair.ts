@@ -13,6 +13,11 @@ import {
 import { isPlaceholderClinicalSummary } from "@/lib/clinical-summary";
 import { resolveDoctorSummaryForLocale } from "@/lib/doctor-summary-locale";
 import {
+  buildClinicalFromPatientIdentity,
+  buildHospitalLabNarrative,
+  isHospitalLabReport,
+} from "@/lib/hospital-lab-narrative";
+import {
   buildClinicalNarrativeFromDocument,
   buildDoctorSummaryFromDocument,
 } from "@/lib/report-narrative-fallback";
@@ -71,13 +76,23 @@ function rebuildClinicalForLocale(
   fileCount: number,
   result?: ReportResult,
 ): string {
+  const identity = result?.patient_identity ?? result?.patientIdentity ?? null;
   const fromAnalyses =
     result?.file_analyses?.length &&
     fileCount > 1
       ? buildClinicalNarrativeFromFileAnalyses(result.file_analyses, locale)
       : null;
   if (fromAnalyses) return fromAnalyses;
-  return buildClinicalNarrativeFromDocument(document, locale, fileCount);
+  if (document.trim() && isHospitalLabReport(document)) {
+    return buildHospitalLabNarrative(document, locale, identity);
+  }
+  if (document.trim()) {
+    return buildClinicalNarrativeFromDocument(document, locale, fileCount);
+  }
+  if (identity?.name?.trim()) {
+    return buildClinicalFromPatientIdentity(identity, locale) ?? "";
+  }
+  return "";
 }
 
 export function repairClinicalSummary(
@@ -89,6 +104,22 @@ export function repairClinicalSummary(
   let id = summary.id?.trim() ?? "";
 
   if (!document.trim() && !result?.file_analyses?.length) {
+    const identity = result?.patient_identity ?? result?.patientIdentity ?? null;
+    if (identity?.name?.trim()) {
+      const fromIdentityEn =
+        buildClinicalFromPatientIdentity(identity, "en") ?? "";
+      const fromIdentityId =
+        buildClinicalFromPatientIdentity(identity, "id") ?? "";
+      if (
+        isPlaceholderClinicalSummary(en) ||
+        isPlaceholderClinicalSummary(id)
+      ) {
+        return bilingual(
+          isPlaceholderClinicalSummary(en) ? fromIdentityEn || en : en,
+          isPlaceholderClinicalSummary(id) ? fromIdentityId || id : id,
+        );
+      }
+    }
     if (en && !id && looksIndonesian(en)) return bilingual("", en);
     if (id && !en && looksEnglish(id)) return bilingual(id, "");
     return summary;
@@ -101,7 +132,12 @@ export function repairClinicalSummary(
     (shouldRebuildMultiFileClinicalSummary(en, document, uploadedCount) ||
       shouldRebuildMultiFileClinicalSummary(id, document, uploadedCount));
 
-  if (!en || looksIndonesian(en) || needsMultiRebuild) {
+  if (
+    !en ||
+    looksIndonesian(en) ||
+    needsMultiRebuild ||
+    isPlaceholderClinicalSummary(en)
+  ) {
     en = rebuildClinicalForLocale("en", document, fileCount, result);
   }
 
@@ -116,9 +152,19 @@ export function repairClinicalSummary(
     !id ||
     looksEnglish(id) ||
     (en && id === en) ||
-    needsMultiRebuild
+    needsMultiRebuild ||
+    isPlaceholderClinicalSummary(id)
   ) {
     id = rebuildClinicalForLocale("id", document, fileCount, result);
+  }
+
+  if (isPlaceholderClinicalSummary(en) && result?.patient_identity?.name) {
+    en =
+      buildClinicalFromPatientIdentity(result.patient_identity, "en") ?? en;
+  }
+  if (isPlaceholderClinicalSummary(id) && result?.patient_identity?.name) {
+    id =
+      buildClinicalFromPatientIdentity(result.patient_identity, "id") ?? id;
   }
 
   return bilingual(en, id);
