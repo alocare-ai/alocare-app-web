@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
 import { useReportFullDocumentText } from "@/hooks/use-report-full-document-text";
 import { getReport, getReportResult } from "@/lib/api/reports";
+import { localizeClinicalIntelligenceForDisplay } from "@/lib/localize-clinical-intelligence";
 import { hasDisplayableClinicalSummary } from "@/lib/report-result-utils";
 import { bilingual } from "@/lib/i18n";
 import { repairClinicalSummary, repairDoctorSummary } from "@/lib/bilingual-repair";
@@ -239,8 +240,8 @@ export function ReportDetailClient({
   );
 
   const resolvedKeyFindings = useMemo(
-    () => resolveReportKeyFindings(result ?? null, documentText),
-    [result, documentText],
+    () => resolveReportKeyFindings(result ?? null, documentText, locale),
+    [documentText, locale, result],
   );
   const resolvedRisk = useMemo(
     () =>
@@ -277,8 +278,10 @@ export function ReportDetailClient({
 
   const clinicalIntelligence = useMemo((): ClinicalIntelligenceResult | null => {
     if (!result) return null;
-    return result.clinical_intelligence ?? result.clinicalIntelligence ?? null;
-  }, [result]);
+    const raw = result.clinical_intelligence ?? result.clinicalIntelligence ?? null;
+    if (!raw) return null;
+    return localizeClinicalIntelligenceForDisplay(raw, locale);
+  }, [locale, result]);
 
   const isClinician =
     user?.role === "DOCTOR" ||
@@ -395,6 +398,16 @@ export function ReportDetailClient({
               locale={locale}
               disabled={isAnalyzing || aiSummaryGenerating}
             />
+            {clinicalIntelligence && !aiSummaryGenerating ? (
+              <button
+                type="button"
+                onClick={() => retryAiAnalysis()}
+                disabled={aiSummaryGenerating}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-200"
+              >
+                {locale === "id" ? "Analisis ulang" : "Re-analyze"}
+              </button>
+            ) : null}
           </div>
         </div>
 

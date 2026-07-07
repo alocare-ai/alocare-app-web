@@ -1,4 +1,6 @@
 import { splitDocumentSections } from "@/lib/document-sections";
+import type { Locale } from "@/hooks/use-locale";
+import { translateTestName } from "@/lib/lab-test-localization";
 import { extractHospitalLabMetrics } from "@/lib/hospital-lab-narrative";
 import {
   normalizeFindingStatus,
@@ -87,12 +89,13 @@ function sortFindings(findings: StoredKeyFinding[]): StoredKeyFinding[] {
 export function resolveReportKeyFindings(
   result: ReportResult | null | undefined,
   documentText: string,
+  locale: Locale = "en",
 ): StoredKeyFinding[] {
   const ci = result?.clinical_intelligence ?? result?.clinicalIntelligence;
   const fromCi = (ci?.normalized_results ?? ci?.normalizedResults ?? [])
     .map((row) =>
       normalizeStoredFinding({
-        name: row.test,
+        name: translateTestName(row.test ?? "", locale),
         value:
           row.value == null || row.value === ""
             ? undefined
@@ -104,6 +107,10 @@ export function resolveReportKeyFindings(
       }),
     )
     .filter((f): f is StoredKeyFinding => f != null);
+
+  if (fromCi.length > 0) {
+    return sortFindings(fromCi).slice(0, 8);
+  }
 
   const stored = (result?.key_findings ?? [])
     .map((f) => normalizeStoredFinding(f))
@@ -120,7 +127,12 @@ export function resolveReportKeyFindings(
     if (entry.ocr_text?.trim()) ocrParts.push(entry.ocr_text);
     else if (entry.extract_preview?.trim()) ocrParts.push(entry.extract_preview);
   }
-  const fromOcr = findingsFromHospitalOcr(ocrParts.filter(Boolean).join("\n\n"));
+  const fromOcr = findingsFromHospitalOcr(ocrParts.filter(Boolean).join("\n\n")).map(
+    (finding) => ({
+      ...finding,
+      name: translateTestName(finding.name, locale),
+    }),
+  );
 
   return sortFindings(
     mergeFindings(mergeFindings(mergeFindings(fromCi, stored), fromFiles), fromOcr),
