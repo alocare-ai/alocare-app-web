@@ -1,3 +1,4 @@
+import type { Locale } from "@/hooks/use-locale";
 import type {
   Report,
   ReportFileAnalysis,
@@ -180,8 +181,12 @@ export async function getReport(id: string): Promise<Report> {
   return apiFetch<Report>(`/reports/${id}`);
 }
 
-export async function getReportResult(id: string): Promise<ReportResult> {
-  return apiFetch<ReportResult>(`/reports/${id}/result`);
+export async function getReportResult(
+  id: string,
+  locale: Locale = "en",
+): Promise<ReportResult> {
+  const query = new URLSearchParams({ locale });
+  return apiFetch<ReportResult>(`/reports/${id}/result?${query.toString()}`);
 }
 
 export async function validateReport(

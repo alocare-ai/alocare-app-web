@@ -23,7 +23,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useReportAiAnalysis } from "@/hooks/use-report-ai-analysis";
 import { useReportFullDocumentText } from "@/hooks/use-report-full-document-text";
 import { getReport, getReportResult } from "@/lib/api/reports";
-import { localizeClinicalIntelligenceForDisplay } from "@/lib/localize-clinical-intelligence";
 import { hasDisplayableClinicalSummary } from "@/lib/report-result-utils";
 import { bilingual } from "@/lib/i18n";
 import { repairClinicalSummary, repairDoctorSummary } from "@/lib/bilingual-repair";
@@ -110,8 +109,8 @@ export function ReportDetailClient({
   });
 
   const { data: result, isLoading: resultLoading } = useQuery({
-    queryKey: ["report-result", reportId],
-    queryFn: () => getReportResult(reportId),
+    queryKey: ["report-result", reportId, locale],
+    queryFn: () => getReportResult(reportId, locale),
     initialData:
       cachedResult && hasDisplayableClinicalSummary(cachedResult)
         ? cachedResult
@@ -278,10 +277,8 @@ export function ReportDetailClient({
 
   const clinicalIntelligence = useMemo((): ClinicalIntelligenceResult | null => {
     if (!result) return null;
-    const raw = result.clinical_intelligence ?? result.clinicalIntelligence ?? null;
-    if (!raw) return null;
-    return localizeClinicalIntelligenceForDisplay(raw, locale);
-  }, [locale, result]);
+    return result.clinical_intelligence ?? result.clinicalIntelligence ?? null;
+  }, [result]);
 
   const isClinician =
     user?.role === "DOCTOR" ||
