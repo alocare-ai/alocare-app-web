@@ -5,9 +5,8 @@
   "scripts": {
     "login": "./scripts/gcloud-login.sh --login",
     "login:setup": "./scripts/gcloud-login.sh",
-    "generate-env": "tsx scripts/generate-env.ts",
-    "generate-env:help": "tsx scripts/generate-env.ts --help",
-    "seed-secrets": "bash scripts/seed-secret-manager.sh",
+    "generate-env": "node scripts/generate-env.cjs",
+    "seed-secrets": "node scripts/seed-secrets.cjs",
     "seed-github-config": "bash scripts/seed-github-config.sh",
     "setup-git": "node scripts/setup-git.cjs",
     "postinstall": "node scripts/setup-git.cjs",
@@ -34,7 +33,6 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@google-cloud/secret-manager": "^6.1.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
