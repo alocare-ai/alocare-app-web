@@ -78,8 +78,8 @@ function VerifyContent() {
   const successMessage =
     message ??
     (locale === "id"
-      ? "Email berhasil diverifikasi. Anda sekarang dapat masuk."
-      : "Email verified successfully. You can now sign in.");
+      ? "Email berhasil diverifikasi. Kembali ke aplikasi Alocare dan masuk lagi."
+      : "Email verified successfully. Return to the Alocare app and sign in again.");
 
   const handleResend = async () => {
     if (!email) return;
@@ -135,9 +135,23 @@ function VerifyContent() {
             </p>
           ) : null}
 
+          {status === "success" && token ? (
+            <p className="text-sm text-slate-600">
+              {locale === "id"
+                ? "Anda dapat menutup halaman ini dan membuka kembali aplikasi."
+                : "You can close this page and open the app again."}
+            </p>
+          ) : null}
+
           {status === "success" ? (
             <Button fullWidth size="lg" onClick={() => router.push("/login")}>
-              {locale === "id" ? "Masuk" : "Sign in"}
+              {locale === "id"
+                ? token
+                  ? "Buka portal web (opsional)"
+                  : "Masuk"
+                : token
+                  ? "Open web portal (optional)"
+                  : "Sign in"}
             </Button>
           ) : null}
 
